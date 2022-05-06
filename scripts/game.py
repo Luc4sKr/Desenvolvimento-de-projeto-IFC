@@ -38,7 +38,7 @@ class Game:
     # Menu do jogo ----------------------------------------------------------------------------------------
     def menu(self):
         self.menu_background_group = pygame.sprite.Group()
-        self.menu_background_group.add(self.background_menu)
+        #self.menu_background_group.add(self.menu_background)
 
         while self.mostrar_menu:
             self.clock.tick(FPS)
@@ -117,6 +117,7 @@ class Game:
     def new_game(self):
         # -- Instancia as sprites -------------------
         self.sprite_group = pygame.sprite.Group()
+        self.sprite_group.add(self.game_background)
 
         # Player
         self.player = Player()
@@ -161,7 +162,7 @@ class Game:
     def draw_sprites(self):
         self.sprite_group.add(self.enemy_1)
 
-        self.screen.fill(WHITE)
+        self.screen.fill(BLACK)
         self.sprite_group.draw(self.screen)
         pygame.display.flip()
 
@@ -175,10 +176,15 @@ class Game:
 
 
     def carregar_arquivos(self):
-        self.background_menu = pygame.sprite.Sprite()
-        self.background_menu.image = pygame.image.load(path.join(getcwd() + "/assets/images/background.png"))
-        self.background_menu.image = pygame.transform.scale(self.background_menu.image, (SCREEN_X, SCREEN_Y))
-        self.background_menu.rect = self.background_menu.image.get_rect()
+        self.menu_background = pygame.sprite.Sprite()
+        self.menu_background.image = pygame.image.load(path.join(getcwd() + "/assets/images/background.png"))
+        self.menu_background.image = pygame.transform.scale(self.menu_background.image, (SCREEN_X, SCREEN_Y))
+        self.menu_background.rect = self.menu_background.image.get_rect()
+
+        self.game_background = pygame.sprite.Sprite()
+        self.game_background.image = pygame.image.load(path.join(getcwd() + "/assets/images/game_background.jpg"))
+        self.game_background.image = pygame.transform.scale(self.game_background.image, (SCREEN_X, SCREEN_Y))
+        self.game_background.rect = self.game_background.image.get_rect()
         
 
 
