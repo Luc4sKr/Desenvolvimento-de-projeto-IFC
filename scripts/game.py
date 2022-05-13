@@ -71,13 +71,23 @@ class Game:
 
             if event.type == pygame.KEYDOWN:
 
-                if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                     if self.cursor_point == "Jogar":
                         self.new_game()
                         self.mostrar_menu = False
+                    if self.cursor_point == "Loja":
+                        pass
+                    if self.cursor_point == "Opções":
+                        pass
+                    if self.cursor_point == "Créditos":
+                        self.mostrar_creditos = True
+                        self.mostrar_menu = False
+                        self.creditos()
+                    if self.cursor_point == "Sair":
+                        self.rodando = False
+                        exit()
 
-
-                if event.key == pygame.K_w:
+                if event.key == pygame.K_w or event.key == pygame.K_UP:
                     if self.cursor_point == "Loja":
                         self.cursor_point = "Jogar"
                         self.cursor_rect.y = 300
@@ -91,7 +101,7 @@ class Game:
                         self.cursor_point = "Créditos"
                         self.cursor_rect.y = 450
 
-                if event.key == pygame.K_s:
+                if event.key == pygame.K_s or event.key == pygame.K_DOWN:
                     if self.cursor_point == "Créditos":
                         self.cursor_point = "Sair"
                         self.cursor_rect.y = 500
@@ -124,8 +134,8 @@ class Game:
         self.sprite_group.add(self.player)
 
         # Enemy
-        self.enemy_1_sprite_sheet = self.create_sprite_sheet("enemy_1", 100, 100)
-        self.enemy_1 = Enemy(self.enemy_1_sprite_sheet)
+        self.enemy_group = pygame.sprite.Group()
+        self.enemy_1_sprite_sheet = self.create_spaceship_sprite_sheet("enemy_1", 100, 100)
         # -------------------------------------------
 
         # -- Roda o jogo ----------------------------
@@ -160,9 +170,9 @@ class Game:
 
     # Desenha as sprites ----------------------------------------------------------------------------------
     def draw_sprites(self):
-        self.sprite_group.add(self.enemy_1)
+        #self.sprite_group.add(self.enemy_1)
 
-        self.screen.fill(BLACK)
+        self.screen.fill(WHITE)
         self.sprite_group.draw(self.screen)
         pygame.display.flip()
 
@@ -174,7 +184,7 @@ class Game:
         self.text_rect.center = (x, y)
         self.screen.blit(self.text_obj, self.text_rect)
 
-
+    # Carrega os arquivos do jogo -------------------------------------------------------------------------
     def carregar_arquivos(self):
         self.menu_background = pygame.sprite.Sprite()
         self.menu_background.image = pygame.image.load(path.join(getcwd() + "/assets/images/background.png"))
@@ -191,8 +201,8 @@ class Game:
     def tela_game_over(self):
         pass
 
-    # Cria as sprite sheets
-    def create_sprite_sheet(self, sprite, sprite_size_x, sprite_size_y):
+    # Cria as sprite sheets de naves -----------------------------------------------------------------------
+    def create_spaceship_sprite_sheet(self, sprite, sprite_size_x, sprite_size_y):
         self.animation_list = []
         self.animation_types = ["move"]
 
@@ -205,6 +215,38 @@ class Game:
                 self.temp_list.append(self.image)
             self.animation_list.append(self.temp_list)
         return self.animation_list
+
+    # Tela de créditos do menu ------------------------------------------------------------------------------
+    def creditos(self):
+        while self.mostrar_creditos:
+            self.clock.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.mostrar_creditos = False
+                    self.self.rodando = False
+                    exit()
+                
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_BACKSPACE or pygame.K_ESCAPE:
+                        self.mostrar_creditos = False
+                        self.mostrar_menu = True
+                        self.menu()
+
+            self.draw_text("CRÉDITOS", 42, WHITE, SCREEN_X/2, 60)
+            self.draw_text("LUCAS EDUARDO KREUCH", 28, WHITE, SCREEN_X/2, 150)
+            self.draw_text("MARIA CLARA DE SOUZA", 28, WHITE, SCREEN_X/2, 180)
+            self.draw_text("HAIDY JANDRE", 28, WHITE, SCREEN_X/2, 210)
+            self.draw_text("DAVI GABRIEL KRUEGER", 28, WHITE, SCREEN_X/2, 240)
+
+            
+            pygame.display.flip()
+            pygame.display.update()
+            self.screen.fill(BLACK)
+
+
+
+
+        
 
         
 
