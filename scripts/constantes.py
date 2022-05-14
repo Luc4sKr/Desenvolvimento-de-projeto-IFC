@@ -5,18 +5,24 @@ SCREEN_X = 580
 SCREEN_Y = 720
 
 # Player
-PLAYER_SIZE_X = 100
-PLAYER_SIZE_Y = 100
+PLAYER_SIZE_X = 80
+PLAYER_SIZE_Y = 80
 PLAYER_VEL = 5
 
-# enemy
+# Enemy
 ENEMY_SIZE_X = 100
 ENEMY_SIZE_Y = 100
+
+# Asteroid
+ASTEROID_SIZE_X = 60
+ASTEROID_SIZE_Y = 60
+ASTEROID_VEL = 1
 
 # FPS
 FPS = 60
 
-ANIMATION_COOLDOWN = 200
+# Cooldown de animação dos sprite sheets
+ANIMATION_COOLDOWN = 100
 
 # Colors
 BLACK = (0, 0, 0)
