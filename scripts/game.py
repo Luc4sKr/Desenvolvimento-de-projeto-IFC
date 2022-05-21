@@ -164,8 +164,7 @@ class Game:
             self.clock.tick(FPS)
 
             self.eventos()
-            self.update_sprites()
-            self.draw_sprites()
+            
 
             # Colissão dos tiros com os asteroides
             self.bullet_collide = pygame.sprite.groupcollide(self.asteroid_group, self.bullet_group, True, True, pygame.sprite.collide_circle)
@@ -178,7 +177,7 @@ class Game:
             # Colisão da nave com os asteroides
             self.player_collide = pygame.sprite.spritecollide(self.player, self.asteroid_group, True, pygame.sprite.collide_mask)
             for hit in self.player_collide:
-                self.player.shield -= 20
+                self.player.shield -= 50
                 self.newasteroid() # Cria um novo asteroide
                 if self.player.shield <= 0:
                     self.death_explosion = Explosion(self.player.rect.center, self.explosion_sprite_sheet)
@@ -192,6 +191,10 @@ class Game:
                 self.game_over = True
                 self.mostrar_menu = True
                 self.menu()
+
+            
+            self.update_sprites()
+            self.draw_sprites()
 
     # Eventos do jogo -------------------------------------------------------------------------------------
     def eventos(self):
@@ -232,7 +235,7 @@ class Game:
     # Carrega os arquivos do jogo -------------------------------------------------------------------------
     def carregar_arquivos(self):
         self.menu_background = pygame.sprite.Sprite()
-        self.menu_background.image = pygame.image.load(path.join(getcwd() + "/assets/images/background.png"))
+        self.menu_background.image = pygame.image.load(path.join(getcwd() + "/assets/images/menu_background.jpg"))
         self.menu_background.image = pygame.transform.scale(self.menu_background.image, (SCREEN_X, SCREEN_Y))
         self.menu_background.rect = self.menu_background.image.get_rect()
 

@@ -9,7 +9,9 @@ class Player(pygame.sprite.Sprite):
 
         self.image = pygame.image.load(path.join(getcwd() + "/assets/images/spaceship_1.png"))
         self.image = pygame.transform.scale(self.image, (PLAYER_SIZE_X, PLAYER_SIZE_Y))
-        self.rect = pygame.Rect((SCREEN_X / 2) - (PLAYER_SIZE_X / 2), SCREEN_Y + 100, PLAYER_SIZE_X, PLAYER_SIZE_Y)
+        self.rect = self.image.get_rect()
+
+        self.rect.center = (SCREEN_X / 2,  600)
 
         self.sprite_group = sprite_group
         self.bullet_group = bullet_group
@@ -17,7 +19,7 @@ class Player(pygame.sprite.Sprite):
         self.shield = 100 # Escudo/vida da nave
         self.shoot_delay = 250 # Delay do tiro
         self.last_shoot = pygame.time.get_ticks() # Tempo do ultimo tiro
-        self.lives = 1 # Vidas
+        self.lives = 3 # Vidas
 
         # Quando o player/nave é "morto", ele fica um tempo "escondido"
         self.hidden = False 
@@ -67,7 +69,9 @@ class Player(pygame.sprite.Sprite):
     def hide(self):
         self.hidden = True
         self.hide_timer = pygame.time.get_ticks()
-        self.rect.center = (SCREEN_X / 2, SCREEN_Y + 100)
+        self.rect.center = (SCREEN_X /2, SCREEN_Y + 100)
+
+        self.image = pygame.image.load(path.join(getcwd() + "/assets/images/invisible_sprite.png"))
 
     def update(self):
         self.movement_and_shoot()
@@ -76,5 +80,8 @@ class Player(pygame.sprite.Sprite):
         if self.hidden and pygame.time.get_ticks() - self.hide_timer > 1000:
             self.hidden = False
             self.rect.centerx = SCREEN_X / 2
-            self.rect.y = SCREEN_Y + 200
+            self.rect.y = SCREEN_Y + 300
+            
+            self.image = pygame.image.load(path.join(getcwd() + "/assets/images/spaceship_1.png"))
+            self.image = pygame.transform.scale(self.image, (PLAYER_SIZE_X, PLAYER_SIZE_Y))
 
