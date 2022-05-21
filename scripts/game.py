@@ -23,13 +23,17 @@ class Game:
         self.clock = pygame.time.Clock()
 
         # -- Controle dos laços de repetição ----------------------
-        self.rodando = True
         self.game_over = False
         self.mostrar_menu = True
+        self.mostrar_creditos = False
+        self.mostrar_pause = False
 
         # -- Variáveis do menu -----------------------------------
-        self.cursor_rect = pygame.Rect(100, 300, 100, 100)
+        self.cursor_rect = pygame.Rect(0, 0, 100, 100)
         self.cursor_point = "Jogar"
+
+        # -- Cursor do pause--------------------------------------
+        self.pause_cursor_point = "Voltar ao jogo"
 
         # -- Função para carregar os arquivos --------------------
         self.carregar_arquivos()
@@ -37,7 +41,11 @@ class Game:
     # Menu do jogo ----------------------------------------------------------------------------------------
     def menu(self):
         self.menu_background_group = pygame.sprite.Group()
-        #self.menu_background_group.add(self.menu_background)
+        self.menu_background_group.add(self.menu_background)
+
+        # Posição do cursor
+        self.cursor_rect.x = 100
+        self.cursor_rect.y = 300
 
         while self.mostrar_menu:
             self.clock.tick(FPS)
@@ -54,6 +62,7 @@ class Game:
             self.draw_text("Créditos", 40, WHITE, SCREEN_X / 2, 450)
             self.draw_text("Sair", 40, WHITE, SCREEN_X / 2, 500)
 
+
             self.menu_events()
 
             pygame.display.flip()
@@ -64,7 +73,6 @@ class Game:
     def menu_events(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                self.rodando = False
                 self.mostrar_menu = False
                 exit()
 
@@ -83,8 +91,7 @@ class Game:
                         self.mostrar_menu = False
                         self.creditos()
                     if self.cursor_point == "Sair":
-                        self.rodando = False
-                        exit()
+                        self.mostrar_menu = False
 
                 if event.key == pygame.K_w or event.key == pygame.K_UP:
                     if self.cursor_point == "Loja":
@@ -177,7 +184,7 @@ class Game:
             # Colisão da nave com os asteroides
             self.player_collide = pygame.sprite.spritecollide(self.player, self.asteroid_group, True, pygame.sprite.collide_mask)
             for hit in self.player_collide:
-                self.player.shield -= 50
+                self.player.shield -= 20 # Tira o shield do player
                 self.newasteroid() # Cria um novo asteroide
                 if self.player.shield <= 0:
                     self.death_explosion = Explosion(self.player.rect.center, self.explosion_sprite_sheet)
@@ -202,8 +209,12 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.game_over = True
-                self.rodando = False
                 exit()
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.mostrar_pause = True
+                    self.pause_screen()
 
     # Atualiza as sprites ---------------------------------------------------------------------------------
     def update_sprites(self):
@@ -235,7 +246,7 @@ class Game:
     # Carrega os arquivos do jogo -------------------------------------------------------------------------
     def carregar_arquivos(self):
         self.menu_background = pygame.sprite.Sprite()
-        self.menu_background.image = pygame.image.load(path.join(getcwd() + "/assets/images/menu_background.jpg"))
+        self.menu_background.image = pygame.image.load(path.join(getcwd() + "/assets/images/menu_background.png"))
         self.menu_background.image = pygame.transform.scale(self.menu_background.image, (SCREEN_X, SCREEN_Y))
         self.menu_background.rect = self.menu_background.image.get_rect()
 
@@ -292,8 +303,6 @@ class Game:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.mostrar_creditos = False
-                    self.self.rodando = False
-                    exit()
                 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_BACKSPACE or pygame.K_ESCAPE:
@@ -306,12 +315,72 @@ class Game:
             self.draw_text("MARIA CLARA DE SOUZA", 28, WHITE, SCREEN_X/2, 180)
             self.draw_text("HAIDY JANDRE", 28, WHITE, SCREEN_X/2, 210)
 
-            
             pygame.display.flip()
             pygame.display.update()
             self.screen.fill(BLACK)
 
+    # Tela de pause
+    def pause_screen(self):
 
+        # Posição do cursor
+        self.cursor_rect.x = 60
+        self.cursor_rect.y = VOLTAR_AO_JOGO_Y
+
+        while self.mostrar_pause:
+            self.clock.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.mostrar_pause = False
+                    self.game_over = True
+                
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                        if self.pause_cursor_point == "Voltar ao jogo":
+                            self.mostrar_pause = False
+                        if self.pause_cursor_point == "Voltar ao menu":
+                            self.mostrar_pause = False
+                            self.game_over = True
+                            self.mostrar_menu = True
+                            self.menu()
+                        if self.pause_cursor_point == "Sair do jogo":
+                            exit()
+                        if self.pause_cursor_point == "Opções":
+                            pass
+
+                    if event.key == pygame.K_w or event.key == pygame.K_UP:
+                        if self.pause_cursor_point == "Voltar ao menu":
+                            self.pause_cursor_point = "Voltar ao jogo"
+                            self.cursor_rect.y = VOLTAR_AO_JOGO_Y
+                        if self.pause_cursor_point == "Sair do jogo":
+                            self.pause_cursor_point = "Voltar ao menu"
+                            self.cursor_rect.y = VOLTAR_AO_MENU_Y
+                        if self.pause_cursor_point == "Opções":
+                            self.pause_cursor_point = "Sair do jogo"
+                            self.cursor_rect.y = SAIR_DO_JOGO_Y
+
+                    if event.key == pygame.K_s or event.key == pygame.K_DOWN:
+                        if self.pause_cursor_point == "Sair do jogo":
+                            self.pause_cursor_point = "Opções"
+                            self.cursor_rect.y = OPCOES_Y
+                        if self.pause_cursor_point == "Voltar ao menu":
+                            self.pause_cursor_point = "Sair do jogo"
+                            self.cursor_rect.y = SAIR_DO_JOGO_Y
+                        if self.pause_cursor_point == "Voltar ao jogo":
+                            self.pause_cursor_point = "Voltar ao menu"
+                            self.cursor_rect.y = VOLTAR_AO_MENU_Y
+            
+            self.draw_text("PAUSE", 38, WHITE, SCREEN_X / 2, 200)        
+            
+            self.draw_text("VOLTAR AO JOGO", 28, WHITE, SCREEN_X / 2, VOLTAR_AO_JOGO_Y)
+            self.draw_text("VOLTAR AO MENU", 28, WHITE, SCREEN_X / 2, VOLTAR_AO_MENU_Y)
+            self.draw_text("SAIR DO JOGO", 28, WHITE, SCREEN_X/2, SAIR_DO_JOGO_Y)
+            self.draw_text("OPÇÕES", 28, WHITE, SCREEN_X / 2, OPCOES_Y)
+
+            self.draw_cursor()
+
+            pygame.display.flip()
+            pygame.display.update()
+            self.screen.fill(BLACK)
 
 
         

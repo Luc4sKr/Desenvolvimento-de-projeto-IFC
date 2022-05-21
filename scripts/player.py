@@ -69,7 +69,7 @@ class Player(pygame.sprite.Sprite):
     def hide(self):
         self.hidden = True
         self.hide_timer = pygame.time.get_ticks()
-        self.rect.center = (SCREEN_X /2, SCREEN_Y + 100)
+        self.rect.center = (SCREEN_X /2, 600)
 
         self.image = pygame.image.load(path.join(getcwd() + "/assets/images/invisible_sprite.png"))
 
@@ -79,9 +79,8 @@ class Player(pygame.sprite.Sprite):
 
         if self.hidden and pygame.time.get_ticks() - self.hide_timer > 1000:
             self.hidden = False
-            self.rect.centerx = SCREEN_X / 2
-            self.rect.y = SCREEN_Y + 300
-            
+            self.rect.center = (SCREEN_X /2, 600)
+
             self.image = pygame.image.load(path.join(getcwd() + "/assets/images/spaceship_1.png"))
             self.image = pygame.transform.scale(self.image, (PLAYER_SIZE_X, PLAYER_SIZE_Y))
 

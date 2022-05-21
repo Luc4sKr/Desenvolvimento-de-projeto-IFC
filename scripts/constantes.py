@@ -36,3 +36,9 @@ GREEN = (0, 255, 0)
 
 # Fonte
 FONTE = path.join(getcwd() + "/assets/font/8-bit_font.ttf")
+
+# Menu de pause
+VOLTAR_AO_JOGO_Y = SCREEN_Y / 2 - 32
+VOLTAR_AO_MENU_Y = SCREEN_Y / 2
+SAIR_DO_JOGO_Y = SCREEN_Y / 2 + 32
+OPCOES_Y =SCREEN_Y / 2 + 64
