@@ -1,7 +1,8 @@
 import pygame
 
-from scripts.constantes import *
+from random import randint
 
+from scripts.constantes import *
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, animation_list):
@@ -13,11 +14,10 @@ class Enemy(pygame.sprite.Sprite):
         self.animation_list = animation_list
 
         self.image = self.animation_list[self.action][self.frame_index]
-        #self.image = pygame.transform.scale(self.image, (ENEMY_SIZE_X, ENEMY_SIZE_Y))
-        #self.rect = pygame.Rect(0, 0, ENEMY_SIZE_X, ENEMY_SIZE_Y)
+        self.image = pygame.transform.scale(self.image, (ENEMY_SIZE_X, ENEMY_SIZE_Y))
         self.rect = self.image.get_rect()
 
-        self.rect.center = (SCREEN_X/2, SCREEN_Y/2)
+        self.rect.center = (randint(0 + ENEMY_SIZE_X / 2, SCREEN_X - ENEMY_SIZE_X / 2), 0)
 
     
     def update_animation(self):
@@ -32,3 +32,5 @@ class Enemy(pygame.sprite.Sprite):
 
     def update(self):
         self.update_animation()
+
+        self.rect.y += 1

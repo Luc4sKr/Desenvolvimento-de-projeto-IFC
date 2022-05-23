@@ -17,7 +17,7 @@ class Asteroid(pygame.sprite.Sprite):
         self.rect.x = randrange(SCREEN_X - self.rect.width)
         self.rect.y = randrange(-150, -100)
         self.speedx = randrange(-3, 3)
-        self.speedy = randrange(3, 8)
+        self.speedy = randrange(3, 5)
 
     def update_animation(self):
         self.image = self.animation_list[self.frame_index]

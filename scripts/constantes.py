@@ -14,8 +14,8 @@ BAR_HEIGHT = 15
 BAR_WIDTH = 150
 
 # Enemy
-ENEMY_SIZE_X = 100
-ENEMY_SIZE_Y = 100
+ENEMY_SIZE_X = 80
+ENEMY_SIZE_Y = 80
 
 # Asteroid
 ASTEROID_SIZE_X = 60
@@ -33,9 +33,13 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 YELLOW  = (255, 255, 0)
 GREEN = (0, 255, 0)
+RED = (255, 0, 0)
 
 # Fonte
 FONTE = path.join(getcwd() + "/assets/font/8-bit_font.ttf")
+LARGE_FONT_SIZE = 42
+MEDIUM_FONT_SIZE = 28
+SMALL_FONT_SIZE = 14
 
 # Menu de pause
 VOLTAR_AO_JOGO_Y = SCREEN_Y / 2 - 32

@@ -2,6 +2,7 @@ import pygame
 
 from os import path, getcwd, listdir
 from sys import exit
+from random import randint
 
 from scripts.constantes import *
 from scripts.explosion import Explosion
@@ -23,17 +24,19 @@ class Game:
         self.clock = pygame.time.Clock()
 
         # -- Controle dos laços de repetição ----------------------
-        self.game_over = False
         self.mostrar_menu = True
+        self.game_over = False
         self.mostrar_creditos = False
         self.mostrar_pause = False
+        self.mostrar_game_over_screen = False
+        self.mostrar_loja = False
+        self.mostrsr_opções = False
 
-        # -- Variáveis do menu -----------------------------------
+        # -- Cursores ---------------------------------------------
         self.cursor_rect = pygame.Rect(0, 0, 100, 100)
         self.cursor_point = "Jogar"
-
-        # -- Cursor do pause--------------------------------------
         self.pause_cursor_point = "Voltar ao jogo"
+        self.loja_cusror_point = "Naves"
 
         # -- Função para carregar os arquivos --------------------
         self.carregar_arquivos()
@@ -53,8 +56,8 @@ class Game:
             self.menu_background_group.update()
             self.menu_background_group.draw(self.screen)
 
-            self.draw_text("SPACE", 50, YELLOW, SCREEN_X / 2, 100)
-            self.draw_text("BATTLE", 50, YELLOW, SCREEN_X / 2, 160)
+            self.draw_text("SPACE", 60, YELLOW, SCREEN_X / 2, 100)
+            self.draw_text("BATTLE", 60, YELLOW, SCREEN_X / 2, 160)
 
             self.draw_text("Jogar", 40, WHITE, SCREEN_X / 2, 300)
             self.draw_text("Loja", 40, WHITE, SCREEN_X / 2, 350)
@@ -77,19 +80,19 @@ class Game:
                 exit()
 
             if event.type == pygame.KEYDOWN:
-
                 if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
                     if self.cursor_point == "Jogar":
                         self.new_game()
                         self.mostrar_menu = False
                     if self.cursor_point == "Loja":
-                        pass
+                        self.mostrar_loja = True
+                        self.loja()
                     if self.cursor_point == "Opções":
-                        pass
+                        self.mostrsr_opções = True
+                        self.opcoes()
                     if self.cursor_point == "Créditos":
                         self.mostrar_creditos = True
-                        self.mostrar_menu = False
-                        self.creditos()
+                        self.credit_screen()
                     if self.cursor_point == "Sair":
                         self.mostrar_menu = False
 
@@ -121,10 +124,9 @@ class Game:
                         self.cursor_point = "Loja"
                         self.cursor_rect.y = 350
 
-                #print(self.cursor)
-
         self.draw_cursor()
 
+    # Desenha o cursor
     def draw_cursor(self):
         self.draw_text("->", 25, WHITE, self.cursor_rect.x, self.cursor_rect.y)
 
@@ -134,6 +136,7 @@ class Game:
         self.sprite_group = pygame.sprite.Group()
         self.bullet_group = pygame.sprite.Group()
         self.asteroid_group = pygame.sprite.Group()
+        self.enemy_group = pygame.sprite.Group()
 
         # -- Background
         self.sprite_group.add(self.game_background)
@@ -141,20 +144,20 @@ class Game:
         # -- Player ---------------------------------
         self.player = Player(self.sprite_group, self.bullet_group)
         self.sprite_group.add(self.player)
+        # Imagem do player que serve como contador de vidas
         self.player_mini_image = pygame.transform.scale(self.player.image, (25, 25))
 
         # -- Asteroid -------------------------------
         self.asteroid_sprite_sheet = self.create_sprite_sheet("asteroid", ASTEROID_SIZE_X, ASTEROID_SIZE_Y, "rotate")
         self.asteroid_sprite_sheet = self.asteroid_sprite_sheet[0]
         for i in range(8):
-            self.newasteroid()
+            self.new_asteroid()
 
         # -- Explosion ------------------------------
         self.explosion_sprite_sheet = self.create_sprite_sheet("explosion", 50, 50, "explosion-1")
         self.explosion_sprite_sheet = self.explosion_sprite_sheet[0]
 
         # -- Enemy ----------------------------------
-        self.enemy_group = pygame.sprite.Group()
         self.enemy_1_sprite_sheet = self.create_sprite_sheet("enemy_1", ENEMY_SIZE_X, ENEMY_SIZE_Y, "move")
 
         # -- Score ----------------------------------
@@ -166,26 +169,27 @@ class Game:
 
     # Rodando ---------------------------------------------------------------------------------------------
     def running(self):
-        #  -- Loop do jogo --------------------------
+        #  Loop principal do jogo
         while not self.game_over:
             self.clock.tick(FPS)
-
             self.eventos()
-            
 
+            if randint(0, 100) == 0:
+                self.new_enemy()
+            
             # Colissão dos tiros com os asteroides
             self.bullet_collide = pygame.sprite.groupcollide(self.asteroid_group, self.bullet_group, True, True, pygame.sprite.collide_circle)
             for hit in self.bullet_collide:
                 self.score += 1
                 explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
                 self.sprite_group.add(explosion)
-                self.newasteroid()
+                self.new_asteroid()
 
             # Colisão da nave com os asteroides
             self.player_collide = pygame.sprite.spritecollide(self.player, self.asteroid_group, True, pygame.sprite.collide_mask)
             for hit in self.player_collide:
                 self.player.shield -= 20 # Tira o shield do player
-                self.newasteroid() # Cria um novo asteroide
+                self.new_asteroid() # Cria um novo asteroide
                 if self.player.shield <= 0:
                     self.death_explosion = Explosion(self.player.rect.center, self.explosion_sprite_sheet)
                     self.sprite_group.add(self.death_explosion)
@@ -193,11 +197,18 @@ class Game:
                     self.player.lives -= 1 # Tira uma vida do player
                     self.player.shield = 100 # O shield do jogador volta a ser 100
 
+            # Colisão entre a nave inimiga e o asteroide
+            self.enemy_asteroid_collide = pygame.sprite.groupcollide(self.enemy_group, self.asteroid_group, True, True, pygame.sprite.collide_mask)
+            for hit in self.enemy_asteroid_collide:
+                self.new_asteroid()
+                explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
+                self.sprite_group.add(explosion)
+
             # Verifica se o player ainda tem vidas
             if self.player.lives == 0 and not self.death_explosion.alive():
                 self.game_over = True
-                self.mostrar_menu = True
-                self.menu()
+                self.mostrar_game_over_screen = True
+                self.game_over_screen()
 
             
             self.update_sprites()
@@ -230,12 +241,12 @@ class Game:
 
         # Texto/Draw
         self.draw_text(f"Score: {self.score}", 18, WHITE, SCREEN_X/2, 16) # Texto do score
-        self.draw_shield_bar(self.screen, 5, 10, self.player.shield)
+        self.draw_shield_bar(self.screen, 5, 10)
         self.draw_lives(self.screen, 480, 10, self.player_mini_image)
 
         pygame.display.flip()
 
-    # Texto -----------------------------------------------------------------------------------------------
+    # Desenha o texto na tela
     def draw_text(self, text, tam, color, x, y):
         self.fonte = pygame.font.Font(FONTE, tam)
         self.text_obj = self.fonte.render(text, False, color)
@@ -245,23 +256,113 @@ class Game:
 
     # Carrega os arquivos do jogo -------------------------------------------------------------------------
     def carregar_arquivos(self):
+        # Background do menu
         self.menu_background = pygame.sprite.Sprite()
         self.menu_background.image = pygame.image.load(path.join(getcwd() + "/assets/images/menu_background.png"))
         self.menu_background.image = pygame.transform.scale(self.menu_background.image, (SCREEN_X, SCREEN_Y))
         self.menu_background.rect = self.menu_background.image.get_rect()
 
+        # Background do jogo
         self.game_background = pygame.sprite.Sprite()
         self.game_background.image = pygame.image.load(path.join(getcwd() + "/assets/images/game_background.jpg"))
         self.game_background.image = pygame.transform.scale(self.game_background.image, (SCREEN_X, SCREEN_Y))
         self.game_background.rect = self.game_background.image.get_rect()
 
-    def tela_game_over(self):
-        pass
+    # Tela de game over
+    def game_over_screen(self):
+        while self.mostrar_game_over_screen:
+            self.clock.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
 
-    def newasteroid(self):
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        self.mostrar_game_over_screen = False
+                        self.mostrar_menu = True
+                        self.menu()
+            
+            self.draw_text("GAME OVER", LARGE_FONT_SIZE, RED, SCREEN_X / 2, 60)
+            self.draw_text(f"SCORE: {self.score}", MEDIUM_FONT_SIZE, WHITE, SCREEN_X / 2, SCREEN_Y / 2 - 32)
+            self.draw_text("PRESSIONE 'SPACE' PARA VOLTAR AO MENU", SMALL_FONT_SIZE, WHITE, SCREEN_X / 2, SCREEN_Y - 100)
+
+            pygame.display.flip()
+            pygame.display.update()
+            self.screen.fill(BLACK)
+    
+    # Loja do jogo
+    def loja(self):
+        self.cursor_rect.x = 150
+        self.cursor_rect.y = SCREEN_Y / 2
+
+        while self.mostrar_loja:
+            self.clock.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
+                        # O cursor volta a ter a posição do cursor do menu
+                        self.cursor_rect.x = 100
+                        self.cursor_rect.y = 350
+                        self.mostrar_loja = False
+                    
+                    if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
+                        if self.loja_cusror_point == "Naves":
+                            pass
+                        if self.loja_cusror_point == "Skins":
+                            pass
+                    
+                    if event.key == pygame.K_w or event.key == pygame.K_UP:
+                        if self.loja_cusror_point == "Skins":
+                            self.loja_cusror_point = "Naves"
+                            self.cursor_rect.y = SCREEN_Y / 2
+
+                    if event.key == pygame.K_s or event.key == pygame.K_DOWN:
+                        if self.loja_cusror_point == "Naves":
+                            self.loja_cusror_point = "Skins";
+                            self.cursor_rect.y = SCREEN_Y / 2 + 32
+
+            self.draw_text("LOJA", LARGE_FONT_SIZE, WHITE, SCREEN_X / 2, 60)
+            self.draw_text("NAVES", MEDIUM_FONT_SIZE, WHITE, SCREEN_X / 2, SCREEN_Y / 2)
+            self.draw_text("SKINS", MEDIUM_FONT_SIZE, WHITE, SCREEN_X / 2, SCREEN_Y / 2 + 32)
+
+            self.draw_cursor()
+
+            pygame.display.flip()
+            pygame.display.update()
+            self.screen.fill(BLACK)
+
+    # Opções
+    def opcoes(self):
+        while self.mostrsr_opções:
+            self.clock.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+                
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
+                        self.mostrsr_opções = False
+
+            self.draw_text("OPÇÕES", LARGE_FONT_SIZE, WHITE, SCREEN_X / 2, 60)
+
+            pygame.display.flip()
+            pygame.display.update()
+            self.screen.fill(BLACK)
+
+    # Função para criar um novo asteroide
+    def new_asteroid(self):
         m = Asteroid(self.asteroid_sprite_sheet)
         self.sprite_group.add(m)
         self.asteroid_group.add(m)
+    
+    # Função para criar um novo inimigo
+    def new_enemy(self):
+        enemy = Enemy(self.enemy_1_sprite_sheet)
+        self.sprite_group.add(enemy)
+        self.enemy_group.add(enemy)
 
     # Cria as sprite sheets de naves -----------------------------------------------------------------------
     def create_sprite_sheet(self, sprite, sprite_size_x, sprite_size_y, *animation_type):
@@ -279,7 +380,7 @@ class Game:
         return self.animation_list
 
     # Desenha o escudo do player
-    def draw_shield_bar(self, surface, x, y, shield):
+    def draw_shield_bar(self, surface, x, y):
         if self.player.shield < 0:
             self.player.shield = 0
         fill = (self.player.shield / 100) * BAR_WIDTH
@@ -297,7 +398,7 @@ class Game:
             surface.blit(image, image_rect)
 
     # Tela de créditos do menu ------------------------------------------------------------------------------
-    def creditos(self):
+    def credit_screen(self):
         while self.mostrar_creditos:
             self.clock.tick(FPS)
             for event in pygame.event.get():
@@ -307,8 +408,6 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_BACKSPACE or pygame.K_ESCAPE:
                         self.mostrar_creditos = False
-                        self.mostrar_menu = True
-                        self.menu()
 
             self.draw_text("CRÉDITOS", 42, WHITE, SCREEN_X/2, 60)
             self.draw_text("LUCAS EDUARDO KREUCH", 28, WHITE, SCREEN_X/2, 150)
@@ -369,12 +468,12 @@ class Game:
                             self.pause_cursor_point = "Voltar ao menu"
                             self.cursor_rect.y = VOLTAR_AO_MENU_Y
             
-            self.draw_text("PAUSE", 38, WHITE, SCREEN_X / 2, 200)        
+            self.draw_text("PAUSE", LARGE_FONT_SIZE, WHITE, SCREEN_X / 2, 200)        
             
-            self.draw_text("VOLTAR AO JOGO", 28, WHITE, SCREEN_X / 2, VOLTAR_AO_JOGO_Y)
-            self.draw_text("VOLTAR AO MENU", 28, WHITE, SCREEN_X / 2, VOLTAR_AO_MENU_Y)
-            self.draw_text("SAIR DO JOGO", 28, WHITE, SCREEN_X/2, SAIR_DO_JOGO_Y)
-            self.draw_text("OPÇÕES", 28, WHITE, SCREEN_X / 2, OPCOES_Y)
+            self.draw_text("VOLTAR AO JOGO", MEDIUM_FONT_SIZE, WHITE, SCREEN_X / 2, VOLTAR_AO_JOGO_Y)
+            self.draw_text("VOLTAR AO MENU", MEDIUM_FONT_SIZE, WHITE, SCREEN_X / 2, VOLTAR_AO_MENU_Y)
+            self.draw_text("SAIR DO JOGO", MEDIUM_FONT_SIZE, WHITE, SCREEN_X/2, SAIR_DO_JOGO_Y)
+            self.draw_text("OPÇÕES", MEDIUM_FONT_SIZE, WHITE, SCREEN_X / 2, OPCOES_Y)
 
             self.draw_cursor()
 
@@ -382,8 +481,4 @@ class Game:
             pygame.display.update()
             self.screen.fill(BLACK)
 
-
-        
-
-        
 
