@@ -5,6 +5,7 @@ from sys import exit
 from random import randint
 
 from scripts.constantes import *
+from scripts.background import Background
 from scripts.explosion import Explosion
 from scripts.player import Player
 from scripts.enemy import Enemy
@@ -38,8 +39,28 @@ class Game:
         self.pause_cursor_point = "Voltar ao jogo"
         self.loja_cusror_point = "Naves"
 
-        # -- Função para carregar os arquivos --------------------
-        self.carregar_arquivos()
+        # -- Arquivos do jogo -------------------------------------
+        # Background do menu
+        
+        self.menu_background = pygame.sprite.Sprite()
+        self.menu_background.image = pygame.image.load(path.join(getcwd() + "/assets/images/menu_background.png"))
+        self.menu_background.image = pygame.transform.scale(self.menu_background.image, (SCREEN_X, SCREEN_Y))
+        self.menu_background.rect = self.menu_background.image.get_rect()
+        
+
+        
+
+
+        # Background do jogo
+        # !!!! A SPRITE COM MOVIMENTO PRECISA TER 580x2722
+        self.game_background_rect = Background("game_b.png")
+        '''
+        self.game_background = pygame.sprite.Sprite()
+        self.game_background.image = pygame.image.load(path.join(getcwd() + "/assets/images/game_background.jpg"))
+        self.game_background.image = pygame.transform.scale(self.game_background.image, (SCREEN_X, SCREEN_Y))
+        self.game_background.rect = self.game_background.image.get_rect()
+        '''
+
 
     # Menu do jogo ----------------------------------------------------------------------------------------
     def menu(self):
@@ -139,7 +160,7 @@ class Game:
         self.enemy_group = pygame.sprite.Group()
 
         # -- Background
-        self.sprite_group.add(self.game_background)
+        self.sprite_group.add(self.game_background_rect)
 
         # -- Player ---------------------------------
         self.player = Player(self.sprite_group, self.bullet_group)
@@ -252,21 +273,7 @@ class Game:
         self.text_obj = self.fonte.render(text, False, color)
         self.text_rect = self.text_obj.get_rect()
         self.text_rect.center = (x, y)
-        self.screen.blit(self.text_obj, self.text_rect)
-
-    # Carrega os arquivos do jogo -------------------------------------------------------------------------
-    def carregar_arquivos(self):
-        # Background do menu
-        self.menu_background = pygame.sprite.Sprite()
-        self.menu_background.image = pygame.image.load(path.join(getcwd() + "/assets/images/menu_background.png"))
-        self.menu_background.image = pygame.transform.scale(self.menu_background.image, (SCREEN_X, SCREEN_Y))
-        self.menu_background.rect = self.menu_background.image.get_rect()
-
-        # Background do jogo
-        self.game_background = pygame.sprite.Sprite()
-        self.game_background.image = pygame.image.load(path.join(getcwd() + "/assets/images/game_background.jpg"))
-        self.game_background.image = pygame.transform.scale(self.game_background.image, (SCREEN_X, SCREEN_Y))
-        self.game_background.rect = self.game_background.image.get_rect()
+        self.screen.blit(self.text_obj, self.text_rect)    
 
     # Tela de game over
     def game_over_screen(self):
