@@ -61,9 +61,10 @@ class Player(pygame.sprite.Sprite):
         now = pygame.time.get_ticks()
         if now - self.last_shoot > self.shoot_delay:
             self.last_shoot = now
-            bullet = Bullet(self.rect.centerx, self.rect.top)
-            self.sprite_group.add(bullet)
-            self.bullet_group.add(bullet)
+            bullet_1 = Bullet(self.rect.centerx + 10, self.rect.top)
+            bullet_2 = Bullet(self.rect.centerx - 10, self.rect.top)
+            self.sprite_group.add(bullet_1, bullet_2)
+            self.bullet_group.add(bullet_1, bullet_2)
 
     # Esconde o player temporariamente depois da sua barra de shiel chegar a 0
     def hide(self):

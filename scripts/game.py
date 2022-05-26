@@ -40,16 +40,11 @@ class Game:
         self.loja_cusror_point = "Naves"
 
         # -- Arquivos do jogo -------------------------------------
-        # Background do menu
-        
+        # Background do menu        
         self.menu_background = pygame.sprite.Sprite()
         self.menu_background.image = pygame.image.load(path.join(getcwd() + "/assets/images/menu_background.png"))
         self.menu_background.image = pygame.transform.scale(self.menu_background.image, (SCREEN_X, SCREEN_Y))
         self.menu_background.rect = self.menu_background.image.get_rect()
-        
-
-        
-
 
         # Background do jogo
         # !!!! A SPRITE COM MOVIMENTO PRECISA TER 580x2722
@@ -85,7 +80,6 @@ class Game:
             self.draw_text("Opções", 40, WHITE, SCREEN_X / 2, 400)
             self.draw_text("Créditos", 40, WHITE, SCREEN_X / 2, 450)
             self.draw_text("Sair", 40, WHITE, SCREEN_X / 2, 500)
-
 
             self.menu_events()
 
@@ -166,12 +160,12 @@ class Game:
         self.player = Player(self.sprite_group, self.bullet_group)
         self.sprite_group.add(self.player)
         # Imagem do player que serve como contador de vidas
-        self.player_mini_image = pygame.transform.scale(self.player.image, (25, 25))
+        self.player_mini_image = pygame.transform.scale(self.player.image, (30, 30))
 
         # -- Asteroid -------------------------------
         self.asteroid_sprite_sheet = self.create_sprite_sheet("asteroid", ASTEROID_SIZE_X, ASTEROID_SIZE_Y, "rotate")
         self.asteroid_sprite_sheet = self.asteroid_sprite_sheet[0]
-        for i in range(8):
+        for i in range(0):
             self.new_asteroid()
 
         # -- Explosion ------------------------------
@@ -180,6 +174,8 @@ class Game:
 
         # -- Enemy ----------------------------------
         self.enemy_1_sprite_sheet = self.create_sprite_sheet("enemy_1", ENEMY_SIZE_X, ENEMY_SIZE_Y, "move")
+        self.create_enemy_delay = 2500
+        self.last_enemy = pygame.time.get_ticks()
 
         # -- Score ----------------------------------
         self.score = 0
@@ -195,8 +191,10 @@ class Game:
             self.clock.tick(FPS)
             self.eventos()
 
-            if randint(0, 100) == 0:
-                self.new_enemy()
+            now = pygame.time.get_ticks()
+            if now - self.last_enemy > self.create_enemy_delay:
+                self.last_enemy = now
+                self.new_tripe_enemy()
             
             # Colissão dos tiros com os asteroides
             self.bullet_collide = pygame.sprite.groupcollide(self.asteroid_group, self.bullet_group, True, True, pygame.sprite.collide_circle)
@@ -365,11 +363,22 @@ class Game:
         self.sprite_group.add(m)
         self.asteroid_group.add(m)
     
-    # Função para criar um novo inimigo
-    def new_enemy(self):
-        enemy = Enemy(self.enemy_1_sprite_sheet)
-        self.sprite_group.add(enemy)
-        self.enemy_group.add(enemy)
+    # Função para criar inimigos
+    def new_tripe_enemy(self):
+        pos_x = randint(0 + ENEMY_SIZE_X / 2, SCREEN_X - (ENEMY_SIZE_X*3) + ENEMY_SIZE_X / 2)
+        pos_y = -20
+        distance_x = ENEMY_SIZE_X
+        distance_y = 20
+        for i in range(3):
+            if i == 0:
+                enemy = Enemy(pos_x, pos_y, self.enemy_1_sprite_sheet)
+            else:
+                enemy = Enemy(pos_x + distance_x, pos_y - distance_y, self.enemy_1_sprite_sheet)
+                distance_x += ENEMY_SIZE_X
+                distance_y -= 20
+            self.sprite_group.add(enemy)
+            self.enemy_group.add(enemy)
+            
 
     # Cria as sprite sheets de naves -----------------------------------------------------------------------
     def create_sprite_sheet(self, sprite, sprite_size_x, sprite_size_y, *animation_type):

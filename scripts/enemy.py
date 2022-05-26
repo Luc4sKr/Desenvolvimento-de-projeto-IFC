@@ -5,7 +5,7 @@ from random import randint
 from scripts.constantes import *
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, animation_list):
+    def __init__(self, x, y, animation_list):
         pygame.sprite.Sprite.__init__(self)
 
         self.frame_index = 0
@@ -17,7 +17,8 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (ENEMY_SIZE_X, ENEMY_SIZE_Y))
         self.rect = self.image.get_rect()
 
-        self.rect.center = (randint(0 + ENEMY_SIZE_X / 2, SCREEN_X - ENEMY_SIZE_X / 2), 0)
+        #self.rect.center = (randint(0 + ENEMY_SIZE_X / 2, SCREEN_X - ENEMY_SIZE_X / 2), 0)
+        self.rect.center = (x, y)
 
     
     def update_animation(self):
@@ -34,3 +35,6 @@ class Enemy(pygame.sprite.Sprite):
         self.update_animation()
 
         self.rect.y += 1
+
+        if self.rect.top > SCREEN_Y:
+            self.kill()
