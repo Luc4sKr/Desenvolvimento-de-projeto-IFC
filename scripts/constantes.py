@@ -9,9 +9,13 @@ PLAYER_SIZE_X = 80
 PLAYER_SIZE_Y = 80
 PLAYER_VEL = 5
 
-# Barra de vida do player
+# Barra de shield do player
 BAR_HEIGHT = 15
 BAR_WIDTH = 150
+
+# Barra de shield do enemy
+ENEMY_BAR_HEIGHT = 3
+ENEMY_BAR_WIDTH = 24
 
 # Enemy
 ENEMY_SIZE_X = 80

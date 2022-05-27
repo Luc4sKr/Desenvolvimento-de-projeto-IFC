@@ -48,7 +48,7 @@ class Game:
 
         # Background do jogo
         # !!!! A SPRITE COM MOVIMENTO PRECISA TER 580x2722
-        self.game_background_rect = Background("game_b.png")
+        self.game_background_rect = Background("game_bac.png")
         '''
         self.game_background = pygame.sprite.Sprite()
         self.game_background.image = pygame.image.load(path.join(getcwd() + "/assets/images/game_background.jpg"))
@@ -197,21 +197,21 @@ class Game:
                 self.new_tripe_enemy()
             
             # Colissão dos tiros com os asteroides
-            self.bullet_collide = pygame.sprite.groupcollide(self.asteroid_group, self.bullet_group, True, True, pygame.sprite.collide_circle)
-            for hit in self.bullet_collide:
+            self.bullet_asteroid_collide = pygame.sprite.groupcollide(self.asteroid_group, self.bullet_group, True, True, pygame.sprite.collide_circle)
+            for hit in self.bullet_asteroid_collide:
                 self.score += 1
                 explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
                 self.sprite_group.add(explosion)
                 self.new_asteroid()
 
             # Colisão da nave com os asteroides
-            self.player_collide = pygame.sprite.spritecollide(self.player, self.asteroid_group, True, pygame.sprite.collide_mask)
-            for hit in self.player_collide:
+            self.player_asteroid_collide = pygame.sprite.spritecollide(self.player, self.asteroid_group, True, pygame.sprite.collide_mask)
+            for hit in self.player_asteroid_collide:
                 self.player.shield -= 20 # Tira o shield do player
                 self.new_asteroid() # Cria um novo asteroide
                 if self.player.shield <= 0:
-                    self.death_explosion = Explosion(self.player.rect.center, self.explosion_sprite_sheet)
-                    self.sprite_group.add(self.death_explosion)
+                    death_explosion = Explosion(self.player.rect.center, self.explosion_sprite_sheet)
+                    self.sprite_group.add(death_explosion)
                     self.player.hide() # Esconde o player temporariamete
                     self.player.lives -= 1 # Tira uma vida do player
                     self.player.shield = 100 # O shield do jogador volta a ser 100
@@ -220,6 +220,13 @@ class Game:
             self.enemy_asteroid_collide = pygame.sprite.groupcollide(self.enemy_group, self.asteroid_group, True, True, pygame.sprite.collide_mask)
             for hit in self.enemy_asteroid_collide:
                 self.new_asteroid()
+                explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
+                self.sprite_group.add(explosion)
+
+            # Colissão entre o tiro e o inimigo
+            self.bullet_enemy_collide = pygame.sprite.groupcollide(self.enemy_group, self.bullet_group, True, True, pygame.sprite.collide_mask)
+            for hit in self.bullet_enemy_collide:
+                self.score += 1
                 explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
                 self.sprite_group.add(explosion)
 
@@ -371,13 +378,14 @@ class Game:
         distance_y = 20
         for i in range(3):
             if i == 0:
-                enemy = Enemy(pos_x, pos_y, self.enemy_1_sprite_sheet)
+                enemy = Enemy(pos_x, pos_y, 20, self.enemy_1_sprite_sheet)
             else:
-                enemy = Enemy(pos_x + distance_x, pos_y - distance_y, self.enemy_1_sprite_sheet)
+                enemy = Enemy(pos_x + distance_x, pos_y - distance_y, 20, self.enemy_1_sprite_sheet)
                 distance_x += ENEMY_SIZE_X
                 distance_y -= 20
             self.sprite_group.add(enemy)
             self.enemy_group.add(enemy)
+            #self.draw_enemy_shield_bar(self.screen, enemy.rect.x, enemy.rect.y, enemy.shield, enemy.vel_y)
             
 
     # Cria as sprite sheets de naves -----------------------------------------------------------------------
@@ -395,7 +403,7 @@ class Game:
             self.animation_list.append(self.temp_list)
         return self.animation_list
 
-    # Desenha o escudo do player
+    # Desenha a barra do escudo do player
     def draw_shield_bar(self, surface, x, y):
         if self.player.shield < 0:
             self.player.shield = 0
@@ -404,6 +412,16 @@ class Game:
         fill_rect = pygame.Rect(x, y, fill, BAR_HEIGHT)
         pygame.draw.rect(surface, GREEN, fill_rect)
         pygame.draw.rect(surface, WHITE, outline_rect, 2)
+    
+    '''
+    # Desenha a barra do escudo do enemy
+    def draw_enemy_shield_bar(self, surface, x, y, enemy_shield, vel_y):
+        if enemy_shield < 0:
+            enemy_shield = 0
+        fill = (enemy_shield / 100) * ENEMY_BAR_WIDTH
+        fill_rect = pygame.Rect(x, y, fill, ENEMY_BAR_HEIGHT)
+        pygame.draw.rect(surface, GREEN, fill_rect)
+    '''
 
     # Desenha a quantidade de vidas do jogador
     def draw_lives(self, surface, x, y, image):

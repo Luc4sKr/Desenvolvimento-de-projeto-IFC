@@ -5,13 +5,15 @@ from random import randint
 from scripts.constantes import *
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y, animation_list):
+    def __init__(self, x, y, shield, animation_list):
         pygame.sprite.Sprite.__init__(self)
 
         self.frame_index = 0
         self.action = 0
         self.update_time = pygame.time.get_ticks()
         self.animation_list = animation_list
+        self.shield = shield
+        self.vel_y = 1
 
         self.image = self.animation_list[self.action][self.frame_index]
         self.image = pygame.transform.scale(self.image, (ENEMY_SIZE_X, ENEMY_SIZE_Y))
@@ -34,7 +36,7 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         self.update_animation()
 
-        self.rect.y += 1
+        self.rect.y += self.vel_y
 
         if self.rect.top > SCREEN_Y:
             self.kill()
