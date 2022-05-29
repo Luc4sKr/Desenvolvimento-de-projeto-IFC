@@ -4,12 +4,13 @@ from sys import exit
 
 import pygame
 
+from scripts.constantes import *
 from scripts.asteroid import Asteroid
 from scripts.background import Background
-from scripts.constantes import *
 from scripts.enemy import Enemy
 from scripts.explosion import Explosion
 from scripts.player import Player
+from scripts.score import Score
 
 
 class Game:
@@ -39,14 +40,13 @@ class Game:
         self.pause_cursor_point = "Voltar ao jogo"
         self.loja_cusror_point = "Naves"
 
-        # -- Arquivos do jogo -------------------------------------
-        # Background do menu        
+        # -- Background do menu -----------------------------------
         self.menu_background = pygame.sprite.Sprite()
         self.menu_background.image = pygame.image.load(path.join(getcwd() + "/assets/images/menu_background.png"))
         self.menu_background.image = pygame.transform.scale(self.menu_background.image, (SCREEN_X, SCREEN_Y))
         self.menu_background.rect = self.menu_background.image.get_rect()
 
-        # Background do jogo
+        # -- Background do jogo -----------------------------------
         # !!!! A SPRITE COM MOVIMENTO PRECISA TER 580x2722
         self.game_background_rect = Background("game_background_teste_4.png")
 
@@ -149,34 +149,34 @@ class Game:
         # -- Background
         self.sprite_group.add(self.game_background_rect)
 
-        # -- Player ---------------------------------
+        # -- Player -----------------------------------------------
         self.player = Player(self.sprite_group, self.bullet_group)
         self.sprite_group.add(self.player)
         # Imagem do player que serve como contador de vidas
         self.player_mini_image = pygame.transform.scale(self.player.image, (30, 30))
 
-        # -- Asteroid -------------------------------
+        # -- Asteroid ---------------------------------------------
         self.asteroid_sprite_sheet = self.create_sprite_sheet("asteroid", ASTEROID_SIZE_X, ASTEROID_SIZE_Y, "rotate")
         self.asteroid_sprite_sheet = self.asteroid_sprite_sheet[0]
         for i in range(0):
             self.new_asteroid()
 
-        # -- Explosion ------------------------------
+        # -- Explosion --------------------------------------------
         self.explosion_sprite_sheet = self.create_sprite_sheet("explosion", 50, 50, "explosion-1")
         self.explosion_sprite_sheet = self.explosion_sprite_sheet[0]
 
-        # -- Enemy ----------------------------------
+        # -- Enemy ------------------------------------------------
         self.enemy_1_sprite_sheet = self.create_sprite_sheet("enemy_1", ENEMY_SIZE_X, ENEMY_SIZE_Y, "move")
         self.create_enemy_delay = 2500
         self.last_enemy = pygame.time.get_ticks()
 
-        # -- Score ----------------------------------
-        self.score = 0
+        # -- Score ------------------------------------------------
+        self.score = Score()
 
-        # -- Controladores de tempo -----------------
+        # -- Controladores de tempo -------------------------------
         self.ready_time = pygame.time.get_ticks()
 
-        # -- Roda o jogo ----------------------------
+        # -- Roda o jogo -----------------------------------------
         self.game_over = False
         self.running()
 
@@ -221,11 +221,11 @@ class Game:
                 self.sprite_group.add(explosion)
 
             # Colissão entre o tiro e o inimigo
-            self.bullet_enemy_collide = pygame.sprite.groupcollide(self.enemy_group, self.bullet_group, True, True, pygame.sprite.collide_mask)
-            for hit in self.bullet_enemy_collide:
+            #self.bullet_enemy_collide = pygame.sprite.groupcollide(self.enemy_group, self.bullet_group, False, True, pygame.sprite.collide_mask)
+            '''for hit in self.bullet_enemy_collide:
                 self.score += 1
-                explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
-                self.sprite_group.add(explosion)
+                #explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
+                #self.sprite_group.add(explosion)'''
 
             # Verifica se o player ainda tem vidas
             if self.player.lives == 0 and not self.death_explosion.alive():
@@ -233,7 +233,7 @@ class Game:
                 self.mostrar_game_over_screen = True
                 self.game_over_screen()
 
-            
+
             self.update_sprites()
             self.draw_sprites()
 
@@ -254,30 +254,6 @@ class Game:
     def update_sprites(self):
         self.sprite_group.update()
         pygame.display.update()
-
-    # Desenha as sprites ----------------------------------------------------------------------------------
-    def draw_sprites(self):
-        #self.sprite_group.add(self.enemy_1)
-
-        self.screen.fill(WHITE)
-        self.sprite_group.draw(self.screen)
-
-        # Texto/Draw
-        self.draw_text(f"Score: {self.score}", 18, WHITE, SCREEN_X/2, 16) # Texto do score
-        self.draw_shield_bar(self.screen, 5, 10)
-        self.draw_lives(self.screen, 480, 10, self.player_mini_image)
-
-        self.draw_ready()
-
-        pygame.display.flip()
-
-    # Desenha o texto na tela
-    def draw_text(self, text, tam, color, x, y):
-        self.fonte = pygame.font.Font(FONTE, tam)
-        self.text_obj = self.fonte.render(text, False, color)
-        self.text_rect = self.text_obj.get_rect()
-        self.text_rect.center = (x, y)
-        self.screen.blit(self.text_obj, self.text_rect)    
 
     # Tela de game over
     def game_over_screen(self):
@@ -377,41 +353,15 @@ class Game:
         distance_y = 20
         for i in range(3):
             if i == 0:
-                enemy = Enemy(pos_x, pos_y, 20, self.enemy_1_sprite_sheet)
+                enemy = Enemy(pos_x, pos_y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.bullet_group, self.sprite_group, self.explosion_sprite_sheet, self.score)
             else:
-                enemy = Enemy(pos_x + distance_x, pos_y - distance_y, 20, self.enemy_1_sprite_sheet)
+                enemy = Enemy(pos_x + distance_x, pos_y - distance_y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.bullet_group, self.sprite_group, self.explosion_sprite_sheet, self.score)
                 distance_x += ENEMY_SIZE_X
                 distance_y -= 20
             self.sprite_group.add(enemy)
             self.enemy_group.add(enemy)
             #self.draw_enemy_shield_bar(self.screen, enemy.rect.x, enemy.rect.y, enemy.shield, enemy.vel_y)
-            
 
-    # Cria as sprite sheets de naves -----------------------------------------------------------------------
-    @staticmethod
-    def create_sprite_sheet(sprite, sprite_size_x, sprite_size_y, *animation_type):
-        animation_list = []
-        animation_types = animation_type
-
-        for animation in animation_types:
-            temp_list = []
-            num_of_frames = len(listdir(f"assets/images/sprites/{sprite}/{animation}"))
-            for i in range(1, num_of_frames):
-                image = pygame.image.load(path.join(getcwd() + f"/assets/images/sprites/{sprite}/{animation}/sprite-{i}.png"))
-                image = pygame.transform.scale(image, (sprite_size_x, sprite_size_y))
-                temp_list.append(image)
-            animation_list.append(temp_list)
-        return animation_list
-
-    # Desenha a barra do escudo do player
-    def draw_shield_bar(self, surface, x, y):
-        if self.player.shield < 0:
-            self.player.shield = 0
-        fill = (self.player.shield / 100) * BAR_WIDTH
-        outline_rect = pygame.Rect(x, y, BAR_WIDTH, BAR_HEIGHT)
-        fill_rect = pygame.Rect(x, y, fill, BAR_HEIGHT)
-        pygame.draw.rect(surface, GREEN, fill_rect)
-        pygame.draw.rect(surface, WHITE, outline_rect, 2)
     
     '''
     # Desenha a barra do escudo do enemy
@@ -422,14 +372,6 @@ class Game:
         fill_rect = pygame.Rect(x, y, fill, ENEMY_BAR_HEIGHT)
         pygame.draw.rect(surface, GREEN, fill_rect)
     '''
-
-    # Desenha a quantidade de vidas do jogador
-    def draw_lives(self, surface, x, y, image):
-        for i in range(self.player.lives):
-            image_rect = image.get_rect()
-            image_rect.x = x + 30 * i
-            image_rect.y = y
-            surface.blit(image, image_rect)
 
     # Tela de créditos do menu ------------------------------------------------------------------------------
     def credit_screen(self):
@@ -454,7 +396,6 @@ class Game:
 
     # Tela de pause
     def pause_screen(self):
-
         # Posição do cursor
         self.cursor_rect.x = 60
         self.cursor_rect.y = VOLTAR_AO_JOGO_Y
@@ -516,6 +457,35 @@ class Game:
             pygame.display.update()
             self.screen.fill(BLACK)
 
+
+    # Cria as sprite sheets de naves -----------------------------------------------------------------------
+    @staticmethod
+    def create_sprite_sheet(sprite, sprite_size_x, sprite_size_y, *animation_type):
+        animation_list = []
+        animation_types = animation_type
+
+        for animation in animation_types:
+            temp_list = []
+            num_of_frames = len(listdir(f"assets/images/sprites/{sprite}/{animation}"))
+            for i in range(1, num_of_frames):
+                image = pygame.image.load(
+                    path.join(getcwd() + f"/assets/images/sprites/{sprite}/{animation}/sprite-{i}.png"))
+                image = pygame.transform.scale(image, (sprite_size_x, sprite_size_y))
+                temp_list.append(image)
+            animation_list.append(temp_list)
+        return animation_list
+
+
+    # !! ------------------------ DRAW ------------------------ !! #
+    # Desenha a quantidade de vidas do jogador
+    def draw_lives(self, surface, x, y, image):
+        for i in range(self.player.lives):
+            image_rect = image.get_rect()
+            image_rect.x = x + 30 * i
+            image_rect.y = y
+            surface.blit(image, image_rect)
+
+    # Denha o texto de READY no inicio do jogo
     def draw_ready(self):
         READY_DELAY = 1000
         GO_DELAY = 2000
@@ -523,3 +493,35 @@ class Game:
             self.draw_text("READY?", LARGE_FONT_SIZE, YELLOW, SCREEN_X / 2, 100)
         if GO_DELAY < pygame.time.get_ticks() - self.ready_time < 3000:
             self.draw_text("GO", LARGE_FONT_SIZE, YELLOW, SCREEN_X / 2, 150)
+
+    # Desenha a barra do escudo do player
+    def draw_shield_bar(self, surface, x, y):
+        if self.player.shield < 0:
+            self.player.shield = 0
+        fill = (self.player.shield / 100) * BAR_WIDTH
+        outline_rect = pygame.Rect(x, y, BAR_WIDTH, BAR_HEIGHT)
+        fill_rect = pygame.Rect(x, y, fill, BAR_HEIGHT)
+        pygame.draw.rect(surface, GREEN, fill_rect)
+        pygame.draw.rect(surface, WHITE, outline_rect, 2)
+
+    # Desenha o texto na tela
+    def draw_text(self, text, tam, color, x, y):
+        self.fonte = pygame.font.Font(FONTE, tam)
+        self.text_obj = self.fonte.render(text, False, color)
+        self.text_rect = self.text_obj.get_rect()
+        self.text_rect.center = (x, y)
+        self.screen.blit(self.text_obj, self.text_rect)
+
+    # Desenha as sprites no jogo
+    def draw_sprites(self):
+        self.screen.fill(WHITE)
+        self.sprite_group.draw(self.screen)
+
+        # Texto/Draw
+        self.draw_text(f"Score: {self.score.score}", 18, WHITE, SCREEN_X/2, 16) # Texto do score
+        self.draw_shield_bar(self.screen, 5, 10)
+        self.draw_lives(self.screen, 480, 10, self.player_mini_image)
+
+        self.draw_ready()
+
+        pygame.display.flip()

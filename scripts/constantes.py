@@ -9,17 +9,19 @@ PLAYER_SIZE_X = 80
 PLAYER_SIZE_Y = 80
 PLAYER_VEL = 5
 
-# Barra de shield do player
+# Barra de shield do Player
 BAR_HEIGHT = 15
 BAR_WIDTH = 150
 
-# Barra de shield do enemy
+# Barra de shield do Enemy
 ENEMY_BAR_HEIGHT = 3
 ENEMY_BAR_WIDTH = 24
 
 # Enemy
 ENEMY_SIZE_X = 80
 ENEMY_SIZE_Y = 80
+# Shield
+ENEMY_1_SHIELD = 4
 
 # Asteroid
 ASTEROID_SIZE_X = 60

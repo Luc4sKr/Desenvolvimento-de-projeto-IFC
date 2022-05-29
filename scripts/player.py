@@ -20,6 +20,7 @@ class Player(pygame.sprite.Sprite):
         self.shoot_delay = 250 # Delay do tiro
         self.last_shoot = pygame.time.get_ticks() # Tempo do ultimo tiro
         self.lives = 3 # Vidas
+        self.damage = 1
 
         # Quando o player/nave é "morto", ele fica um tempo "escondido"
         self.hidden = False 
