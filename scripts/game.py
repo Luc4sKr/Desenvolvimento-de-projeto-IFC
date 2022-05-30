@@ -48,7 +48,7 @@ class Game:
 
         # -- Background do jogo -----------------------------------
         # !!!! A SPRITE COM MOVIMENTO PRECISA TER 580x2722
-        self.game_background_rect = Background("game_background_teste_4.png")
+        self.game_background_rect = Background("game_background_preto.png")
 
     # Menu do jogo ----------------------------------------------------------------------------------------
     def menu(self):
