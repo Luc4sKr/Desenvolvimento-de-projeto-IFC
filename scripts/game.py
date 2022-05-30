@@ -220,6 +220,14 @@ class Game:
                 explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
                 self.sprite_group.add(explosion)
 
+            # !!! Inicio da criação de um missil teleguiado !!! #
+            self.enemy_list = self.enemy_group.sprites()
+            try:
+                u = self.enemy_list[0]
+                print(u.rect.center)
+            except:
+                pass
+
             # Colissão entre o tiro e o inimigo
             #self.bullet_enemy_collide = pygame.sprite.groupcollide(self.enemy_group, self.bullet_group, False, True, pygame.sprite.collide_mask)
             '''for hit in self.bullet_enemy_collide:
