@@ -6,7 +6,7 @@ from scripts.constantes import *
 from scripts.explosion import Explosion
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y, shield, animation_list, bullet_group, sprite_group, explosion_sprite_sheet, score):
+    def __init__(self, x, y, shield, animation_list, bullet_group, sprite_group, explosion_sprite_sheet, score, shield_bar):
         pygame.sprite.Sprite.__init__(self)
 
         self.frame_index = 0 # Frame de animação
@@ -21,6 +21,7 @@ class Enemy(pygame.sprite.Sprite):
         self.sprite_group = sprite_group
         self.explosion_sprite_sheet = explosion_sprite_sheet
         self.score = score
+        self.shield_bar = shield_bar
         # ----------------------------------------------------
 
         self.vel_y = 1 # Velocidade no eixo Y
@@ -52,7 +53,6 @@ class Enemy(pygame.sprite.Sprite):
                 explosion = Explosion(self.rect.center, self.explosion_sprite_sheet)
                 self.sprite_group.add(explosion)
 
-
     def update(self):
         self.update_animation()
         self.shoot_collision()
@@ -63,3 +63,7 @@ class Enemy(pygame.sprite.Sprite):
 
         # Faz o Enemy "andar" pra frente
         self.rect.y += self.vel_y
+
+        self.shield_bar.draw_shield_bar(self.shield, self.rect.x + 10, self.rect.top)
+
+

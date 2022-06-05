@@ -11,6 +11,7 @@ from scripts.enemy import Enemy
 from scripts.explosion import Explosion
 from scripts.player import Player
 from scripts.score import Score
+from scripts.enemy_shield_bar import ShieldBar
 
 
 class Game:
@@ -48,7 +49,7 @@ class Game:
 
         # -- Background do jogo -----------------------------------
         # !!!! A SPRITE COM MOVIMENTO PRECISA TER 580x2722
-        self.game_background_rect = Background("game_background_preto.png")
+        self.game_background_rect = Background("game_background_azul_cinza.png")
 
     # Menu do jogo ----------------------------------------------------------------------------------------
     def menu(self):
@@ -165,6 +166,10 @@ class Game:
         self.explosion_sprite_sheet = self.create_sprite_sheet("explosion", 50, 50, "explosion-1")
         self.explosion_sprite_sheet = self.explosion_sprite_sheet[0]
 
+        # -- Bullet explosion -------------------------------------
+        self.bullet_explosion_sprite_sheet = self.create_sprite_sheet("explosion", 30, 30, "explosion-2")
+        self.bullet_explosion_sprite_sheet = self.bullet_explosion_sprite_sheet[0]
+
         # -- Enemy ------------------------------------------------
         self.enemy_1_sprite_sheet = self.create_sprite_sheet("enemy_1", ENEMY_SIZE_X, ENEMY_SIZE_Y, "move")
         self.create_enemy_delay = 2500
@@ -220,20 +225,20 @@ class Game:
                 explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
                 self.sprite_group.add(explosion)
 
+            # !!!!!!!!!!!!!!!!!!!!!!!!!! --
+            # Explosão quando o tiro bate na nave
+            '''self.explode_bullet = pygame.sprite.groupcollide(self.bullet_group, self.enemy_group, False, False, pygame.sprite.collide_mask)
+            for hit in self.explode_bullet:
+                explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
+                self.sprite_group.add(explosion)'''
+
             # !!! Inicio da criação de um missil teleguiado !!! #
             self.enemy_list = self.enemy_group.sprites()
             try:
                 u = self.enemy_list[0]
-                print(u.rect.center)
+                #print(u.rect.center)
             except:
                 pass
-
-            # Colissão entre o tiro e o inimigo
-            #self.bullet_enemy_collide = pygame.sprite.groupcollide(self.enemy_group, self.bullet_group, False, True, pygame.sprite.collide_mask)
-            '''for hit in self.bullet_enemy_collide:
-                self.score += 1
-                #explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
-                #self.sprite_group.add(explosion)'''
 
             # Verifica se o player ainda tem vidas
             if self.player.lives == 0 and not self.death_explosion.alive():
@@ -361,16 +366,19 @@ class Game:
         distance_y = 20
         for i in range(3):
             if i == 0:
-                enemy = Enemy(pos_x, pos_y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.bullet_group, self.sprite_group, self.explosion_sprite_sheet, self.score)
+                shield_bar = ShieldBar(self.screen)
+                self.sprite_group.add(shield_bar)
+                enemy = Enemy(pos_x, pos_y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.bullet_group, self.sprite_group, self.explosion_sprite_sheet, self.score, shield_bar)
             else:
-                enemy = Enemy(pos_x + distance_x, pos_y - distance_y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.bullet_group, self.sprite_group, self.explosion_sprite_sheet, self.score)
+                shield_bar = ShieldBar(self.screen)
+                self.sprite_group.add(shield_bar)
+                enemy = Enemy(pos_x + distance_x, pos_y - distance_y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.bullet_group, self.sprite_group, self.explosion_sprite_sheet, self.score, shield_bar)
                 distance_x += ENEMY_SIZE_X
                 distance_y -= 20
             self.sprite_group.add(enemy)
             self.enemy_group.add(enemy)
             #self.draw_enemy_shield_bar(self.screen, enemy.rect.x, enemy.rect.y, enemy.shield, enemy.vel_y)
 
-    
     '''
     # Desenha a barra do escudo do enemy
     def draw_enemy_shield_bar(self, surface, x, y, enemy_shield, vel_y):
@@ -464,7 +472,6 @@ class Game:
             pygame.display.flip()
             pygame.display.update()
             self.screen.fill(BLACK)
-
 
     # Cria as sprite sheets de naves -----------------------------------------------------------------------
     @staticmethod
