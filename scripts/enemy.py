@@ -64,6 +64,6 @@ class Enemy(pygame.sprite.Sprite):
         # Faz o Enemy "andar" pra frente
         self.rect.y += self.vel_y
 
-        self.shield_bar.draw_shield_bar(self.shield, self.rect.x + 10, self.rect.top)
+        self.shield_bar.draw_shield_bar(self.shield, self.rect.x, self.rect.y)
 
 
