@@ -377,17 +377,6 @@ class Game:
                 distance_y -= 20
             self.sprite_group.add(enemy)
             self.enemy_group.add(enemy)
-            #self.draw_enemy_shield_bar(self.screen, enemy.rect.x, enemy.rect.y, enemy.shield, enemy.vel_y)
-
-    '''
-    # Desenha a barra do escudo do enemy
-    def draw_enemy_shield_bar(self, surface, x, y, enemy_shield, vel_y):
-        if enemy_shield < 0:
-            enemy_shield = 0
-        fill = (enemy_shield / 100) * ENEMY_BAR_WIDTH
-        fill_rect = pygame.Rect(x, y, fill, ENEMY_BAR_HEIGHT)
-        pygame.draw.rect(surface, GREEN, fill_rect)
-    '''
 
     # Tela de créditos do menu ------------------------------------------------------------------------------
     def credit_screen(self):
