@@ -4,10 +4,10 @@ from scripts.constantes import *
 from scripts.bullet import Bullet
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, sprite_group, bullet_group):
+    def __init__(self, image, shield, shoot_delay, sprite_group, bullet_group):
         pygame.sprite.Sprite.__init__(self)
 
-        self.image = pygame.image.load(path.join(getcwd() + "/assets/images/spaceship_1.png"))
+        self.image = pygame.image.load(path.join(getcwd() + f"/assets/images/{image}"))
         self.image = pygame.transform.scale(self.image, (PLAYER_SIZE_X, PLAYER_SIZE_Y))
         self.rect = self.image.get_rect()
 
@@ -16,8 +16,8 @@ class Player(pygame.sprite.Sprite):
         self.sprite_group = sprite_group
         self.bullet_group = bullet_group
 
-        self.shield = 100 # Escudo/vida da nave
-        self.shoot_delay = 250 # Delay do tiro
+        self.shield = shield # Escudo/vida da nave
+        self.shoot_delay = shoot_delay # Delay do tiro
         self.last_shoot = pygame.time.get_ticks() # Tempo do ultimo tiro
         self.lives = 3 # Vidas
         self.damage = 1

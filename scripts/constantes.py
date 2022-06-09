@@ -60,4 +60,7 @@ SAIR_DO_JOGO_Y = SCREEN_Y / 2 + 32
 OPCOES_Y =SCREEN_Y / 2 + 64
 
 
+# Tamanho da imagem da loja
+IMAGE_LOJA_SIZE = 60
+
 

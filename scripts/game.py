@@ -1,3 +1,4 @@
+from ntpath import join
 from os import listdir
 from random import randint
 from sys import exit
@@ -151,7 +152,7 @@ class Game:
         self.sprite_group.add(self.game_background_rect)
 
         # -- Player -----------------------------------------------
-        self.player = Player(self.sprite_group, self.bullet_group)
+        self.player = Player("spaceship_1.png", 100, 250, self.sprite_group, self.bullet_group)
         self.sprite_group.add(self.player)
         # Imagem do player que serve como contador de vidas
         self.player_mini_image = pygame.transform.scale(self.player.image, (30, 30))
@@ -167,8 +168,8 @@ class Game:
         self.explosion_sprite_sheet = self.explosion_sprite_sheet[0]
 
         # -- Bullet explosion -------------------------------------
-        self.bullet_explosion_sprite_sheet = self.create_sprite_sheet("explosion", 30, 30, "explosion-2")
-        self.bullet_explosion_sprite_sheet = self.bullet_explosion_sprite_sheet[0]
+        #self.bullet_explosion_sprite_sheet = self.create_sprite_sheet("explosion", 30, 30, "explosion-2")
+        #self.bullet_explosion_sprite_sheet = self.bullet_explosion_sprite_sheet[0]
 
         # -- Enemy ------------------------------------------------
         self.enemy_1_sprite_sheet = self.create_sprite_sheet("enemy_1", ENEMY_SIZE_X, ENEMY_SIZE_Y, "move")
@@ -295,6 +296,22 @@ class Game:
         self.cursor_rect.x = 150
         self.cursor_rect.y = SCREEN_Y / 2
 
+        nave_1 = pygame.image.load(path.join(getcwd() + "/assets/images/spaceship.png"))
+
+        def framed_spaceship(nave, pos_x, pos_y):
+            nave = pygame.transform.scale(nave, (IMAGE_LOJA_SIZE, IMAGE_LOJA_SIZE))
+            nave_rect = nave.get_rect()
+            nave_rect.x = pos_x
+            nave_rect.y = pos_y
+            self.screen.blit(nave, nave_rect)
+
+        def frame(left, top, width, height):
+            image_white = pygame.Rect(left, top, width, height)
+            image_black = pygame.Rect(left+5, top+5, width-10, height-10)
+
+            pygame.draw.rect(self.screen, WHITE, image_white)
+            pygame.draw.rect(self.screen, BLACK, image_black)
+
         while self.mostrar_loja:
             self.clock.tick(FPS)
             for event in pygame.event.get():
@@ -302,6 +319,20 @@ class Game:
                     exit()
 
                 if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
+                        # O cursor volta a ter a posição do cursor do menu
+                        self.cursor_rect.x = 100
+                        self.cursor_rect.y = 350
+                        self.mostrar_loja = False
+
+            self.draw_text("LOJA", LARGE_FONT_SIZE, WHITE, SCREEN_X / 2, 60)
+
+            # Spaceship 1
+            framed_spaceship(nave_1, SCREEN_X / 2, 300)
+            frame(100, 200, SCREEN_X - 200, 100)
+
+
+            '''if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE or event.key == pygame.K_BACKSPACE:
                         # O cursor volta a ter a posição do cursor do menu
                         self.cursor_rect.x = 100
@@ -324,11 +355,12 @@ class Game:
                             self.loja_cusror_point = "Skins"
                             self.cursor_rect.y = SCREEN_Y / 2 + 32
 
+
             self.draw_text("LOJA", LARGE_FONT_SIZE, WHITE, SCREEN_X / 2, 60)
             self.draw_text("NAVES", MEDIUM_FONT_SIZE, WHITE, SCREEN_X / 2, SCREEN_Y / 2)
             self.draw_text("SKINS", MEDIUM_FONT_SIZE, WHITE, SCREEN_X / 2, SCREEN_Y / 2 + 32)
 
-            self.draw_cursor()
+            self.draw_cursor()'''
 
             pygame.display.flip()
             pygame.display.update()
