@@ -4,9 +4,10 @@ from random import randint
 
 from scripts.constantes import *
 from scripts.explosion import Explosion
+from scripts.powerup import Powerup
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y, shield, animation_list, bullet_group, sprite_group, explosion_sprite_sheet, score, shield_bar):
+    def __init__(self, x, y, shield, animation_list, bullet_group, sprite_group, explosion_sprite_sheet, score, shield_bar, powerup_group):
         pygame.sprite.Sprite.__init__(self)
 
         self.frame_index = 0 # Frame de animação
@@ -22,6 +23,7 @@ class Enemy(pygame.sprite.Sprite):
         self.explosion_sprite_sheet = explosion_sprite_sheet
         self.score = score
         self.shield_bar = shield_bar
+        self.powerup_group = powerup_group
         # ----------------------------------------------------
 
         self.vel_y = 1 # Velocidade no eixo Y
@@ -48,10 +50,20 @@ class Enemy(pygame.sprite.Sprite):
         if self.collision:
             self.shield -= 1
             if self.shield <= 0:
+                self.shield = 0
+                
+                if randint(0, 10) >= 5:
+                    # Powerups
+                    powerup = Powerup(self.rect.center)
+                    self.sprite_group.add(powerup)
+                    self.powerup_group.add(powerup)
+
                 self.score.add_score()
                 self.kill()
                 explosion = Explosion(self.rect.center, self.explosion_sprite_sheet)
                 self.sprite_group.add(explosion)
+
+
 
     def update(self):
         self.update_animation()

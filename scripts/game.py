@@ -1,9 +1,8 @@
-from ntpath import join
+import pygame
+
 from os import listdir
 from random import randint
 from sys import exit
-
-import pygame
 
 from scripts.constantes import *
 from scripts.asteroid import Asteroid
@@ -13,6 +12,7 @@ from scripts.explosion import Explosion
 from scripts.player import Player
 from scripts.score import Score
 from scripts.enemy_shield_bar import ShieldBar
+from scripts.powerup import Powerup
 
 
 class Game:
@@ -147,6 +147,7 @@ class Game:
         self.bullet_group = pygame.sprite.Group()
         self.asteroid_group = pygame.sprite.Group()
         self.enemy_group = pygame.sprite.Group()
+        self.powerup_group = pygame.sprite.Group()
 
         # -- Background
         self.sprite_group.add(self.game_background_rect)
@@ -400,11 +401,11 @@ class Game:
             if i == 0:
                 shield_bar = ShieldBar(self.screen)
                 self.sprite_group.add(shield_bar)
-                enemy = Enemy(pos_x, pos_y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.bullet_group, self.sprite_group, self.explosion_sprite_sheet, self.score, shield_bar)
+                enemy = Enemy(pos_x, pos_y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.bullet_group, self.sprite_group, self.explosion_sprite_sheet, self.score, shield_bar, self.powerup_group)
             else:
                 shield_bar = ShieldBar(self.screen)
                 self.sprite_group.add(shield_bar)
-                enemy = Enemy(pos_x + distance_x, pos_y - distance_y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.bullet_group, self.sprite_group, self.explosion_sprite_sheet, self.score, shield_bar)
+                enemy = Enemy(pos_x + distance_x, pos_y - distance_y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.bullet_group, self.sprite_group, self.explosion_sprite_sheet, self.score, shield_bar, self.powerup_group)
                 distance_x += ENEMY_SIZE_X
                 distance_y -= 20
             self.sprite_group.add(enemy)
