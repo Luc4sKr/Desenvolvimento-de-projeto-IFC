@@ -26,6 +26,10 @@ class Player(pygame.sprite.Sprite):
         self.hidden = False 
         self.hide_timer = pygame.time.get_ticks()
 
+        # Powerups
+        self.power = 1
+        self.power_time = pygame.time.get_ticks()
+
     def movement_and_shoot(self):
         self.key = pygame.key.get_pressed()
         self.vel = PLAYER_VEL
@@ -62,10 +66,16 @@ class Player(pygame.sprite.Sprite):
         now = pygame.time.get_ticks()
         if now - self.last_shoot > self.shoot_delay:
             self.last_shoot = now
-            bullet_1 = Bullet(self.rect.centerx + 10, self.rect.top, 5)
-            bullet_2 = Bullet(self.rect.centerx - 10, self.rect.top, 5)
+            bullet_1 = Bullet(self.rect.centerx + 10, self.rect.top, 5, -10)
+            bullet_2 = Bullet(self.rect.centerx - 10, self.rect.top, 5, -10)
             self.sprite_group.add(bullet_1, bullet_2)
             self.bullet_group.add(bullet_1, bullet_2)
+
+            if self.power >= 2:
+                bullet_3 = Bullet(self.rect.right, self.rect.centery, 5, -10)
+                bullet_4 = Bullet(self.rect.left, self.rect.centery, 5, -10)
+                self.sprite_group.add(bullet_3, bullet_4)
+                self.bullet_group.add(bullet_3, bullet_4)
 
     # Esconde o player temporariamente depois da sua barra de shiel chegar a 0
     def hide(self):
@@ -74,6 +84,11 @@ class Player(pygame.sprite.Sprite):
         self.rect.center = (SCREEN_X /2, 600)
 
         self.image = pygame.image.load(path.join(getcwd() + "/assets/images/invisible_sprite.png"))
+
+
+    def powerup(self):
+        self.power += 1
+        self.power_time = pygame.time.get_ticks()
 
     def update(self):
         self.movement_and_shoot()
@@ -85,4 +100,11 @@ class Player(pygame.sprite.Sprite):
 
             self.image = pygame.image.load(path.join(getcwd() + "/assets/images/spaceship_1.png"))
             self.image = pygame.transform.scale(self.image, (PLAYER_SIZE_X, PLAYER_SIZE_Y))
+
+
+        # Timeout para os powerups
+        if self.power >= 2 and pygame.time.get_ticks() - self.power_time > POWERUP_TIME:
+            self.power -= 1
+            self.power_time = pygame.time.get_ticks()
+
 

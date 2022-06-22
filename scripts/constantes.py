@@ -37,6 +37,7 @@ FPS = 60
 # Cooldown de animação dos sprite sheets
 ANIMATION_COOLDOWN = 100
 
+POWERUP_TIME = 5000
 
 # Colors
 BLACK = (0, 0, 0)

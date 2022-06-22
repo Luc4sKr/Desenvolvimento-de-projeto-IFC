@@ -12,16 +12,18 @@ class Powerup(pygame.sprite.Sprite):
 
         powerup_images = {}
         powerup_images["shield"] = pygame.image.load(path.join(getcwd() + "/assets/images/powerups/shield2.png"))
-        #powerup_images["gun"] = pygame.image.load(path.join(getcwd() + "/assets/images/powerups/shield.png"))
+        powerup_images["gun"] = pygame.image.load(path.join(getcwd() + "/assets/images/powerups/gun.png"))
 
          # Imagem
-        self.type = choice(["shield"]) # Escolhe aleatoriamente o tipo
+        self.type = choice(["shield", "gun"]) # Escolhe aleatoriamente o tipo
         self.image = powerup_images[self.type]
+
         if self.type == "shield":
             self.image = pygame.transform.scale(self.image, (30, 38))
         else:
             self.image = pygame.transform.scale(self.image, (40, 40))
-        #self.image.set_colorkey(WHITE)
+
+
         self.rect = self.image.get_rect()
 
         self.rect.center = center

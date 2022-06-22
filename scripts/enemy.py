@@ -5,9 +5,12 @@ from random import randint
 from scripts.constantes import *
 from scripts.explosion import Explosion
 from scripts.powerup import Powerup
+from scripts.bullet import Bullet
+from scripts.enemy_shield_bar import Shield_bar
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y, shield, animation_list, bullet_group, sprite_group, explosion_sprite_sheet, score, shield_bar, powerup_group):
+    def __init__(self, x, y, shield, animation_list, sprite_group, enemy_shot_group, explosion_sprite_sheet, score):
+        super().__init__()
         pygame.sprite.Sprite.__init__(self)
 
         self.frame_index = 0 # Frame de animação
@@ -17,16 +20,15 @@ class Enemy(pygame.sprite.Sprite):
 
         self.shield = shield # É a "vida" do Enemy
 
-        # ----------------------------------------------------
-        self.bullet_group = bullet_group
         self.sprite_group = sprite_group
         self.explosion_sprite_sheet = explosion_sprite_sheet
         self.score = score
-        self.shield_bar = shield_bar
-        self.powerup_group = powerup_group
-        # ----------------------------------------------------
+        self.enemy_shot_group = enemy_shot_group
 
         self.vel_y = 1 # Velocidade no eixo Y
+
+        self.shoot_delay = 1500
+        self.last_shoot = pygame.time.get_ticks()
 
         # Imagem
         self.image = self.animation_list[self.action][self.frame_index]
@@ -44,38 +46,30 @@ class Enemy(pygame.sprite.Sprite):
         if self.frame_index >= len(self.animation_list[self.action]):
             self.frame_index = 0
 
-    # Colisão com o tiro do player
-    def shoot_collision(self):
-        self.collision = pygame.sprite.spritecollide(self, self.bullet_group, True, pygame.sprite.collide_mask)
-        if self.collision:
-            self.shield -= 1
-            if self.shield <= 0:
-                self.shield = 0
-                
-                if randint(0, 10) >= 5:
-                    # Powerups
-                    powerup = Powerup(self.rect.center)
-                    self.sprite_group.add(powerup)
-                    self.powerup_group.add(powerup)
 
-                self.score.add_score()
-                self.kill()
-                explosion = Explosion(self.rect.center, self.explosion_sprite_sheet)
-                self.sprite_group.add(explosion)
-
+    def shoot(self):
+        now = pygame.time.get_ticks()
+        if now - self.last_shoot > self.shoot_delay:
+            self.last_shoot = now
+            bullet = Bullet(self.rect.centerx, self.rect.bottom, 5, 7)
+            self.sprite_group.add(bullet)
+            self.enemy_shot_group.add(bullet)
 
 
     def update(self):
         self.update_animation()
-        self.shoot_collision()
+        #self.shoot_collision()
+        self.shoot()
 
         # Verifica se o Enemy saiu da tela, e se saiu exclui o mesmo
         if self.rect.top > SCREEN_Y:
             self.kill()
 
-        # Faz o Enemy "andar" pra frente
+        # Faz o Enemy se mover
         self.rect.y += self.vel_y
 
-        self.shield_bar.draw_shield_bar(self.shield, self.rect.x, self.rect.y)
+        #self.shield_bar.draw_shield_bar()
+
+
 
 

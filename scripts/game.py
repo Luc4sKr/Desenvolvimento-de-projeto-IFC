@@ -1,4 +1,5 @@
 import pygame
+from __main__ import *
 
 from os import listdir
 from random import randint
@@ -11,19 +12,23 @@ from scripts.enemy import Enemy
 from scripts.explosion import Explosion
 from scripts.player import Player
 from scripts.score import Score
-from scripts.enemy_shield_bar import ShieldBar
 from scripts.powerup import Powerup
+
+
+class Menu:
+    def __init__(self):
+        # Controle dos laços de repetição
+        self.show_menu = False
+
+    def menu(self):
+        self.show_menu = True
+        while self.show_menu:
+            pass
 
 
 class Game:
     def __init__(self):
-        pygame.init() # Inicializa o pygame
-        pygame.mixer.init() # Inicializa o modulo de mixer
-
-        # -- Tela do jogo -----------------------------------------
-        self.screen = pygame.display.set_mode((SCREEN_X, SCREEN_Y))
-        pygame.display.set_caption("Space Battle")
-
+        super().__init__()
         # -- Cria um objeto para ajudar a controlar o tempo -------
         self.clock = pygame.time.Clock()
 
@@ -65,7 +70,7 @@ class Game:
             self.clock.tick(FPS)
 
             self.menu_background_group.update()
-            self.menu_background_group.draw(self.screen)
+            self.menu_background_group.draw(screen)
 
             self.draw_text("SPACE", 60, YELLOW, SCREEN_X / 2, 100)
             self.draw_text("BATTLE", 60, YELLOW, SCREEN_X / 2, 160)
@@ -80,7 +85,7 @@ class Game:
 
             pygame.display.flip()
             pygame.display.update()
-            self.screen.fill(BLACK)
+            screen.fill(BLACK)
 
     # Eventos do menu -------------------------------------------------------------------------------------
     def menu_events(self):
@@ -148,6 +153,7 @@ class Game:
         self.asteroid_group = pygame.sprite.Group()
         self.enemy_group = pygame.sprite.Group()
         self.powerup_group = pygame.sprite.Group()
+        self.enemy_shoot_group = pygame.sprite.Group()
 
         # -- Background
         self.sprite_group.add(self.game_background_rect)
@@ -227,6 +233,41 @@ class Game:
                 explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
                 self.sprite_group.add(explosion)
 
+            # Colissão com os powerups
+            self.powerup_collide = pygame.sprite.spritecollide(self.player, self.powerup_group, True)
+            for hit in self.powerup_collide:
+                if hit.type == "shield":
+                    self.player.shield += 20
+                    if self.player.shield >= 100:
+                        self.player.shield = 100
+
+                if hit.type == "gun":
+                    self.player.powerup()
+
+            # Colissão com os tiros inimigos
+            self.enemy_shoot_collision = pygame.sprite.spritecollide(self.player, self.enemy_shoot_group, True)
+            for hit in self.enemy_shoot_collision:
+                self.player.shield -= hit.damage
+
+            # Colisão com o tiro do player
+            player_shot_collide = pygame.sprite.groupcollide(self.enemy_group, self.bullet_group, False, True, pygame.sprite.collide_mask)
+            for hit in player_shot_collide:
+                hit.shield -= 1
+                if hit.shield <= 0:
+
+                    # Powerups
+                    if randint(0, 10) >= 5:
+                        powerup = Powerup(hit.rect.center)
+                        self.sprite_group.add(powerup)
+                        self.powerup_group.add(powerup)
+
+                    self.score.add_score()
+                    hit.kill()
+                    explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
+                    self.sprite_group.add(explosion)
+
+
+
             # !!!!!!!!!!!!!!!!!!!!!!!!!! --
             # Explosão quando o tiro bate na nave
             '''self.explode_bullet = pygame.sprite.groupcollide(self.bullet_group, self.enemy_group, False, False, pygame.sprite.collide_mask)
@@ -247,7 +288,6 @@ class Game:
                 self.game_over = True
                 self.mostrar_game_over_screen = True
                 self.game_over_screen()
-
 
             self.update_sprites()
             self.draw_sprites()
@@ -290,7 +330,7 @@ class Game:
 
             pygame.display.flip()
             pygame.display.update()
-            self.screen.fill(BLACK)
+            screen.fill(BLACK)
     
     # Loja do jogo
     def loja(self):
@@ -304,14 +344,14 @@ class Game:
             nave_rect = nave.get_rect()
             nave_rect.x = pos_x
             nave_rect.y = pos_y
-            self.screen.blit(nave, nave_rect)
+            screen.blit(nave, nave_rect)
 
         def frame(left, top, width, height):
             image_white = pygame.Rect(left, top, width, height)
             image_black = pygame.Rect(left+5, top+5, width-10, height-10)
 
-            pygame.draw.rect(self.screen, WHITE, image_white)
-            pygame.draw.rect(self.screen, BLACK, image_black)
+            pygame.draw.rect(screen, WHITE, image_white)
+            pygame.draw.rect(screen, BLACK, image_black)
 
         while self.mostrar_loja:
             self.clock.tick(FPS)
@@ -365,7 +405,7 @@ class Game:
 
             pygame.display.flip()
             pygame.display.update()
-            self.screen.fill(BLACK)
+            screen.fill(BLACK)
 
     # Opções
     def opcoes(self):
@@ -383,7 +423,7 @@ class Game:
 
             pygame.display.flip()
             pygame.display.update()
-            self.screen.fill(BLACK)
+            screen.fill(BLACK)
 
     # Função para criar um novo asteroide
     def new_asteroid(self):
@@ -399,19 +439,15 @@ class Game:
         distance_y = 20
         for i in range(3):
             if i == 0:
-                shield_bar = ShieldBar(self.screen)
-                self.sprite_group.add(shield_bar)
-                enemy = Enemy(pos_x, pos_y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.bullet_group, self.sprite_group, self.explosion_sprite_sheet, self.score, shield_bar, self.powerup_group)
+                enemy = Enemy(pos_x, pos_y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.bullet_group, self.enemy_shoot_group, self.sprite_group, self.explosion_sprite_sheet, self.score, self.powerup_group, screen)
             else:
-                shield_bar = ShieldBar(self.screen)
-                self.sprite_group.add(shield_bar)
-                enemy = Enemy(pos_x + distance_x, pos_y - distance_y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.bullet_group, self.sprite_group, self.explosion_sprite_sheet, self.score, shield_bar, self.powerup_group)
+                enemy = Enemy(pos_x + distance_x, pos_y - distance_y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.bullet_group, self.enemy_shoot_group, self.sprite_group, self.explosion_sprite_sheet, self.score, self.powerup_group, screen)
                 distance_x += ENEMY_SIZE_X
                 distance_y -= 20
             self.sprite_group.add(enemy)
             self.enemy_group.add(enemy)
 
-    # Tela de créditos do menu ------------------------------------------------------------------------------
+    # Tela de créditos do menu
     def credit_screen(self):
         while self.mostrar_creditos:
             self.clock.tick(FPS)
@@ -430,7 +466,7 @@ class Game:
 
             pygame.display.flip()
             pygame.display.update()
-            self.screen.fill(BLACK)
+            screen.fill(BLACK)
 
     # Tela de pause
     def pause_screen(self):
@@ -493,7 +529,7 @@ class Game:
 
             pygame.display.flip()
             pygame.display.update()
-            self.screen.fill(BLACK)
+            screen.fill(BLACK)
 
     # Cria as sprite sheets de naves -----------------------------------------------------------------------
     @staticmethod
@@ -547,17 +583,17 @@ class Game:
         self.text_obj = self.fonte.render(text, False, color)
         self.text_rect = self.text_obj.get_rect()
         self.text_rect.center = (x, y)
-        self.screen.blit(self.text_obj, self.text_rect)
+        screen.blit(self.text_obj, self.text_rect)
 
     # Desenha as sprites no jogo
     def draw_sprites(self):
-        self.screen.fill(WHITE)
-        self.sprite_group.draw(self.screen)
+        screen.fill(WHITE)
+        self.sprite_group.draw(screen)
 
         # Texto/Draw
         self.draw_text(f"Score: {self.score.score}", 18, WHITE, SCREEN_X/2, 16) # Texto do score
-        self.draw_shield_bar(self.screen, 5, 10)
-        self.draw_lives(self.screen, 480, 10, self.player_mini_image)
+        self.draw_shield_bar(screen, 5, 10)
+        self.draw_lives(screen, 480, 10, self.player_mini_image)
 
         self.draw_ready()
 
