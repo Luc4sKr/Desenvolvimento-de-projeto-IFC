@@ -107,7 +107,7 @@ class Game:
         # Background do jogo - A SPRITE COM MOVIMENTO PRECISA TER 580x2722 !!!!
         self.game_background_rect = Background("game_background_azul_cinza.png")
 
-    # Novo jogo
+    # Cria um novo jogo
     def new_game(self):
         # Sprite groups
         self.sprite_group = pygame.sprite.Group()
@@ -156,7 +156,7 @@ class Game:
         self.game_over = False
         self.running()
 
-    # Rodando
+    # Roda o jogo
     def running(self):
         #  Loop principal do jogo
         while not self.game_over:
@@ -191,7 +191,6 @@ class Game:
             pygame.display.update()
             self.draw_sprites()
 
-
     # Desenha as sprites no jogo
     def draw_sprites(self):
         screen.fill(BLACK)
@@ -210,9 +209,10 @@ class Game:
 
         pygame.display.flip()
 
-
+    # Checa as colisões do jogo
     def collision_checks(self):
-        # Colissão dos tiros com os asteroides
+
+        # Colissão dos tiros do Player com o Asteroid
         bullet_asteroid_collide = pygame.sprite.groupcollide(self.asteroid_group, self.bullet_group, True, True, pygame.sprite.collide_circle)
         for hit in bullet_asteroid_collide:
             self.score += 1
@@ -220,42 +220,7 @@ class Game:
             self.sprite_group.add(explosion)
             self.new_asteroid()
 
-        # Colisão da nave com os asteroides
-        player_asteroid_collide = pygame.sprite.spritecollide(self.player, self.asteroid_group, True, pygame.sprite.collide_mask)
-        for hit in player_asteroid_collide:
-            self.player.shield -= 20  # Tira o shield do player
-            self.new_asteroid()  # Cria um novo asteroide
-            if self.player.shield <= 0:
-                self.death_explosion = Explosion(self.player.rect.center, self.explosion_sprite_sheet)
-                self.sprite_group.add(self.death_explosion)
-                self.player.hide()  # Esconde o player temporariamete
-                self.player.lives -= 1  # Tira uma vida do player
-                self.player.shield = 100  # O shield do jogador volta a ser 100
-
-        # Colisão entre a nave inimiga e o asteroide
-        enemy_asteroid_collide = pygame.sprite.groupcollide(self.enemy_group, self.asteroid_group, True, True, pygame.sprite.collide_mask)
-        for hit in enemy_asteroid_collide:
-            self.new_asteroid()
-            explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
-            self.sprite_group.add(explosion)
-
-        # Colissão com os powerups
-        powerup_collide = pygame.sprite.spritecollide(self.player, self.powerup_group, True)
-        for hit in powerup_collide:
-            if hit.type == "shield":
-                self.player.shield += 20
-                if self.player.shield >= 100:
-                    self.player.shield = 100
-
-            if hit.type == "gun":
-                self.player.powerup()
-
-        # Colissão com os tiros inimigos
-        enemy_shoot_collision = pygame.sprite.spritecollide(self.player, self.enemy_shoot_group, True)
-        for hit in enemy_shoot_collision:
-            self.player.shield -= hit.damage
-
-        # Colisão com o tiro do player
+        # Colisão com o tiro do Player
         player_shot_collide = pygame.sprite.groupcollide(self.enemy_group, self.bullet_group, False, True, pygame.sprite.collide_mask)
         for hit in player_shot_collide:
             hit.shield -= 1
@@ -272,12 +237,99 @@ class Game:
                 explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
                 self.sprite_group.add(explosion)
 
-                # Explosão quando o tiro bate na nave
-                '''self.explode_bullet = pygame.sprite.groupcollide(self.bullet_group, self.enemy_group, False, False, pygame.sprite.collide_mask)
-                for hit in self.explode_bullet:
-                    explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
-                    self.sprite_group.add(explosion)'''
+        # Colisão d Player com o Asteroid
+        player_asteroid_collide = pygame.sprite.spritecollide(self.player, self.asteroid_group, True, pygame.sprite.collide_mask)
+        for hit in player_asteroid_collide:
+            self.player.shield -= 20  # Tira o shield do player
+            self.new_asteroid()  # Cria um novo asteroide
+            if self.player.shield <= 0:
+                death_explosion = Explosion(self.player.rect.center, self.explosion_sprite_sheet)
+                self.sprite_group.add(death_explosion)
+                self.player.hide()  # Esconde o player temporariamete
+                self.player.lives -= 1  # Tira uma vida do player
+                self.player.shield = 100  # O shield do jogador volta a ser 100
 
+        # Colisão entre o Enemy e o Asteroid
+        enemy_asteroid_collide = pygame.sprite.groupcollide(self.enemy_group, self.asteroid_group, True, True, pygame.sprite.collide_mask)
+        for hit in enemy_asteroid_collide:
+            self.new_asteroid()
+            explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
+            self.sprite_group.add(explosion)
+
+        # Colissão do Player com os Powerups
+        powerup_collide = pygame.sprite.spritecollide(self.player, self.powerup_group, True)
+        for hit in powerup_collide:
+            if hit.type == "shield":
+                self.player.shield += 20
+                if self.player.shield >= 100:
+                    self.player.shield = 100
+
+            if hit.type == "gun":
+                self.player.powerup()
+
+        # Colisão dos tiros inimigos com o Player
+        enemy_shoot_collision = pygame.sprite.spritecollide(self.player, self.enemy_shoot_group, True)
+        for hit in enemy_shoot_collision:
+            self.player.shield -= hit.damage
+
+        # Explosão quando o tiro bate na nave
+        '''self.explode_bullet = pygame.sprite.groupcollide(self.bullet_group, self.enemy_group, False, False, pygame.sprite.collide_mask)
+        for hit in self.explode_bullet:
+            explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
+            self.sprite_group.add(explosion)'''
+
+    # Tela de pause
+    def pause_screen(self):
+        self.show_pause = True
+        while self.show_pause:
+            clock.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.show_pause = False
+                    self.game_over = True
+                    pygame.quit()
+                    exit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        self.click = True
+
+            # Título
+            self.draw_text("PAUSE", LARGE_FONT_SIZE, WHITE, SCREEN_X / 2, 100)
+
+            # Botões
+            voltar_ao_jogo_button = draw_button(SCREEN_X / 2 - 150, 250, SCREEN_X / 2 + 10, 50, "VOLTAR AO JOGO")
+            voltar_ao_menu_button = draw_button(SCREEN_X / 2 - 150, 310, SCREEN_X / 2 + 10, 50, "VOLTAR AO MENU")
+            sair_do_jogo_button = draw_button(SCREEN_X / 2 - 150, 370, SCREEN_X / 2 + 10, 50, "SAIR DO JOGO")
+
+            # Posição do mouse
+            mx, my = pygame.mouse.get_pos()
+
+            # Inputs do mouse com os botões do menu
+            if voltar_ao_jogo_button.collidepoint((mx, my)):
+                if self.click:
+                    self.click = False
+                    self.show_pause = False
+            if voltar_ao_menu_button.collidepoint((mx, my)):
+                if self.click:
+                    self.click = False
+                    self.show_pause = False
+                    self.game_over = True
+                    menu.menu()
+            if sair_do_jogo_button.collidepoint((mx, my)):
+                if self.click:
+                    self.click = False
+                    self.show_pause = False
+                    self.game_over = True
+                    pygame.quit()
+                    exit()
+
+            # Depois de checar os inputs o click fica falso
+            self.click = False
+
+            pygame.display.flip()
+            pygame.display.update()
+            screen.fill(BLACK)
 
     # Tela de game over
     def game_over_screen(self):
@@ -318,79 +370,7 @@ class Game:
             self.sprite_group.add(enemy)
             self.enemy_group.add(enemy)
 
-    # Tela de créditos do menu
-    def credit_screen(self):
-        while self.mostrar_creditos:
-            clock.tick(FPS)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.mostrar_creditos = False
 
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_BACKSPACE or pygame.K_ESCAPE:
-                        self.mostrar_creditos = False
-
-            self.draw_text("CRÉDITOS", 42, WHITE, SCREEN_X / 2, 60)
-            self.draw_text("LUCAS EDUARDO KREUCH", 28, WHITE, SCREEN_X / 2, 150)
-            self.draw_text("MARIA CLARA DE SOUZA", 28, WHITE, SCREEN_X / 2, 180)
-            self.draw_text("HAIDY JANDRE", 28, WHITE, SCREEN_X / 2, 210)
-
-            pygame.display.flip()
-            pygame.display.update()
-            screen.fill(BLACK)
-
-    # Tela de pause
-    def pause_screen(self):
-        self.show_pause = True
-        while self.show_pause:
-            clock.tick(FPS)
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.show_pause = False
-                    self.game_over = True
-                    pygame.quit()
-                    exit()
-
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if event.button == 1:
-                        self.click = True
-
-            # Título
-            self.draw_text("PAUSE", LARGE_FONT_SIZE, WHITE, SCREEN_X / 2, 100)
-
-            # Botões
-            voltar_ao_jogo_button = draw_button(SCREEN_X/2 - 150, 250, SCREEN_X/2 + 10, 50, "VOLTAR AO JOGO")
-            voltar_ao_menu_button = draw_button(SCREEN_X/2 - 150, 310, SCREEN_X/2 + 10, 50, "VOLTAR AO MENU")
-            sair_do_jogo_button = draw_button(SCREEN_X/2 - 150, 370, SCREEN_X/2 + 10, 50, "SAIR DO JOGO")
-
-            # Posição do mouse
-            mx, my = pygame.mouse.get_pos()
-
-            # Inputs do mouse com os botões do menu
-            if voltar_ao_jogo_button.collidepoint((mx, my)):
-                if self.click:
-                    self.click = False
-                    self.show_pause = False
-            if voltar_ao_menu_button.collidepoint((mx, my)):
-                if self.click:
-                    self.click = False
-                    self.show_pause = False
-                    self.game_over = True
-                    menu.menu()
-            if sair_do_jogo_button.collidepoint((mx, my)):
-                if self.click:
-                    self.click = False
-                    self.show_pause = False
-                    self.game_over = True
-                    pygame.quit()
-                    exit()
-
-            # Depois de checar os inputs o click fica falso
-            self.click = False
-
-            pygame.display.flip()
-            pygame.display.update()
-            screen.fill(BLACK)
 
     # Cria as sprite sheets de naves -----------------------------------------------------------------------
     @staticmethod
@@ -436,17 +416,6 @@ class Game:
         fill_rect = pygame.Rect(x, y, fill, BAR_HEIGHT)
         pygame.draw.rect(surface, GREEN, fill_rect)
         pygame.draw.rect(surface, WHITE, outline_rect, 2)
-
-    # Desenha o texto na tela
-    def draw_text(self, text, tam, color, x, y):
-        self.fonte = pygame.font.Font(FONTE, tam)
-        self.text_obj = self.fonte.render(text, False, color)
-        self.text_rect = self.text_obj.get_rect()
-        self.text_rect.center = (x, y)
-        screen.blit(self.text_obj, self.text_rect)
-
-
-
 
 
 
