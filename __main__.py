@@ -88,7 +88,7 @@ class Menu:
             self.click = False
 
             # Update na tela
-            pygame.display.flip()
+            style.draw()
             pygame.display.update()
             screen.fill(BLACK)
 
@@ -187,6 +187,7 @@ class Game:
                 self.game_over_screen()
 
             # Update/Draw
+            style.draw()
             self.sprite_group.update()
             pygame.display.update()
             self.draw_sprites()
@@ -198,8 +199,8 @@ class Game:
 
         # Texto/Draw
         draw_text(f"Score: {self.score.score}", 18, WHITE, SCREEN_X / 2, 16)  # Texto do score
-        self.draw_shield_bar(screen, 5, 10) # Shield do Player
-        self.draw_lives(screen, 480, 10, self.player_mini_image) # Vidas do Player
+        self.draw_shield_bar(5, 10) # Shield do Player
+        self.draw_lives(480, 10, self.player_mini_image) # Vidas do Player
 
         self.draw_ready()
 
@@ -207,7 +208,7 @@ class Game:
         for enemy in self.enemy_group:
             self.enemy_shield_bar.draw_shield_bar(enemy.shield, enemy.rect.x, enemy.rect.y)
 
-        pygame.display.flip()
+        #pygame.display.flip()
 
     # Checa as colisões do jogo
     def collision_checks(self):
@@ -295,7 +296,7 @@ class Game:
                         self.click = True
 
             # Título
-            self.draw_text("PAUSE", LARGE_FONT_SIZE, WHITE, SCREEN_X / 2, 100)
+            draw_text("PAUSE", LARGE_FONT_SIZE, WHITE, SCREEN_X / 2, 100)
 
             # Botões
             voltar_ao_jogo_button = draw_button(SCREEN_X / 2 - 150, 250, SCREEN_X / 2 + 10, 50, "VOLTAR AO JOGO")
@@ -391,12 +392,12 @@ class Game:
 
     # !! ------------------------ DRAW ------------------------ !! #
     # Desenha a quantidade de vidas do jogador
-    def draw_lives(self, surface, x, y, image):
+    def draw_lives(self, x, y, image):
         for i in range(self.player.lives):
             image_rect = image.get_rect()
             image_rect.x = x + 30 * i
             image_rect.y = y
-            surface.blit(image, image_rect)
+            screen.blit(image, image_rect)
 
     # Denha o texto de READY no inicio do jogo
     def draw_ready(self):
@@ -408,17 +409,44 @@ class Game:
             draw_text("GO", LARGE_FONT_SIZE, YELLOW, SCREEN_X / 2, 150)
 
     # Desenha a barra do escudo do player
-    def draw_shield_bar(self, surface, x, y):
+    def draw_shield_bar(self, x, y):
         if self.player.shield < 0:
             self.player.shield = 0
         fill = (self.player.shield / 100) * BAR_WIDTH
         outline_rect = pygame.Rect(x, y, BAR_WIDTH, BAR_HEIGHT)
         fill_rect = pygame.Rect(x, y, fill, BAR_HEIGHT)
-        pygame.draw.rect(surface, GREEN, fill_rect)
-        pygame.draw.rect(surface, WHITE, outline_rect, 2)
+        pygame.draw.rect(screen, GREEN, fill_rect)
+        pygame.draw.rect(screen, WHITE, outline_rect, 2)
 
 
 
+class Style:
+    """
+    Classe para deixar o estilo do jogo um pouco mais retrô
+    """
+    def __init__(self):
+        # Bordas de TV antiga
+        self.tv = pygame.image.load(path.join(getcwd() + "/assets/images/tv.png"))
+        self.tv = pygame.transform.scale(self.tv, (SCREEN_X, SCREEN_Y))
+
+    def draw(self):
+        """
+        Desenha na tela
+        """
+        self.tv.set_alpha(randint(75, 90))
+        self.create_crt_lines()
+
+        screen.blit(self.tv, (0, 0))
+
+    def create_crt_lines(self):
+        """
+        Cria linhas para dar um estilo retrô para o jogo
+        """
+        line_height = 3
+        line_amount = int(SCREEN_Y / line_height)
+        for line in range(line_amount):
+            y_pos = line * line_height
+            pygame.draw.line(self.tv, "black", (0, y_pos), (SCREEN_X, y_pos), 1)
 
 
 
@@ -449,6 +477,7 @@ if __name__ == '__main__':
 
     menu = Menu()
     game = Game()
+    style = Style()
 
     # Tela do jogo
     screen = pygame.display.set_mode((SCREEN_X, SCREEN_Y))

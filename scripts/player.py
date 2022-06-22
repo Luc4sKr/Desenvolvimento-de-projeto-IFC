@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, image, shield, shoot_delay, sprite_group, bullet_group):
         pygame.sprite.Sprite.__init__(self)
 
-        self.image = pygame.image.load(path.join(getcwd() + f"/assets/images/{image}"))
+        self.image = pygame.image.load(path.join(getcwd() + f"/assets/images/{image}")).convert_alpha()
         self.image = pygame.transform.scale(self.image, (PLAYER_SIZE_X, PLAYER_SIZE_Y))
         self.rect = self.image.get_rect()
 

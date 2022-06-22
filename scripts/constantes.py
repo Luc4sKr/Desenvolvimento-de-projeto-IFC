@@ -54,13 +54,6 @@ MEDIUM_FONT_SIZE = 28
 SMALL_FONT_SIZE = 14
 
 
-# Menu de pause
-VOLTAR_AO_JOGO_Y = SCREEN_Y / 2 - 32
-VOLTAR_AO_MENU_Y = SCREEN_Y / 2
-SAIR_DO_JOGO_Y = SCREEN_Y / 2 + 32
-OPCOES_Y =SCREEN_Y / 2 + 64
-
-
 # Tamanho da imagem da loja
 IMAGE_LOJA_SIZE = 60
 
