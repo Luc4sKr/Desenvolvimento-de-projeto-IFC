@@ -403,9 +403,9 @@ class Game:
         READY_DELAY = 1000
         GO_DELAY = 2000
         if READY_DELAY < pygame.time.get_ticks() - self.ready_time < 3000:
-            self.draw_text("READY?", LARGE_FONT_SIZE, YELLOW, SCREEN_X / 2, 100)
+            draw_text("READY?", LARGE_FONT_SIZE, YELLOW, SCREEN_X / 2, 100)
         if GO_DELAY < pygame.time.get_ticks() - self.ready_time < 3000:
-            self.draw_text("GO", LARGE_FONT_SIZE, YELLOW, SCREEN_X / 2, 150)
+            draw_text("GO", LARGE_FONT_SIZE, YELLOW, SCREEN_X / 2, 150)
 
     # Desenha a barra do escudo do player
     def draw_shield_bar(self, surface, x, y):
