@@ -88,7 +88,6 @@ class Menu:
             self.click = False
 
             # Update na tela
-            style.draw()
             pygame.display.update()
             screen.fill(BLACK)
 
@@ -152,6 +151,9 @@ class Game:
         # Controladores de tempo
         self.ready_time = pygame.time.get_ticks()
 
+        # Controle de aparecimento do Enemy
+        self.ready = False
+
         # Roda o jogo
         self.game_over = False
         self.running()
@@ -173,12 +175,13 @@ class Game:
                         self.pause_screen()
 
             # Gera novos inimigos
-            now = pygame.time.get_ticks()
+            '''now = pygame.time.get_ticks()
             if now - self.last_enemy > self.create_enemy_delay:
                 self.last_enemy = now
-                self.new_tripe_enemy()
+                self.new_solo_enemy()'''
 
             self.collision_checks()
+            self.generate_enemy()
 
             # Verifica se o player ainda tem vidas
             if self.player.lives == 0 and not self.death_explosion.alive():
@@ -186,8 +189,9 @@ class Game:
                 self.show_game_over_screen = True
                 self.game_over_screen()
 
+            print(clock.get_fps())
+
             # Update/Draw
-            style.draw()
             self.sprite_group.update()
             pygame.display.update()
             self.draw_sprites()
@@ -207,8 +211,6 @@ class Game:
         # Shield do player
         for enemy in self.enemy_group:
             self.enemy_shield_bar.draw_shield_bar(enemy.shield, enemy.rect.x, enemy.rect.y)
-
-        #pygame.display.flip()
 
     # Checa as colisões do jogo
     def collision_checks(self):
@@ -349,6 +351,18 @@ class Game:
             pygame.display.update()
             screen.fill(BLACK)
 
+    # Gera novos inimigos
+    def generate_enemy(self):
+        now = pygame.time.get_ticks()
+        if now - self.last_enemy > self.create_enemy_delay:
+            now = pygame.time.get_ticks()
+            self.last_enemy = pygame.time.get_ticks()
+            enemy_type = randint(1, 2)
+            if enemy_type == 1:
+                self.new_solo_enemy()
+            if enemy_type == 2:
+                self.new_tripe_enemy()
+
     # Função para criar um novo asteroide
     def new_asteroid(self):
         m = Asteroid(self.asteroid_sprite_sheet)
@@ -363,13 +377,24 @@ class Game:
         distance_y = 20
         for i in range(3):
             if i == 0:
-                enemy = Enemy(pos_x, pos_y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.enemy_shoot_group, self.sprite_group, self.explosion_sprite_sheet, self.score)
+                enemy = self.create_enemy(pos_x, pos_y)
             else:
-                enemy = Enemy(pos_x + distance_x, pos_y - distance_y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.enemy_shoot_group, self.sprite_group, self.explosion_sprite_sheet, self.score)
+                enemy = self.create_enemy(pos_x + distance_x, pos_y - distance_y)
                 distance_x += ENEMY_SIZE_X
                 distance_y -= 20
             self.sprite_group.add(enemy)
             self.enemy_group.add(enemy)
+
+    def new_solo_enemy(self):
+        pos_x = randint(ENEMY_SIZE_X / 2, SCREEN_X - (ENEMY_SIZE_X / 2))
+        pos_y = -20
+        enemy = self.create_enemy(pos_x, pos_y)
+        self.sprite_group.add(enemy)
+        self.enemy_group.add(enemy)
+
+    def create_enemy(self, x, y):
+        enemy = Enemy(x, y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.enemy_shoot_group, self.sprite_group, self.explosion_sprite_sheet, self.score)
+        return enemy
 
 
 
@@ -407,6 +432,7 @@ class Game:
             draw_text("READY?", LARGE_FONT_SIZE, YELLOW, SCREEN_X / 2, 100)
         if GO_DELAY < pygame.time.get_ticks() - self.ready_time < 3000:
             draw_text("GO", LARGE_FONT_SIZE, YELLOW, SCREEN_X / 2, 150)
+            self.ready = True
 
     # Desenha a barra do escudo do player
     def draw_shield_bar(self, x, y):
@@ -419,34 +445,6 @@ class Game:
         pygame.draw.rect(screen, WHITE, outline_rect, 2)
 
 
-
-class Style:
-    """
-    Classe para deixar o estilo do jogo um pouco mais retrô
-    """
-    def __init__(self):
-        # Bordas de TV antiga
-        self.tv = pygame.image.load(path.join(getcwd() + "/assets/images/tv.png"))
-        self.tv = pygame.transform.scale(self.tv, (SCREEN_X, SCREEN_Y))
-
-    def draw(self):
-        """
-        Desenha na tela
-        """
-        self.tv.set_alpha(randint(75, 90))
-        self.create_crt_lines()
-
-        screen.blit(self.tv, (0, 0))
-
-    def create_crt_lines(self):
-        """
-        Cria linhas para dar um estilo retrô para o jogo
-        """
-        line_height = 3
-        line_amount = int(SCREEN_Y / line_height)
-        for line in range(line_amount):
-            y_pos = line * line_height
-            pygame.draw.line(self.tv, "black", (0, y_pos), (SCREEN_X, y_pos), 1)
 
 
 
@@ -477,7 +475,6 @@ if __name__ == '__main__':
 
     menu = Menu()
     game = Game()
-    style = Style()
 
     # Tela do jogo
     screen = pygame.display.set_mode((SCREEN_X, SCREEN_Y))

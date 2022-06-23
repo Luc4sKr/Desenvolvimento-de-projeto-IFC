@@ -50,7 +50,8 @@ class Enemy(pygame.sprite.Sprite):
     def shoot(self):
         now = pygame.time.get_ticks()
         if now - self.last_shoot > self.shoot_delay:
-            self.last_shoot = now
+            now = pygame.time.get_ticks()
+            self.last_shoot = pygame.time.get_ticks()
             bullet = Bullet(self.rect.centerx, self.rect.bottom, 5, 7)
             self.sprite_group.add(bullet)
             self.enemy_shot_group.add(bullet)
@@ -58,7 +59,6 @@ class Enemy(pygame.sprite.Sprite):
 
     def update(self):
         self.update_animation()
-        #self.shoot_collision()
         self.shoot()
 
         # Verifica se o Enemy saiu da tela, e se saiu exclui o mesmo
@@ -67,8 +67,6 @@ class Enemy(pygame.sprite.Sprite):
 
         # Faz o Enemy se mover
         self.rect.y += self.vel_y
-
-        #self.shield_bar.draw_shield_bar()
 
 
 
