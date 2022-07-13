@@ -7,7 +7,7 @@ from sys import exit
 from scripts.constantes import *
 from scripts.asteroid import Asteroid
 from scripts.background import Background
-from scripts.enemy import Enemy
+from scripts.enemies import Enemy
 from scripts.explosion import Explosion
 from scripts.player import Player
 from scripts.score import Score
@@ -23,6 +23,7 @@ class Menu:
 
         # Controle dos laços de repetição
         self.show_menu = False
+        self.show_difficulty_menu = False
 
         # Background
         self.menu_background_sprite = pygame.sprite.Sprite()
@@ -65,8 +66,9 @@ class Menu:
             # Inputs do mouse com os botões do menu
             if jogar_button.collidepoint((mx, my)):
                 if self.click:
+                    self.click = False
                     self.show_menu = False
-                    game.new_game()
+                    self.difficulty_menu()
 
             if loja_button.collidepoint((mx, my)):
                 if self.click:
@@ -91,6 +93,48 @@ class Menu:
             pygame.display.update()
             screen.fill(BLACK)
 
+    def difficulty_menu(self):
+        self.show_difficulty_menu = True
+        while self.show_difficulty_menu:
+            clock.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.show_menu = False
+                    pygame.quit()
+                    exit()
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        self.click = True
+
+            # Título
+            draw_text("Dificuldade", 44, WHITE, SCREEN_X/2, 100)
+
+            # Botões
+            normal_button = draw_button(SCREEN_X/2 - 120, 250, SCREEN_X/2 - 50, 50, "Normal")
+            dificil_button = draw_button(SCREEN_X/2 - 120, 310, SCREEN_X/2 - 50, 50, "Difícil")
+            insano_button = draw_button(SCREEN_X/2 - 120, 370, SCREEN_X/2 - 50, 50, "Insano")
+
+            # Posição do mouse
+            mx, my = pygame.mouse.get_pos()
+
+            # Colisão com os botões
+            if normal_button.collidepoint((mx, my)):
+                if self.click:
+                    self.click = False
+                    self.show_difficulty_menu = False
+                    game.new_game(1)
+            if dificil_button.collidepoint((mx, my)):
+                if self.click:
+                    pass
+            if insano_button.collidepoint((mx, my)):
+                if self.click:
+                    pass
+
+            # Update na tela
+            pygame.display.update()
+            screen.fill(BLACK)
+
 
 class Game:
     def __init__(self):
@@ -99,15 +143,24 @@ class Game:
         self.game_over = False
         self.show_pause = False
         self.show_game_over_screen = False
+        self.draw_dev_options = False
+
+        self.teste = pygame.time.get_ticks()
 
         # Click do mouse
         self.click = False
+
+        # Controle de aparição dos asteroides
+        #self.asteroid_event_cooldown = pygame.time.get_ticks()
+        #self.asteroid_cooldown = pygame.time.get_ticks()
+        self.asteroid_shower_time = pygame.time.get_ticks()
+        self.asteroid_shower_event = False
 
         # Background do jogo - A SPRITE COM MOVIMENTO PRECISA TER 580x2722 !!!!
         self.game_background_rect = Background("game_background_azul_cinza.png")
 
     # Cria um novo jogo
-    def new_game(self):
+    def new_game(self, difficulty):
         # Sprite groups
         self.sprite_group = pygame.sprite.Group()
         self.bullet_group = pygame.sprite.Group()
@@ -123,24 +176,22 @@ class Game:
         self.player = Player("spaceship_1.png", 100, 250, self.sprite_group, self.bullet_group)
         self.sprite_group.add(self.player)
         # Imagem do player que serve como contador de vidas
-        self.player_mini_image = pygame.transform.scale(self.player.image, (30, 30))
+        self.player_mini_image = pygame.transform.scale(self.player.image, (35, 35))
 
         # Asteroid
-        self.asteroid_sprite_sheet = self.create_sprite_sheet("asteroid", ASTEROID_SIZE_X, ASTEROID_SIZE_Y, "rotate")
-        self.asteroid_sprite_sheet = self.asteroid_sprite_sheet[0]
-        for i in range(0):
-            self.new_asteroid()
+        self.asteroid_sprite_sheet = self.create_sprite_sheet("asteroid", ASTEROID_SIZE_X, ASTEROID_SIZE_Y)
 
         # Explosion
-        self.explosion_sprite_sheet = self.create_sprite_sheet("explosion", 50, 50, "explosion-1")
-        self.explosion_sprite_sheet = self.explosion_sprite_sheet[0]
+        self.explosion_sprite_sheet = self.create_sprite_sheet("explosion/explosion-1", 50, 50)
+        self.explosion_sprite_sheet = self.explosion_sprite_sheet
 
         # Bullet explosion
         # self.bullet_explosion_sprite_sheet = self.create_sprite_sheet("explosion", 30, 30, "explosion-2")
         # self.bullet_explosion_sprite_sheet = self.bullet_explosion_sprite_sheet[0]
 
         # Enemy
-        self.enemy_1_sprite_sheet = self.create_sprite_sheet("enemy_1", ENEMY_SIZE_X, ENEMY_SIZE_Y, "move")
+        self.enemy_1_sprite_sheet = self.create_sprite_sheet("enemy_1", ENEMY_SIZE_X, ENEMY_SIZE_Y)
+        self.enemy_2_sprite_sheet = self.create_sprite_sheet("enemy_2", ENEMY_SIZE_X, ENEMY_SIZE_Y)
         self.create_enemy_delay = 2500
         self.last_enemy = pygame.time.get_ticks()
         self.enemy_shield_bar = Shield_bar(screen)
@@ -153,6 +204,11 @@ class Game:
 
         # Controle de aparecimento do Enemy
         self.ready = False
+
+        # Dificuldade
+        self.difficulty = difficulty
+        if self.difficulty == 1:
+            pass
 
         # Roda o jogo
         self.game_over = False
@@ -174,22 +230,30 @@ class Game:
                         self.show_pause = True
                         self.pause_screen()
 
-            # Gera novos inimigos
-            '''now = pygame.time.get_ticks()
-            if now - self.last_enemy > self.create_enemy_delay:
-                self.last_enemy = now
-                self.new_solo_enemy()'''
+                    if event.key == pygame.K_k:
+                        self.player.lives = 0
+
+                    if event.key == pygame.K_F3:
+                        if not self.draw_dev_options:
+                            self.draw_dev_options = True
+                        else:
+                            self.draw_dev_options = False
+
+                    '''if event.key == pygame.K_SPACE:
+                        self.player.shoot_missil((SCREEN_X/2, 200))
+                        self.sprite_group.add(self.player.missil)'''
 
             self.collision_checks()
-            self.generate_enemy()
 
-            # Verifica se o player ainda tem vidas
-            if self.player.lives == 0 and not self.death_explosion.alive():
-                self.game_over = True
-                self.show_game_over_screen = True
-                self.game_over_screen()
+            if not self.asteroid_shower_event:
+                self.generate_enemy()
 
-            print(clock.get_fps())
+            self.check_lives()
+            self.check_shield()
+            self.asteroid_shower()
+
+            if self.draw_dev_options:
+                self.dev_options()
 
             # Update/Draw
             self.sprite_group.update()
@@ -214,14 +278,18 @@ class Game:
 
     # Checa as colisões do jogo
     def collision_checks(self):
-
         # Colissão dos tiros do Player com o Asteroid
-        bullet_asteroid_collide = pygame.sprite.groupcollide(self.asteroid_group, self.bullet_group, True, True, pygame.sprite.collide_circle)
+        bullet_asteroid_collide = pygame.sprite.groupcollide(self.asteroid_group, self.bullet_group, True, True, pygame.sprite.collide_mask)
         for hit in bullet_asteroid_collide:
-            self.score += 1
+            self.score.add_score()
             explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
             self.sprite_group.add(explosion)
-            self.new_asteroid()
+
+        # Colisão do Player com o Asteroid
+        player_asteroid_collide = pygame.sprite.spritecollide(self.player, self.asteroid_group, True, pygame.sprite.collide_mask)
+        for hit in player_asteroid_collide:
+            self.player.shield -= 20  # Tira o shield do player
+            self.new_asteroid()  # Cria um novo asteroide
 
         # Colisão com o tiro do Player
         player_shot_collide = pygame.sprite.groupcollide(self.enemy_group, self.bullet_group, False, True, pygame.sprite.collide_mask)
@@ -239,18 +307,6 @@ class Game:
                 hit.kill()
                 explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
                 self.sprite_group.add(explosion)
-
-        # Colisão d Player com o Asteroid
-        player_asteroid_collide = pygame.sprite.spritecollide(self.player, self.asteroid_group, True, pygame.sprite.collide_mask)
-        for hit in player_asteroid_collide:
-            self.player.shield -= 20  # Tira o shield do player
-            self.new_asteroid()  # Cria um novo asteroide
-            if self.player.shield <= 0:
-                death_explosion = Explosion(self.player.rect.center, self.explosion_sprite_sheet)
-                self.sprite_group.add(death_explosion)
-                self.player.hide()  # Esconde o player temporariamete
-                self.player.lives -= 1  # Tira uma vida do player
-                self.player.shield = 100  # O shield do jogador volta a ser 100
 
         # Colisão entre o Enemy e o Asteroid
         enemy_asteroid_collide = pygame.sprite.groupcollide(self.enemy_group, self.asteroid_group, True, True, pygame.sprite.collide_mask)
@@ -280,6 +336,20 @@ class Game:
         for hit in self.explode_bullet:
             explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
             self.sprite_group.add(explosion)'''
+
+    def check_lives(self):
+        # Verifica se o player ainda tem vidas
+        if self.player.lives == 0 and not self.death_explosion.alive(): # -- Teste -- and not self.death_explosion.alive() 
+            self.game_over = True
+            self.game_over_screen()
+
+    def check_shield(self):
+        if self.player.shield <= 0:
+            self.death_explosion = Explosion(self.player.rect.center, self.explosion_sprite_sheet)
+            self.sprite_group.add(self.death_explosion)
+            self.player.hide()  # Esconde o player temporariamete
+            self.player.lives -= 1  # Tira uma vida do player
+            self.player.shield = 100  # O shield do jogador volta a ser 100
 
     # Tela de pause
     def pause_screen(self):
@@ -336,16 +406,42 @@ class Game:
 
     # Tela de game over
     def game_over_screen(self):
-        while self.mostrar_game_over_screen:
+        self.show_game_over_screen = True
+        while self.show_game_over_screen:
             clock.tick(FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
 
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        self.click = True
 
-            self.draw_text("GAME OVER", LARGE_FONT_SIZE, RED, SCREEN_X / 2, 60)
-            self.draw_text(f"SCORE: {self.score}", MEDIUM_FONT_SIZE, WHITE, SCREEN_X / 2, SCREEN_Y / 2 - 32)
-            self.draw_text("PRESSIONE 'SPACE' PARA VOLTAR AO MENU", SMALL_FONT_SIZE, WHITE, SCREEN_X / 2, SCREEN_Y - 100)
+
+            draw_text("GAME OVER", LARGE_FONT_SIZE, RED, SCREEN_X / 2, 60)
+            draw_text(f"SCORE: {self.score.score}", MEDIUM_FONT_SIZE, WHITE, SCREEN_X / 2, SCREEN_Y / 2 - 124)
+
+            voltar_ao_menu_buttom = draw_button(SCREEN_X/2 - 150, 300, SCREEN_X/2 + 10, 50, "Voltar ao menu")
+            jogar_novamente_button = draw_button(SCREEN_X / 2 - 150, 360, SCREEN_X / 2 + 10, 50, "Jogar novamente", font_size=19)
+
+            mx, my = pygame.mouse.get_pos()
+
+            if voltar_ao_menu_buttom.collidepoint((mx, my)):
+                if self.click:
+                    self.click = False
+                    self.show_game_over_screen = False
+                    menu.menu()
+            if jogar_novamente_button.collidepoint((mx, my)):
+                if self.click:
+                    self.click = False
+                    self.show_game_over_screen = False
+                    self.new_game(1)
+
+            '''draw_text("|", 32, RED, SCREEN_X/2, 300)
+            draw_text("|", 32, RED, SCREEN_X / 2 - 140, 300)
+            draw_text("|", 32, RED, SCREEN_X / 2 + 140, 300)'''
+
+            self.click = False
 
             pygame.display.flip()
             pygame.display.update()
@@ -353,21 +449,43 @@ class Game:
 
     # Gera novos inimigos
     def generate_enemy(self):
-        now = pygame.time.get_ticks()
-        if now - self.last_enemy > self.create_enemy_delay:
-            now = pygame.time.get_ticks()
+        if pygame.time.get_ticks() - self.last_enemy > self.create_enemy_delay :
             self.last_enemy = pygame.time.get_ticks()
-            enemy_type = randint(1, 2)
-            if enemy_type == 1:
+            enemy_type = randint(1, 3)
+            if enemy_type < 2:
                 self.new_solo_enemy()
-            if enemy_type == 2:
+            if enemy_type == 3:
                 self.new_tripe_enemy()
 
     # Função para criar um novo asteroide
     def new_asteroid(self):
-        m = Asteroid(self.asteroid_sprite_sheet)
-        self.sprite_group.add(m)
-        self.asteroid_group.add(m)
+        asteroid = Asteroid(self.asteroid_sprite_sheet)
+        self.sprite_group.add(asteroid)
+        self.asteroid_group.add(asteroid)
+
+    def asteroid_shower(self):
+        if pygame.time.get_ticks() - self.asteroid_shower_time > ASTEROID_TIME or self.asteroid_shower_event:
+            print("Asteroid")
+            self.asteroid_shower_time = pygame.time.get_ticks()
+
+            if randint(0, 100) >= 80 and not self.asteroid_shower_event:
+                self.asteroid_cooldown = pygame.time.get_ticks()
+                self.asteroid_event_cooldown = pygame.time.get_ticks()
+
+                self.asteroid_shower_event = True
+                print("chuva")
+
+            if self.asteroid_shower_event:
+                if pygame.time.get_ticks() - self.asteroid_cooldown > ASTEROID_COOLDOWN:
+                    self.asteroid_cooldown = pygame.time.get_ticks()
+                    self.new_asteroid()
+
+                if pygame.time.get_ticks() - self.asteroid_event_cooldown > ASTEROID_EVENT_COOLDOWN:
+                    self.asteroid_event_cooldown = pygame.time.get_ticks()
+                    self.asteroid_shower_event = False
+                    print("cabo")
+
+
 
     # Função para criar inimigos
     def new_tripe_enemy(self):
@@ -396,23 +514,27 @@ class Game:
         enemy = Enemy(x, y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.enemy_shoot_group, self.sprite_group, self.explosion_sprite_sheet, self.score)
         return enemy
 
+    def dev_options(self):
+        draw_text(f"FPS: {clock.get_fps():.2f}", 12, RED, 20, 100, topleft=True)
+        draw_text(F"get_ticks: {pygame.time.get_ticks()}", 12, RED, 20, 115, topleft=True)
 
+        '''rect = pygame.Rect(SCREEN_X/2 - 25, 200, 50, 50)
+        pygame.draw.rect(screen, RED, rect)
+        try:
+            pygame.draw.line(screen, RED, (self.player.rect.center), (SCREEN_X/2, 200))
+        except:
+            pass'''
 
-    # Cria as sprite sheets de naves -----------------------------------------------------------------------
+    # Cria as sprite sheets de naves
     @staticmethod
-    def create_sprite_sheet(sprite, sprite_size_x, sprite_size_y, *animation_type):
+    def create_sprite_sheet(sprite, sprite_size_x, sprite_size_y):
         animation_list = []
-        animation_types = animation_type
 
-        for animation in animation_types:
-            temp_list = []
-            num_of_frames = len(listdir(f"assets/images/sprites/{sprite}/{animation}"))
-            for i in range(1, num_of_frames):
-                image = pygame.image.load(
-                    path.join(getcwd() + f"/assets/images/sprites/{sprite}/{animation}/sprite-{i}.png"))
-                image = pygame.transform.scale(image, (sprite_size_x, sprite_size_y))
-                temp_list.append(image)
-            animation_list.append(temp_list)
+        num_of_frames = len(listdir(f"assets/images/sprites/{sprite}"))
+        for i in range(1, num_of_frames):
+            image = pygame.image.load(path.join(getcwd() + f"/assets/images/sprites/{sprite}/sprite-{i}.png"))
+            image = pygame.transform.scale(image, (sprite_size_x, sprite_size_y))
+            animation_list.append(image)
         return animation_list
 
     # !! ------------------------ DRAW ------------------------ !! #
@@ -453,7 +575,7 @@ def draw_text(text, tam, color, x, y, topleft=False):
     text_obj = fonte.render(text, False, color)
     text_rect = text_obj.get_rect()
     if topleft:
-        text_rect.topleft(x, y)
+        text_rect.topleft = (x, y)
     else:
         text_rect.center = (x, y)
     screen.blit(text_obj, text_rect)

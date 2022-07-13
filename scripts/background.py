@@ -1,23 +1,38 @@
 import pygame
 
-from os import path, getcwd
-
 from scripts.constantes import *
 
 class Background(pygame.sprite.Sprite):
     def __init__(self, background):
         pygame.sprite.Sprite.__init__(self)
 
-        self.image = pygame.image.load(path.join(getcwd() + f"/assets/images/{background}"))
-        #self.image = self.image.convert()
-        self.rect = self.image.get_rect()
-        self.direction_y = 4
+        self.__image = pygame.image.load(path.join(getcwd() + f"/assets/images/{background}"))
+        self.__rect = self.__image.get_rect()
+        self.__direction_y = 4
         self.reset()
 
     def update(self):
-        self.rect.top += self.direction_y
-        if self.rect.top >= 0:
+        self.__rect.top += self.__direction_y
+        if self.__rect.top >= 0:
             self.reset()
 
     def reset(self):
-        self.rect.bottom = SCREEN_Y
+        self.__rect.bottom = SCREEN_Y
+
+    # Image
+    @property
+    def image(self):
+        return self.__image
+
+    @image.setter
+    def image(self, new_image):
+        self.__image = new_image
+
+    # Rect
+    @property
+    def rect(self):
+        return self.__rect
+
+    @rect.setter
+    def rect(self, rect):
+        self.__rect = rect
