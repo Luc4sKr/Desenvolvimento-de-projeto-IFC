@@ -16,7 +16,6 @@ from scripts.enemy_shield_bar import Shield_bar
 
 
 class Menu:
-    # Adicionar controle por teclado
     def __init__(self):
         super().__init__()
         # Click do mouse
