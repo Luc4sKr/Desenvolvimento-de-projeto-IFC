@@ -19,14 +19,17 @@ class Background(pygame.sprite.Sprite):
     def reset(self):
         self.__rect.bottom = SCREEN_Y
 
+
+
     # Image
     @property
     def image(self):
         return self.__image
 
     @image.setter
-    def image(self, new_image):
-        self.__image = new_image
+    def image(self, image):
+        self.__image = image
+
 
     # Rect
     @property
@@ -36,3 +39,6 @@ class Background(pygame.sprite.Sprite):
     @rect.setter
     def rect(self, rect):
         self.__rect = rect
+
+
+        

@@ -23,14 +23,16 @@ class Bullet(pygame.sprite.Sprite):
             self.kill()
 
 
+
     # Image
     @property
     def image(self):
         return self.__image
 
     @image.setter
-    def image(self, new_image):
-        self.__image = new_image
+    def image(self, image):
+        self.__image = image
+
 
     # Rect
     @property
@@ -41,6 +43,7 @@ class Bullet(pygame.sprite.Sprite):
     def rect(self, rect):
         self.__rect = rect
 
+
     # Damage
     @property
     def damage(self):
@@ -50,6 +53,7 @@ class Bullet(pygame.sprite.Sprite):
     def damage(self, damage):
         self.__damage = damage
 
+
     # Speed
     @property
     def speed_y(self):
@@ -58,3 +62,4 @@ class Bullet(pygame.sprite.Sprite):
     @speed_y.setter
     def speed_y(self, speed_y):
         self.__speed_y = speed_y
+

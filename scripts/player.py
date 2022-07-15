@@ -114,14 +114,16 @@ class Player(pygame.sprite.Sprite):
             self.__power_time = pygame.time.get_ticks()
 
 
+
     # Image
     @property
     def image(self):
         return self.__image
 
     @image.setter
-    def image(self, new_image):
-        self.__image = new_image
+    def image(self, image):
+        self.__image = image
+
 
     # Rect
     @property
@@ -131,6 +133,7 @@ class Player(pygame.sprite.Sprite):
     @rect.setter
     def rect(self, rect):
         self.__rect = rect
+
 
     # Shield
     @property
@@ -143,6 +146,7 @@ class Player(pygame.sprite.Sprite):
             shield = 0
         self.__shield = shield
 
+
     # Lives
     @property
     def lives(self):
@@ -153,6 +157,7 @@ class Player(pygame.sprite.Sprite):
         if lives < 0:
             lives = 0
         self.__lives = lives
+
 
     # Damage
     @property
@@ -165,6 +170,7 @@ class Player(pygame.sprite.Sprite):
             damage = 1
         self.__damage = damage
 
+
     # Power
     @property
     def power(self):
@@ -173,6 +179,7 @@ class Player(pygame.sprite.Sprite):
     @power.setter
     def power(self, power):
         self.__power = power
+
 
     # Power time
     @property
@@ -183,6 +190,7 @@ class Player(pygame.sprite.Sprite):
     def power_time(self, power_time):
         self.__power_time = power_time
 
+
     # Velocity
     @property
     def velocity(self):
@@ -191,3 +199,5 @@ class Player(pygame.sprite.Sprite):
     @velocity.setter
     def velocity(self, velocity):
         self.__velocity = velocity
+
+
