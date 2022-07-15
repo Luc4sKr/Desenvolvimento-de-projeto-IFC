@@ -16,6 +16,7 @@ from scripts.enemy_shield_bar import Shield_bar
 
 
 class Menu:
+    # Adicionar controle por teclado
     def __init__(self):
         super().__init__()
         # Click do mouse
@@ -151,8 +152,8 @@ class Game:
         self.click = False
 
         # Controle de aparição dos asteroides
-        #self.asteroid_event_cooldown = pygame.time.get_ticks()
-        #self.asteroid_cooldown = pygame.time.get_ticks()
+        self.asteroid_event_cooldown = pygame.time.get_ticks()
+        self.asteroid_cooldown = pygame.time.get_ticks()
         self.asteroid_shower_time = pygame.time.get_ticks()
         self.asteroid_shower_event = False
 
@@ -447,16 +448,6 @@ class Game:
             pygame.display.update()
             screen.fill(BLACK)
 
-    # Gera novos inimigos
-    def generate_enemy(self):
-        if pygame.time.get_ticks() - self.last_enemy > self.create_enemy_delay :
-            self.last_enemy = pygame.time.get_ticks()
-            enemy_type = randint(1, 3)
-            if enemy_type < 2:
-                self.new_solo_enemy()
-            if enemy_type == 3:
-                self.new_tripe_enemy()
-
     # Função para criar um novo asteroide
     def new_asteroid(self):
         asteroid = Asteroid(self.asteroid_sprite_sheet)
@@ -468,7 +459,7 @@ class Game:
             print("Asteroid")
             self.asteroid_shower_time = pygame.time.get_ticks()
 
-            if randint(0, 100) >= 80 and not self.asteroid_shower_event:
+            if randint(0, 100) >= 0 and not self.asteroid_shower_event:
                 self.asteroid_cooldown = pygame.time.get_ticks()
                 self.asteroid_event_cooldown = pygame.time.get_ticks()
 
@@ -485,7 +476,15 @@ class Game:
                     self.asteroid_shower_event = False
                     print("cabo")
 
-
+    # Gera novos inimigos
+    def generate_enemy(self):
+        if pygame.time.get_ticks() - self.last_enemy > self.create_enemy_delay :
+            self.last_enemy = pygame.time.get_ticks()
+            enemy_type = randint(1, 3)
+            if enemy_type < 2:
+                self.new_solo_enemy()
+            if enemy_type == 3:
+                self.new_tripe_enemy()
 
     # Função para criar inimigos
     def new_tripe_enemy(self):
@@ -511,7 +510,7 @@ class Game:
         self.enemy_group.add(enemy)
 
     def create_enemy(self, x, y):
-        enemy = Enemy(x, y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.enemy_shoot_group, self.sprite_group, self.explosion_sprite_sheet, self.score)
+        enemy = Enemy(x, y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.enemy_shoot_group, self.sprite_group)
         return enemy
 
     def dev_options(self):
