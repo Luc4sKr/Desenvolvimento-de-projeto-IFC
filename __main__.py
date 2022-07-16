@@ -24,6 +24,10 @@ class Menu:
         # Controle dos laços de repetição
         self.show_menu = False
         self.show_difficulty_menu = False
+        self.show_loja_menu = False
+        self.show_opcoes_menu = False
+        self.show_creditos_menu = False
+
 
         # Background
         self.menu_background_sprite = pygame.sprite.Sprite()
@@ -72,7 +76,9 @@ class Menu:
 
             if loja_button.collidepoint((mx, my)):
                 if self.click:
-                    pass
+                    self.click = False
+                    self.loja_menu()
+
             if opcoes_button.collidepoint((mx, my)):
                 if self.click:
                     pass
@@ -134,6 +140,53 @@ class Menu:
             # Update na tela
             pygame.display.update()
             screen.fill(BLACK)
+
+    def loja_menu(self):
+        self.show_loja_menu = True
+        while self.show_loja_menu:
+            clock.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.show_loja_menu = False
+                    pygame.quit()
+                    exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.show_loja_menu = False
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        self.click = True
+
+            draw_text("LOJA", 40, WHITE, SCREEN_X / 2, 100)
+
+            nave_1_button = draw_loja_button("nave_teste.png", 70, 180, 440, 120, "Nave teste", 3, 100)
+            nave_2_button = draw_loja_button("nave_teste.png", 70, 330, 440, 120, "Nave teste", 3, 100)
+            nave_3_button = draw_loja_button("nave_teste.png", 70, 480, 440, 120, "Nave teste", 3, 100)
+
+            back_to_menu_button = draw_button(30, 670, 100, 30, "Voltar", font_size=14)
+
+            # Posição do mouse
+            mx, my = pygame.mouse.get_pos()
+
+            # Colisão com os botões
+            if back_to_menu_button.collidepoint((mx, my)):
+                if self.click:
+                    self.click = False
+                    self.show_loja_menu = False
+
+            self.click = False
+
+            pygame.display.update()
+            screen.fill(BLACK)
+
+
+    def opcoes_menu(self):
+        pass
+
+    def credios_menu(self):
+        pass
 
 
 class Game:
@@ -581,10 +634,28 @@ def draw_text(text, tam, color, x, y, topleft=False):
 def draw_button(left, top, width, height, text, font_size=20, color=(0, 0, 0)):
     button_border = pygame.Rect(left - 2, top - 2, width + 4, height + 4)
     button = pygame.Rect(left, top, width, height)
-    pygame.draw.rect(screen, (255, 255 ,255), button_border)
+    pygame.draw.rect(screen, WHITE, button_border)
     pygame.draw.rect(screen, color, button)
-    draw_text(text, font_size, (255, 255, 255), left + (width / 2), top + (height / 2))
+    draw_text(text, font_size, WHITE, left + (width / 2), top + (height / 2))
     return button
+
+def draw_loja_button(sprite, left, top, width, height, nome, vidas, shield):
+    button_border = pygame.Rect(left - 2, top - 2, width + 4, height + 4)
+    button = pygame.Rect(left, top, width, height)
+    pygame.draw.rect(screen, WHITE, button_border)
+    pygame.draw.rect(screen, BLACK, button)
+
+    image = pygame.image.load(path.join(getcwd() + f"/assets/images/{sprite}"))
+    image = pygame.transform.scale(image, (75, 75))
+    image_rect = image.get_rect()
+    image_rect.center = (left + 60, top + (height / 2))
+    screen.blit(image, image_rect)
+
+    draw_text(nome, 16, YELLOW, left + 130, top + 10, topleft=True)             # Nome
+    draw_text(f"Vidas: {vidas}", 10, WHITE, left + 130, top + 35, topleft=True) # Vidas
+    draw_text(f"Escudo: {shield}", 10, WHITE, left + 130, top + 55, topleft=True)
+    return  button
+
 
 
 
