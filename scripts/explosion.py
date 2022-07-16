@@ -6,26 +6,46 @@ class Explosion(pygame.sprite.Sprite):
     def __init__(self, center, animation_list):
         pygame.sprite.Sprite.__init__(self)
 
-        self.center = center
-        self.animation_list = animation_list
+        self.__center = center
+        self.__animation_list = animation_list
 
-        self.frame_index = 0
-        self.update_time = pygame.time.get_ticks()
-        self.image = self.animation_list[0]
-        self.rect = self.image.get_rect()
-        self.rect.center = center
+        self.__frame_index = 0
+        self.__update_time = pygame.time.get_ticks()
+        self.__image = self.__animation_list[0]
+        self.__rect = self.__image.get_rect()
+        self.__rect.center = center
 
     def update_animation(self):
-        if pygame.time.get_ticks() - self.update_time > ANIMATION_COOLDOWN:
-            self.update_time = pygame.time.get_ticks()
-            self.frame_index += 1
-            if self.frame_index == len(self.animation_list):
+        if pygame.time.get_ticks() - self.__update_time > ANIMATION_COOLDOWN:
+            self.__update_time = pygame.time.get_ticks()
+            self.__frame_index += 1
+            if self.__frame_index == len(self.__animation_list):
                 self.kill()
             else:
-                center = self.rect.center
-                self.image = self.animation_list[self.frame_index]
-                self.rect.center = center
+                center = self.__rect.center
+                self.__image = self.__animation_list[self.__frame_index]
+                self.__rect.center = center
 
     def update(self):
         self.update_animation()
 
+
+
+    # Image
+    @property
+    def image(self):
+        return self.__image
+
+    @image.setter
+    def image(self, image):
+        self.__image = image
+
+
+    # Rect
+    @property
+    def rect(self):
+        return self.__rect
+
+    @rect.setter
+    def rect(self, rect):
+        self.__rect = rect
