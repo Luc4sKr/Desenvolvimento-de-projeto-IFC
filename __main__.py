@@ -14,6 +14,8 @@ from scripts.score import Score
 from scripts.powerup import Powerup
 from scripts.enemy_shield_bar import Shield_bar
 
+from scripts.data.util import Util
+
 
 class Menu:
     def __init__(self):
@@ -114,7 +116,7 @@ class Menu:
                         self.click = True
 
             # Título
-            draw_text("Dificuldade", 44, WHITE, SCREEN_X/2, 100)
+            draw_text("Dificuldade", 44, WHITE, SCREEN_X/2, 80)
 
             # Botões
             normal_button = draw_button(SCREEN_X/2 - 120, 250, SCREEN_X/2 - 50, 50, "Normal")
@@ -159,7 +161,8 @@ class Menu:
                     if event.button == 1:
                         self.click = True
 
-            draw_text("LOJA", 40, WHITE, SCREEN_X / 2, 100)
+            draw_text("LOJA", 44, WHITE, SCREEN_X / 2, 80)
+            draw_text(f"Coins: {util.get_coins()}", 14, WHITE, 70, 150, topleft=True)
 
             nave_1_button = draw_loja_button("nave_teste.png", 70, 180, 440, 120, "Nave teste", 3, 100)
             nave_2_button = draw_loja_button("nave_teste.png", 70, 330, 440, 120, "Nave teste", 3, 100)
@@ -664,6 +667,7 @@ if __name__ == '__main__':
     pygame.init()  # Inicializa o pygame
     pygame.mixer.init()  # Inicializa o modulo de mixer
 
+    util = Util()
     menu = Menu()
     game = Game()
 
