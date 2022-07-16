@@ -10,30 +10,70 @@ class Powerup(pygame.sprite.Sprite):
     def __init__(self, center):
         pygame.sprite.Sprite.__init__(self)
 
-        powerup_images = {}
-        powerup_images["shield"] = pygame.image.load(path.join(getcwd() + "/assets/images/powerups/shield2.png"))
-        powerup_images["gun"] = pygame.image.load(path.join(getcwd() + "/assets/images/powerups/gun.png"))
+        powerup_images = {
+            "shield": pygame.image.load(path.join(getcwd() + "/assets/images/powerups/shield2.png")),
+            "gun": pygame.image.load(path.join(getcwd() + "/assets/images/powerups/gun.png"))
+        }
 
-         # Imagem
-        self.type = choice(["shield", "gun"]) # Escolhe aleatoriamente o tipo
-        self.image = powerup_images[self.type]
+        # Imagem
+        self.__type = choice(["shield", "gun"]) # Escolhe aleatoriamente o tipo
+        self.__image = powerup_images[self.__type]
 
-        if self.type == "shield":
-            self.image = pygame.transform.scale(self.image, (30, 38))
+        if self.__type == "shield":
+            self.__image = pygame.transform.scale(self.__image, (30, 38))
         else:
-            self.image = pygame.transform.scale(self.image, (40, 40))
+            self.__image = pygame.transform.scale(self.__image, (40, 40))
 
-
-        self.rect = self.image.get_rect()
-
-        self.rect.center = center
+        self.__rect = self.__image.get_rect()
+        self.__rect.center = center
 
         # Velocidade y
-        self.speedy = 3
+        self.__speedy = 3
 
     def update(self):
-        self.rect.y += self.speedy
+        self.__rect.y += self.__speedy
 
-        if self.rect.top > SCREEN_Y:
+        if self.__rect.top > SCREEN_Y:
             self.kill()
-        
+
+
+
+    # Image
+    @property
+    def image(self):
+        return self.__image
+
+    @image.setter
+    def image(self, image):
+        self.__image = image
+
+    # Rect
+    @property
+    def rect(self):
+        return self.__rect
+
+    @rect.setter
+    def rect(self, rect):
+        self.__rect = rect
+
+
+    # Speedy
+    @property
+    def speedy(self):
+        return self.__speedy
+
+    @speedy.setter
+    def speedy(self, speedy):
+        self.__speedy = speedy
+
+
+    # Type
+    @property
+    def type(self):
+        return self.__type
+
+    @type.setter
+    def type(self, type):
+        self.__type = type
+
+
