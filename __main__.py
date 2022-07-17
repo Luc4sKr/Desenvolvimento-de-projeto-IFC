@@ -33,7 +33,7 @@ class Menu:
 
         # Background
         self.menu_background_sprite = pygame.sprite.Sprite()
-        self.menu_background_sprite.image = pygame.image.load(path.join(getcwd() + "/assets/images/menu_background.png"))
+        self.menu_background_sprite.image = pygame.image.load(path.join(getcwd() + "/assets/images/backgrounds/menu_background.png"))
         self.menu_background_sprite.image = pygame.transform.scale(self.menu_background_sprite.image, (SCREEN_X, SCREEN_Y))
         self.menu_background_sprite.rect = self.menu_background_sprite.image.get_rect()
         self.menu_background = pygame.sprite.GroupSingle(self.menu_background_sprite)
