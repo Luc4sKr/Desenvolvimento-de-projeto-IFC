@@ -1,6 +1,6 @@
 import pygame
 
-from scripts.constantes import ANIMATION_COOLDOWN
+from scripts.constantes import *
 
 class Explosion(pygame.sprite.Sprite):
     def __init__(self, center, animation_list):
@@ -16,7 +16,7 @@ class Explosion(pygame.sprite.Sprite):
         self.__rect.center = center
 
     def update_animation(self):
-        if pygame.time.get_ticks() - self.__update_time > ANIMATION_COOLDOWN:
+        if pygame.time.get_ticks() - self.__update_time > EXPLOSION_ANIMATION_COOLDOWN:
             self.__update_time = pygame.time.get_ticks()
             self.__frame_index += 1
             if self.__frame_index == len(self.__animation_list):

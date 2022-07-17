@@ -34,7 +34,7 @@ class Enemy(pygame.sprite.Sprite):
     # Update de animação
     def update_animation(self):
         self.__image = self.__animation_list[self.__frame_index]
-        if pygame.time.get_ticks() - self.__update_time > ANIMATION_COOLDOWN:
+        if pygame.time.get_ticks() - self.__update_time > ENEMIES_ANIMATION_COOLDOWN:
             self.__update_time = pygame.time.get_ticks()
             self.__frame_index += 1
         if self.__frame_index >= len(self.__animation_list):

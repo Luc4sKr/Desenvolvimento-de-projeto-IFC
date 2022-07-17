@@ -201,8 +201,6 @@ class Game:
         self.show_game_over_screen = False
         self.draw_dev_options = False
 
-        self.teste = pygame.time.get_ticks()
-
         # Click do mouse
         self.click = False
 
@@ -286,18 +284,17 @@ class Game:
                         self.show_pause = True
                         self.pause_screen()
 
-                    if event.key == pygame.K_k:
-                        self.player.lives = 0
+                    if event.key == pygame.K_p:
+                        self.asteroid_shower_event = True
+
+                    if event.key == pygame.K_o:
+                        print(self.sprite_group)
 
                     if event.key == pygame.K_F3:
                         if not self.draw_dev_options:
                             self.draw_dev_options = True
                         else:
                             self.draw_dev_options = False
-
-                    '''if event.key == pygame.K_SPACE:
-                        self.player.shoot_missil((SCREEN_X/2, 200))
-                        self.sprite_group.add(self.player.missil)'''
 
             self.collision_checks()
 
@@ -386,12 +383,6 @@ class Game:
         enemy_shoot_collision = pygame.sprite.spritecollide(self.player, self.enemy_shoot_group, True)
         for hit in enemy_shoot_collision:
             self.player.shield -= hit.damage
-
-        # Explosão quando o tiro bate na nave
-        '''self.explode_bullet = pygame.sprite.groupcollide(self.bullet_group, self.enemy_group, False, False, pygame.sprite.collide_mask)
-        for hit in self.explode_bullet:
-            explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
-            self.sprite_group.add(explosion)'''
 
     def check_lives(self):
         # Verifica se o player ainda tem vidas
@@ -493,10 +484,6 @@ class Game:
                     self.show_game_over_screen = False
                     self.new_game(1)
 
-            '''draw_text("|", 32, RED, SCREEN_X/2, 300)
-            draw_text("|", 32, RED, SCREEN_X / 2 - 140, 300)
-            draw_text("|", 32, RED, SCREEN_X / 2 + 140, 300)'''
-
             self.click = False
 
             pygame.display.flip()
@@ -513,7 +500,7 @@ class Game:
         if pygame.time.get_ticks() - self.asteroid_shower_time > ASTEROID_TIME or self.asteroid_shower_event:
             self.asteroid_shower_time = pygame.time.get_ticks()
 
-            if randint(0, 100) >= 0 and not self.asteroid_shower_event:
+            if randint(0, 100) >= 80 and not self.asteroid_shower_event:
                 self.asteroid_cooldown = pygame.time.get_ticks()
                 self.asteroid_event_cooldown = pygame.time.get_ticks()
 
@@ -567,14 +554,8 @@ class Game:
 
     def dev_options(self):
         draw_text(f"FPS: {clock.get_fps():.2f}", 12, RED, 20, 100, topleft=True)
-        draw_text(F"get_ticks: {pygame.time.get_ticks()}", 12, RED, 20, 115, topleft=True)
+        #draw_text(F"get_ticks: {pygame.time.get_ticks()}", 12, RED, 20, 115, topleft=True)
 
-        '''rect = pygame.Rect(SCREEN_X/2 - 25, 200, 50, 50)
-        pygame.draw.rect(screen, RED, rect)
-        try:
-            pygame.draw.line(screen, RED, (self.player.rect.center), (SCREEN_X/2, 200))
-        except:
-            pass'''
 
     # Cria as sprite sheets de naves
     @staticmethod
