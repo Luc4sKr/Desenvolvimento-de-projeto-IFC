@@ -6,10 +6,10 @@ from scripts.bullet import Bullet
 from scripts.missil import Missil
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, image, shield, shoot_delay, sprite_group, bullet_group):
+    def __init__(self, image, attributes, sprite_group, bullet_group):
         pygame.sprite.Sprite.__init__(self)
 
-        self.__image = pygame.image.load(path.join(getcwd() + f"/assets/images/{image}")).convert_alpha()
+        self.__image = pygame.image.load(path.join(getcwd() + f"/assets/images/{image}.png")).convert_alpha()
         self.__image = pygame.transform.scale(self.__image, (PLAYER_SIZE_X, PLAYER_SIZE_Y))
         self.__rect = self.__image.get_rect()
 
@@ -19,14 +19,15 @@ class Player(pygame.sprite.Sprite):
         self.__sprite_group = sprite_group
         self.__bullet_group = bullet_group
 
-        self.__shield = shield # Escudo/vida da nave
-        self.__shoot_delay = shoot_delay # Delay do tiro
+        self.__shield = attributes["shield"] # Escudo/vida da nave
+        self.__shoot_delay = attributes["shoot_delay"] # Delay do tiro
+        self.__lives = attributes["lives"]  # Vidas
+        self.__damage = attributes["damage"]  # Dano
+        self.__spaceship_velocity = attributes["velocity"] # Velocidade
+
         self.__last_shoot = pygame.time.get_ticks() # Tempo do ultimo tiro
-        self.__lives = 3 # Vidas
-        self.__damage = 1 # Dano
         self.__hidden = False 
         self.__hide_timer = pygame.time.get_ticks()
-        self.__velocity = 0
         self.__key = None
 
         # Powerups
@@ -35,7 +36,7 @@ class Player(pygame.sprite.Sprite):
 
     def movement(self):
         self.__key = pygame.key.get_pressed()
-        self.__velocity = PLAYER_VEL
+        self.__velocity = self.__spaceship_velocity
 
         if self.__key[pygame.K_w] or self.__key[pygame.K_UP]:
             if self.__key[pygame.K_d] or self.__key[pygame.K_a] or self.__key[pygame.K_LEFT] or self.__key[pygame.K_RIGHT]:
@@ -93,18 +94,17 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         self.movement()
+        self.collision()
 
         # Shoot
         if self.__key[pygame.K_SPACE]:
             self.shoot()
 
-        self.collision()
-
         if self.__hidden and pygame.time.get_ticks() - self.__hide_timer > 1000:
             self.__hidden = False
             self.__rect.center = (SCREEN_X /2, 600)
 
-            self.__image = pygame.image.load(path.join(getcwd() + "/assets/images/spaceship_1.png"))
+            self.__image = pygame.image.load(path.join(getcwd() + "/assets/images/spaceship-1.png"))
             self.__image = pygame.transform.scale(self.__image, (PLAYER_SIZE_X, PLAYER_SIZE_Y))
 
 

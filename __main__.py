@@ -229,7 +229,7 @@ class Game:
         self.sprite_group.add(self.game_background_rect)
 
         # Player
-        self.player = Player("spaceship_1.png", 100, 250, self.sprite_group, self.bullet_group)
+        self.player = Player(util.get_spaceship(), util.spaceship_attributes(), self.sprite_group, self.bullet_group)
         self.sprite_group.add(self.player)
         # Imagem do player que serve como contador de vidas
         self.player_mini_image = pygame.transform.scale(self.player.image, (35, 35))
@@ -511,7 +511,6 @@ class Game:
 
     def asteroid_shower(self):
         if pygame.time.get_ticks() - self.asteroid_shower_time > ASTEROID_TIME or self.asteroid_shower_event:
-            print("Asteroid")
             self.asteroid_shower_time = pygame.time.get_ticks()
 
             if randint(0, 100) >= 0 and not self.asteroid_shower_event:
@@ -519,7 +518,6 @@ class Game:
                 self.asteroid_event_cooldown = pygame.time.get_ticks()
 
                 self.asteroid_shower_event = True
-                print("chuva")
 
             if self.asteroid_shower_event:
                 if pygame.time.get_ticks() - self.asteroid_cooldown > ASTEROID_COOLDOWN:
@@ -529,7 +527,6 @@ class Game:
                 if pygame.time.get_ticks() - self.asteroid_event_cooldown > ASTEROID_EVENT_COOLDOWN:
                     self.asteroid_event_cooldown = pygame.time.get_ticks()
                     self.asteroid_shower_event = False
-                    print("cabo")
 
     # Gera novos inimigos
     def generate_enemy(self):
