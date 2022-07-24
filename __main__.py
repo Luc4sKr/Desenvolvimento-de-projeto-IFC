@@ -23,6 +23,8 @@ class Menu:
         # Click do mouse
         self.click = False
 
+        self.cursor_point = None
+
         # Controle dos laços de repetição
         self.show_menu = False
         self.show_difficulty_menu = False
@@ -39,6 +41,7 @@ class Menu:
         self.menu_background = pygame.sprite.GroupSingle(self.menu_background_sprite)
 
     def menu(self):
+        button_list = []
         self.show_menu = True
         while self.show_menu:
             clock.tick(FPS)
@@ -47,6 +50,13 @@ class Menu:
                     self.show_menu = False
                     pygame.quit()
                     exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        self.cursor_event(button_list, "UP")
+
+                    if event.key == pygame.K_DOWN:
+                        self.cursor_event(button_list, "DOWN")
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
@@ -66,40 +76,55 @@ class Menu:
             creditos_button = draw_button(SCREEN_X/2 - 120, 430, SCREEN_X/2 - 50, 50, "CRÉDITOS")
             sair_button = draw_button(SCREEN_X/2 - 120, 490, SCREEN_X/2 - 50, 50, "SAIR")
 
+            button_list = [jogar_button, loja_button, opcoes_button, creditos_button, sair_button]
+
             # Posição do mouse
             mx, my = pygame.mouse.get_pos()
 
             # Inputs do mouse com os botões do menu
             if jogar_button.collidepoint((mx, my)):
+                self.cursor_point = jogar_button
                 if self.click:
                     self.click = False
                     self.show_menu = False
                     self.difficulty_menu()
 
             if loja_button.collidepoint((mx, my)):
+                self.cursor_point = loja_button
                 if self.click:
                     self.click = False
                     self.loja_menu()
 
             if opcoes_button.collidepoint((mx, my)):
+                self.cursor_point = opcoes_button
                 if self.click:
-                    pass
+                    self.click = False
+
             if creditos_button.collidepoint((mx, my)):
+                self.cursor_point = creditos_button
                 if self.click:
                     pass
+
             if sair_button.collidepoint((mx, my)):
+                self.cursor_point = sair_button
                 if self.click:
                     self.show_menu = False
                     pygame.quit()
                     exit()
 
-
             # Depois de checar os inputs o click volta a ser falso
             self.click = False
+
+            try:
+                draw_cursor(self.cursor_point)
+            except:
+                self.cursor_point = jogar_button
+                #draw_cursor(jogar_button)
 
             # Update na tela
             pygame.display.update()
             screen.fill(BLACK)
+
 
     def difficulty_menu(self):
         self.show_difficulty_menu = True
@@ -128,20 +153,26 @@ class Menu:
 
             # Colisão com os botões
             if normal_button.collidepoint((mx, my)):
+                draw_cursor(normal_button)
                 if self.click:
                     self.click = False
                     self.show_difficulty_menu = False
                     game.new_game(1)
+
             if dificil_button.collidepoint((mx, my)):
+                draw_cursor(dificil_button)
                 if self.click:
                     pass
+
             if insano_button.collidepoint((mx, my)):
+                draw_cursor(insano_button)
                 if self.click:
                     pass
 
             # Update na tela
             pygame.display.update()
             screen.fill(BLACK)
+
 
     def loja_menu(self):
         self.show_loja_menu = True
@@ -186,10 +217,29 @@ class Menu:
 
 
     def opcoes_menu(self):
-        pass
+        self.show_opcoes_menu = True
+        while self.show_opcoes_menu:
+            clock.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.show_opcoes_menu = False
+                    pygame.quit()
+                    exit()
+
 
     def credios_menu(self):
         pass
+
+
+    def cursor_event(self, button_list, type):
+                if type == "UP":
+                    if button_list.index(self.cursor_point) > 0:
+                        self.cursor_point = button_list[button_list.index(self.cursor_point)-1]
+
+                if type == "DOWN":
+                    if button_list.index(self.cursor_point) < len(button_list)-1:
+                        self.cursor_point = button_list[button_list.index(self.cursor_point)+1]
+
 
 
 class Game:
@@ -320,6 +370,7 @@ class Game:
 
         # Texto/Draw
         draw_text(f"Score: {self.score.score}", 18, WHITE, SCREEN_X / 2, 16)  # Texto do score
+
         self.draw_shield_bar(5, 10) # Shield do Player
         self.draw_lives(480, 10, self.player_mini_image) # Vidas do Player
 
@@ -427,16 +478,21 @@ class Game:
 
             # Inputs do mouse com os botões do menu
             if voltar_ao_jogo_button.collidepoint((mx, my)):
+                draw_cursor(voltar_ao_jogo_button)
                 if self.click:
                     self.click = False
                     self.show_pause = False
+
             if voltar_ao_menu_button.collidepoint((mx, my)):
+                draw_cursor(voltar_ao_menu_button)
                 if self.click:
                     self.click = False
                     self.show_pause = False
                     self.game_over = True
                     menu.menu()
+
             if sair_do_jogo_button.collidepoint((mx, my)):
+                draw_cursor(sair_do_jogo_button)
                 if self.click:
                     self.click = False
                     self.show_pause = False
@@ -636,6 +692,11 @@ def draw_loja_button(sprite, left, top, width, height, nome, vidas, shield):
     draw_text(f"Vidas: {vidas}", 10, WHITE, left + 130, top + 35, topleft=True) # Vidas
     draw_text(f"Escudo: {shield}", 10, WHITE, left + 130, top + 55, topleft=True)
     return  button
+
+def draw_cursor(button, color=WHITE):
+    draw_text("->", 16, color, button.left - 30, button.centery)
+    draw_text("<-", 16, color, button.right + 30, button.centery)
+
 
 
 

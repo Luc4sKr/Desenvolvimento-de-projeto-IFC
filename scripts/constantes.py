@@ -30,7 +30,7 @@ ASTEROID_SIZE_X = 60
 ASTEROID_SIZE_Y = 60
 ASTEROID_TIME = 20000 # Tempo para ter a chance de começar o evento
 ASTEROID_EVENT_COOLDOWN = 10000 # COOLDOWND do tempo de evento
-ASTEROID_COOLDOWN = 150 # COOLDOWN que os asteroids tem para aparecer
+ASTEROID_COOLDOWN = 100 # COOLDOWN que os asteroids tem para aparecer
 
 
 # FPS
