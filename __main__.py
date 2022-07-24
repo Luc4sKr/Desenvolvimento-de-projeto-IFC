@@ -23,6 +23,7 @@ class Menu:
         # Click do mouse
         self.click = False
 
+        # Ponto do cursor
         self.cursor_point = None
 
         # Controle dos laços de repetição
@@ -32,13 +33,13 @@ class Menu:
         self.show_opcoes_menu = False
         self.show_creditos_menu = False
 
-
         # Background
         self.menu_background_sprite = pygame.sprite.Sprite()
         self.menu_background_sprite.image = pygame.image.load(path.join(getcwd() + "/assets/images/backgrounds/menu_background.png"))
         self.menu_background_sprite.image = pygame.transform.scale(self.menu_background_sprite.image, (SCREEN_X, SCREEN_Y))
         self.menu_background_sprite.rect = self.menu_background_sprite.image.get_rect()
         self.menu_background = pygame.sprite.GroupSingle(self.menu_background_sprite)
+
 
     def menu(self):
         button_list = []
@@ -57,6 +58,9 @@ class Menu:
 
                     if event.key == pygame.K_DOWN:
                         self.cursor_event(button_list, "DOWN")
+
+                    if event.key == pygame.K_RETURN:
+                        self.click = True
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
@@ -82,30 +86,33 @@ class Menu:
             mx, my = pygame.mouse.get_pos()
 
             # Inputs do mouse com os botões do menu
-            if jogar_button.collidepoint((mx, my)):
+            if jogar_button.collidepoint((mx, my)) or self.cursor_point == jogar_button:
                 self.cursor_point = jogar_button
                 if self.click:
                     self.click = False
+
                     self.show_menu = False
                     self.difficulty_menu()
 
-            if loja_button.collidepoint((mx, my)):
+            if loja_button.collidepoint((mx, my)) or self.cursor_point == loja_button:
                 self.cursor_point = loja_button
                 if self.click:
                     self.click = False
+
                     self.loja_menu()
 
-            if opcoes_button.collidepoint((mx, my)):
+            if opcoes_button.collidepoint((mx, my)) or self.cursor_point == opcoes_button:
                 self.cursor_point = opcoes_button
                 if self.click:
                     self.click = False
 
-            if creditos_button.collidepoint((mx, my)):
+            if creditos_button.collidepoint((mx, my)) or self.cursor_point == creditos_button:
                 self.cursor_point = creditos_button
                 if self.click:
+                    self.click = False
                     pass
 
-            if sair_button.collidepoint((mx, my)):
+            if sair_button.collidepoint((mx, my)) or self.cursor_point == sair_button:
                 self.cursor_point = sair_button
                 if self.click:
                     self.show_menu = False
@@ -119,7 +126,6 @@ class Menu:
                 draw_cursor(self.cursor_point)
             except:
                 self.cursor_point = jogar_button
-                #draw_cursor(jogar_button)
 
             # Update na tela
             pygame.display.update()
@@ -127,6 +133,7 @@ class Menu:
 
 
     def difficulty_menu(self):
+        button_list = []
         self.show_difficulty_menu = True
         while self.show_difficulty_menu:
             clock.tick(FPS)
@@ -135,6 +142,16 @@ class Menu:
                     self.show_menu = False
                     pygame.quit()
                     exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        self.cursor_event(button_list, "UP")
+
+                    if event.key == pygame.K_DOWN:
+                        self.cursor_event(button_list, "DOWN")
+
+                    if event.key == pygame.K_RETURN:
+                        self.click = True
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
@@ -148,26 +165,37 @@ class Menu:
             dificil_button = draw_button(SCREEN_X/2 - 120, 310, SCREEN_X/2 - 50, 50, "Difícil")
             insano_button = draw_button(SCREEN_X/2 - 120, 370, SCREEN_X/2 - 50, 50, "Insano")
 
+            button_list = [normal_button, dificil_button, insano_button]
+
             # Posição do mouse
             mx, my = pygame.mouse.get_pos()
 
             # Colisão com os botões
-            if normal_button.collidepoint((mx, my)):
+            if normal_button.collidepoint((mx, my)) or self.cursor_point == normal_button:
                 draw_cursor(normal_button)
                 if self.click:
                     self.click = False
+
                     self.show_difficulty_menu = False
                     game.new_game(1)
 
-            if dificil_button.collidepoint((mx, my)):
+            if dificil_button.collidepoint((mx, my)) or self.cursor_point == dificil_button:
                 draw_cursor(dificil_button)
                 if self.click:
                     pass
 
-            if insano_button.collidepoint((mx, my)):
+            if insano_button.collidepoint((mx, my)) or self.cursor_point == insano_button:
                 draw_cursor(insano_button)
                 if self.click:
                     pass
+
+            # Depois de checar os inputs o click volta a ser falso
+            self.click = False
+
+            try:
+                draw_cursor(self.cursor_point)
+            except:
+                self.cursor_point = normal_button
 
             # Update na tela
             pygame.display.update()
@@ -239,6 +267,7 @@ class Menu:
                 if type == "DOWN":
                     if button_list.index(self.cursor_point) < len(button_list)-1:
                         self.cursor_point = button_list[button_list.index(self.cursor_point)+1]
+
 
 
 
@@ -451,6 +480,7 @@ class Game:
 
     # Tela de pause
     def pause_screen(self):
+        button_list = []
         self.show_pause = True
         while self.show_pause:
             clock.tick(FPS)
@@ -460,6 +490,19 @@ class Game:
                     self.game_over = True
                     pygame.quit()
                     exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.show_pause = False
+
+                    if event.key == pygame.K_UP:
+                        menu.cursor_event(button_list, "UP")
+
+                    if event.key == pygame.K_DOWN:
+                        menu.cursor_event(button_list, "DOWN")
+
+                    if event.key == pygame.K_RETURN:
+                        self.click = True
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
@@ -473,32 +516,41 @@ class Game:
             voltar_ao_menu_button = draw_button(SCREEN_X / 2 - 150, 310, SCREEN_X / 2 + 10, 50, "VOLTAR AO MENU")
             sair_do_jogo_button = draw_button(SCREEN_X / 2 - 150, 370, SCREEN_X / 2 + 10, 50, "SAIR DO JOGO")
 
+            button_list = [voltar_ao_jogo_button, voltar_ao_menu_button, sair_do_jogo_button]
             # Posição do mouse
             mx, my = pygame.mouse.get_pos()
 
             # Inputs do mouse com os botões do menu
-            if voltar_ao_jogo_button.collidepoint((mx, my)):
+            if voltar_ao_jogo_button.collidepoint((mx, my)) or menu.cursor_point == voltar_ao_jogo_button:
                 draw_cursor(voltar_ao_jogo_button)
                 if self.click:
                     self.click = False
+
                     self.show_pause = False
 
-            if voltar_ao_menu_button.collidepoint((mx, my)):
+            if voltar_ao_menu_button.collidepoint((mx, my)) or menu.cursor_point == voltar_ao_menu_button:
                 draw_cursor(voltar_ao_menu_button)
                 if self.click:
                     self.click = False
+
                     self.show_pause = False
                     self.game_over = True
                     menu.menu()
 
-            if sair_do_jogo_button.collidepoint((mx, my)):
+            if sair_do_jogo_button.collidepoint((mx, my)) or menu.cursor_point == sair_do_jogo_button:
                 draw_cursor(sair_do_jogo_button)
                 if self.click:
                     self.click = False
+
                     self.show_pause = False
                     self.game_over = True
                     pygame.quit()
                     exit()
+
+            try:
+                draw_cursor(menu.cursor_point)
+            except:
+                menu.cursor_point = voltar_ao_menu_button
 
             # Depois de checar os inputs o click fica falso
             self.click = False
