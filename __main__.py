@@ -23,9 +23,6 @@ class Menu:
         # Click do mouse
         self.click = False
 
-        # Ponto do cursor
-        self.cursor_point = None
-
         # Controle dos laços de repetição
         self.show_menu = False
         self.show_difficulty_menu = False
@@ -43,7 +40,9 @@ class Menu:
 
     def menu(self):
         button_list = []
+        cursor_point = None
         self.show_menu = True
+
         while self.show_menu:
             clock.tick(FPS)
             for event in pygame.event.get():
@@ -54,10 +53,10 @@ class Menu:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP:
-                        self.cursor_event(button_list, "UP")
+                        cursor_point = self.cursor_event(button_list, cursor_point, "UP")
 
                     if event.key == pygame.K_DOWN:
-                        self.cursor_event(button_list, "DOWN")
+                        cursor_point = self.cursor_event(button_list, cursor_point, "DOWN")
 
                     if event.key == pygame.K_RETURN:
                         self.click = True
@@ -86,34 +85,34 @@ class Menu:
             mx, my = pygame.mouse.get_pos()
 
             # Inputs do mouse com os botões do menu
-            if jogar_button.collidepoint((mx, my)) or self.cursor_point == jogar_button:
-                self.cursor_point = jogar_button
+            if jogar_button.collidepoint((mx, my)) or cursor_point == jogar_button:
+                cursor_point = jogar_button
                 if self.click:
                     self.click = False
 
                     self.show_menu = False
                     self.difficulty_menu()
 
-            if loja_button.collidepoint((mx, my)) or self.cursor_point == loja_button:
-                self.cursor_point = loja_button
+            if loja_button.collidepoint((mx, my)) or cursor_point == loja_button:
+                cursor_point = loja_button
                 if self.click:
                     self.click = False
 
                     self.loja_menu()
 
-            if opcoes_button.collidepoint((mx, my)) or self.cursor_point == opcoes_button:
-                self.cursor_point = opcoes_button
+            if opcoes_button.collidepoint((mx, my)) or cursor_point == opcoes_button:
+                cursor_point = opcoes_button
                 if self.click:
                     self.click = False
 
-            if creditos_button.collidepoint((mx, my)) or self.cursor_point == creditos_button:
-                self.cursor_point = creditos_button
+            if creditos_button.collidepoint((mx, my)) or cursor_point == creditos_button:
+                cursor_point = creditos_button
                 if self.click:
                     self.click = False
                     pass
 
-            if sair_button.collidepoint((mx, my)) or self.cursor_point == sair_button:
-                self.cursor_point = sair_button
+            if sair_button.collidepoint((mx, my)) or cursor_point == sair_button:
+                cursor_point = sair_button
                 if self.click:
                     self.show_menu = False
                     pygame.quit()
@@ -123,9 +122,9 @@ class Menu:
             self.click = False
 
             try:
-                draw_cursor(self.cursor_point)
+                draw_cursor(cursor_point)
             except:
-                self.cursor_point = jogar_button
+                cursor_point = jogar_button
 
             # Update na tela
             pygame.display.update()
@@ -134,7 +133,9 @@ class Menu:
 
     def difficulty_menu(self):
         button_list = []
+        cursor_point = None
         self.show_difficulty_menu = True
+
         while self.show_difficulty_menu:
             clock.tick(FPS)
             for event in pygame.event.get():
@@ -145,10 +146,10 @@ class Menu:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP:
-                        self.cursor_event(button_list, "UP")
+                        cursor_point = self.cursor_event(button_list, cursor_point, "UP")
 
                     if event.key == pygame.K_DOWN:
-                        self.cursor_event(button_list, "DOWN")
+                        cursor_point = self.cursor_event(button_list, cursor_point, "DOWN")
 
                     if event.key == pygame.K_RETURN:
                         self.click = True
@@ -171,7 +172,7 @@ class Menu:
             mx, my = pygame.mouse.get_pos()
 
             # Colisão com os botões
-            if normal_button.collidepoint((mx, my)) or self.cursor_point == normal_button:
+            if normal_button.collidepoint((mx, my)) or cursor_point == normal_button:
                 draw_cursor(normal_button)
                 if self.click:
                     self.click = False
@@ -179,12 +180,12 @@ class Menu:
                     self.show_difficulty_menu = False
                     game.new_game(1)
 
-            if dificil_button.collidepoint((mx, my)) or self.cursor_point == dificil_button:
+            if dificil_button.collidepoint((mx, my)) or cursor_point == dificil_button:
                 draw_cursor(dificil_button)
                 if self.click:
                     pass
 
-            if insano_button.collidepoint((mx, my)) or self.cursor_point == insano_button:
+            if insano_button.collidepoint((mx, my)) or cursor_point == insano_button:
                 draw_cursor(insano_button)
                 if self.click:
                     pass
@@ -193,9 +194,9 @@ class Menu:
             self.click = False
 
             try:
-                draw_cursor(self.cursor_point)
+                draw_cursor(cursor_point)
             except:
-                self.cursor_point = normal_button
+                cursor_point = normal_button
 
             # Update na tela
             pygame.display.update()
@@ -259,14 +260,15 @@ class Menu:
         pass
 
 
-    def cursor_event(self, button_list, type):
+    @staticmethod
+    def cursor_event(button_list, cursor_point, type):
                 if type == "UP":
-                    if button_list.index(self.cursor_point) > 0:
-                        self.cursor_point = button_list[button_list.index(self.cursor_point)-1]
+                    if button_list.index(cursor_point) >= 0:
+                        return button_list[button_list.index(cursor_point)-1]
 
                 if type == "DOWN":
-                    if button_list.index(self.cursor_point) < len(button_list)-1:
-                        self.cursor_point = button_list[button_list.index(self.cursor_point)+1]
+                    if button_list.index(cursor_point) < len(button_list)-1:
+                       return button_list[button_list.index(cursor_point)+1]
 
 
 
@@ -481,7 +483,9 @@ class Game:
     # Tela de pause
     def pause_screen(self):
         button_list = []
+        cursor_point = None
         self.show_pause = True
+
         while self.show_pause:
             clock.tick(FPS)
             for event in pygame.event.get():
@@ -496,10 +500,10 @@ class Game:
                         self.show_pause = False
 
                     if event.key == pygame.K_UP:
-                        menu.cursor_event(button_list, "UP")
+                        cursor_point = menu.cursor_event(button_list, cursor_point, "UP")
 
                     if event.key == pygame.K_DOWN:
-                        menu.cursor_event(button_list, "DOWN")
+                        cursor_point = menu.cursor_event(button_list, cursor_point, "DOWN")
 
                     if event.key == pygame.K_RETURN:
                         self.click = True
@@ -521,15 +525,15 @@ class Game:
             mx, my = pygame.mouse.get_pos()
 
             # Inputs do mouse com os botões do menu
-            if voltar_ao_jogo_button.collidepoint((mx, my)) or menu.cursor_point == voltar_ao_jogo_button:
-                draw_cursor(voltar_ao_jogo_button)
+            if voltar_ao_jogo_button.collidepoint((mx, my)) or cursor_point == voltar_ao_jogo_button:
+                cursor_point = voltar_ao_jogo_button
                 if self.click:
                     self.click = False
 
                     self.show_pause = False
 
-            if voltar_ao_menu_button.collidepoint((mx, my)) or menu.cursor_point == voltar_ao_menu_button:
-                draw_cursor(voltar_ao_menu_button)
+            if voltar_ao_menu_button.collidepoint((mx, my)) or cursor_point == voltar_ao_menu_button:
+                cursor_point = voltar_ao_menu_button
                 if self.click:
                     self.click = False
 
@@ -537,8 +541,8 @@ class Game:
                     self.game_over = True
                     menu.menu()
 
-            if sair_do_jogo_button.collidepoint((mx, my)) or menu.cursor_point == sair_do_jogo_button:
-                draw_cursor(sair_do_jogo_button)
+            if sair_do_jogo_button.collidepoint((mx, my)) or cursor_point == sair_do_jogo_button:
+                cursor_point = sair_do_jogo_button
                 if self.click:
                     self.click = False
 
@@ -548,25 +552,37 @@ class Game:
                     exit()
 
             try:
-                draw_cursor(menu.cursor_point)
+                draw_cursor(cursor_point)
             except:
-                menu.cursor_point = voltar_ao_menu_button
+                cursor_point = voltar_ao_jogo_button
 
             # Depois de checar os inputs o click fica falso
             self.click = False
 
-            pygame.display.flip()
             pygame.display.update()
             screen.fill(BLACK)
 
     # Tela de game over
     def game_over_screen(self):
         self.show_game_over_screen = True
+        button_list = []
+        cursor_point = None
+
         while self.show_game_over_screen:
             clock.tick(FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP:
+                        cursor_point = menu.cursor_event(button_list, cursor_point, "UP")
+
+                    if event.key == pygame.K_DOWN:
+                        cursor_point = menu.cursor_event(button_list, cursor_point, "DOWN")
+
+                    if event.key == pygame.K_RETURN:
+                        self.click = True
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
@@ -579,22 +595,34 @@ class Game:
             voltar_ao_menu_buttom = draw_button(SCREEN_X/2 - 150, 300, SCREEN_X/2 + 10, 50, "Voltar ao menu")
             jogar_novamente_button = draw_button(SCREEN_X / 2 - 150, 360, SCREEN_X / 2 + 10, 50, "Jogar novamente", font_size=19)
 
+            button_list = [voltar_ao_menu_buttom, jogar_novamente_button]
+
             mx, my = pygame.mouse.get_pos()
 
-            if voltar_ao_menu_buttom.collidepoint((mx, my)):
+            if voltar_ao_menu_buttom.collidepoint((mx, my)) or cursor_point == voltar_ao_menu_buttom:
+                cursor_point = voltar_ao_menu_buttom
                 if self.click:
                     self.click = False
+
                     self.show_game_over_screen = False
                     menu.menu()
-            if jogar_novamente_button.collidepoint((mx, my)):
+
+            if jogar_novamente_button.collidepoint((mx, my)) or cursor_point == jogar_novamente_button:
+                cursor_point = jogar_novamente_button
                 if self.click:
                     self.click = False
+
                     self.show_game_over_screen = False
-                    self.new_game(1)
+                    self.new_game(self.difficulty)
+
 
             self.click = False
 
-            pygame.display.flip()
+            try:
+                draw_cursor(cursor_point)
+            except:
+                cursor_point = voltar_ao_menu_buttom
+
             pygame.display.update()
             screen.fill(BLACK)
 
@@ -720,6 +748,7 @@ def draw_text(text, tam, color, x, y, topleft=False):
         text_rect.center = (x, y)
     screen.blit(text_obj, text_rect)
 
+
 def draw_button(left, top, width, height, text, font_size=20, color=(0, 0, 0)):
     button_border = pygame.Rect(left - 2, top - 2, width + 4, height + 4)
     button = pygame.Rect(left, top, width, height)
@@ -727,6 +756,7 @@ def draw_button(left, top, width, height, text, font_size=20, color=(0, 0, 0)):
     pygame.draw.rect(screen, color, button)
     draw_text(text, font_size, WHITE, left + (width / 2), top + (height / 2))
     return button
+
 
 def draw_loja_button(sprite, left, top, width, height, nome, vidas, shield):
     button_border = pygame.Rect(left - 2, top - 2, width + 4, height + 4)
@@ -744,6 +774,7 @@ def draw_loja_button(sprite, left, top, width, height, nome, vidas, shield):
     draw_text(f"Vidas: {vidas}", 10, WHITE, left + 130, top + 35, topleft=True) # Vidas
     draw_text(f"Escudo: {shield}", 10, WHITE, left + 130, top + 55, topleft=True)
     return  button
+
 
 def draw_cursor(button, color=WHITE):
     draw_text("->", 16, color, button.left - 30, button.centery)
