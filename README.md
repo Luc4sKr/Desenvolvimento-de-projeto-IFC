@@ -3,3 +3,5 @@
 <p align="center">
   <img src="/assets/images/logo.png" alt="Logo Space Battle" height="250"/>
 </p>
+
+<h3 align="center">🚧Jogo em desenvolvimento🚧</h3>
