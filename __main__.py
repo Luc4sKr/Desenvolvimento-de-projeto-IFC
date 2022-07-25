@@ -109,7 +109,8 @@ class Menu:
                 cursor_point = creditos_button
                 if self.click:
                     self.click = False
-                    pass
+
+                    self.credios_menu()
 
             if sair_button.collidepoint((mx, my)) or cursor_point == sair_button:
                 cursor_point = sair_button
@@ -173,7 +174,7 @@ class Menu:
 
             # Colisão com os botões
             if normal_button.collidepoint((mx, my)) or cursor_point == normal_button:
-                draw_cursor(normal_button)
+                cursor_point = normal_button
                 if self.click:
                     self.click = False
 
@@ -181,12 +182,12 @@ class Menu:
                     game.new_game(1)
 
             if dificil_button.collidepoint((mx, my)) or cursor_point == dificil_button:
-                draw_cursor(dificil_button)
+                cursor_point = dificil_button
                 if self.click:
                     pass
 
             if insano_button.collidepoint((mx, my)) or cursor_point == insano_button:
-                draw_cursor(insano_button)
+                cursor_point = insano_button
                 if self.click:
                     pass
 
@@ -257,7 +258,51 @@ class Menu:
 
 
     def credios_menu(self):
-        pass
+        self.show_creditos_menu = True
+        while self.show_creditos_menu:
+            clock.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.show_creditos_menu = False
+                    pygame.quit()
+                    exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.show_creditos_menu = False
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        self.click = True
+
+            draw_text("CRÉDITOS", 44, WHITE, SCREEN_X/2, 80)
+
+            draw_text("DESENVOLVEDORES:", 22, WHITE, 40, 170, topleft=True)
+            draw_text("LUCAS EDUARDO KREUCH", 14, WHITE, 100, 220, topleft=True)
+            draw_text("MARIA CLARA DE SOUZA", 14, WHITE, 100, 240, topleft=True)
+            draw_text("ALINE AMARAL DE SOUZA", 14, WHITE, 100, 260, topleft=True)
+            draw_text("HAIDY JANDRE", 14, WHITE, 100, 280, topleft=True)
+
+            draw_text("PROFESSORES:", 22, WHITE, 40, 370, topleft=True)
+            draw_text("RICARDO DE LA ROCHA LADEIRA", 14, WHITE, 100, 420, topleft=True)
+            draw_text("LUIZ RICARDO URIARTE", 14, WHITE, 100, 440, topleft=True)
+
+            back_to_menu_button = draw_button(30, 670, 100, 30, "Voltar", font_size=14)
+
+            # Posição do mouse
+            mx, my = pygame.mouse.get_pos()
+
+            # Colisão com os botões
+            if back_to_menu_button.collidepoint((mx, my)):
+                if self.click:
+                    self.click = False
+                    self.show_creditos_menu = False
+
+            self.click = False
+
+            # Update na tela
+            pygame.display.update()
+            screen.fill(BLACK)
 
 
     @staticmethod
