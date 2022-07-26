@@ -11,7 +11,7 @@ class Powerup(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         powerup_images = {
-            "shield": pygame.image.load(path.join(getcwd() + "/assets/images/powerups/shield2.png")),
+            "shield": pygame.image.load(path.join(getcwd() + "/assets/images/powerups/shield.png")),
             "gun": pygame.image.load(path.join(getcwd() + "/assets/images/powerups/gun.png"))
         }
 
@@ -20,7 +20,7 @@ class Powerup(pygame.sprite.Sprite):
         self.__image = powerup_images[self.__type]
 
         if self.__type == "shield":
-            self.__image = pygame.transform.scale(self.__image, (30, 38))
+            self.__image = pygame.transform.scale(self.__image, (40, 40))
         else:
             self.__image = pygame.transform.scale(self.__image, (40, 40))
 
