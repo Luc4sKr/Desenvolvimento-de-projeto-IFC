@@ -342,19 +342,19 @@ class Game:
     # Cria um novo jogo
     def new_game(self, difficulty):
         # Sprite groups
-        self.sprite_group = pygame.sprite.Group()
         self.bullet_group = pygame.sprite.Group()
         self.asteroid_group = pygame.sprite.Group()
         self.enemy_group = pygame.sprite.Group()
         self.powerup_group = pygame.sprite.Group()
         self.enemy_shoot_group = pygame.sprite.Group()
+        self.explosion_group = pygame.sprite.Group()
 
         # Background
-        self.sprite_group.add(self.game_background_rect)
+        self.background = pygame.sprite.GroupSingle(self.game_background_rect)
 
         # Player
-        self.player = Player(util.get_spaceship(), util.spaceship_attributes(), self.sprite_group, self.bullet_group)
-        self.sprite_group.add(self.player)
+        self.player = Player(util.get_spaceship(), util.spaceship_attributes(), self.bullet_group)
+        self.player_group_single = pygame.sprite.GroupSingle(self.player)
         # Imagem do player que serve como contador de vidas
         self.player_mini_image = pygame.transform.scale(self.player.image, (35, 35))
 
@@ -364,10 +364,6 @@ class Game:
         # Explosion
         self.explosion_sprite_sheet = self.create_sprite_sheet("explosion/explosion-1", 50, 50)
         self.explosion_sprite_sheet = self.explosion_sprite_sheet
-
-        # Bullet explosion
-        # self.bullet_explosion_sprite_sheet = self.create_sprite_sheet("explosion", 30, 30, "explosion-2")
-        # self.bullet_explosion_sprite_sheet = self.bullet_explosion_sprite_sheet[0]
 
         # Enemy
         self.enemy_1_sprite_sheet = self.create_sprite_sheet("enemy_1", ENEMY_SIZE_X, ENEMY_SIZE_Y)
@@ -413,9 +409,6 @@ class Game:
                     if event.key == pygame.K_p:
                         self.asteroid_shower_event = True
 
-                    if event.key == pygame.K_o:
-                        print(self.sprite_group)
-
                     if event.key == pygame.K_F3:
                         if not self.draw_dev_options:
                             self.draw_dev_options = True
@@ -424,27 +417,28 @@ class Game:
 
             self.collision_checks()
 
+            if self.ready:
+                self.asteroid_shower()
+
             if not self.asteroid_shower_event:
                 self.generate_enemy()
 
             self.check_lives()
             self.check_shield()
-            self.asteroid_shower()
+
 
             if self.draw_dev_options:
                 self.dev_options()
 
-            # Update/Draw
-            self.sprite_group.update()
-            pygame.display.update()
-            self.draw_sprites()
+            self.update_sprites()
+            self.draw()
 
     # Desenha as sprites no jogo
-    def draw_sprites(self):
+    def draw(self):
         screen.fill(BLACK)
-        self.sprite_group.draw(screen)
 
-        # Texto/Draw
+        self.draw_groups()
+
         draw_text(f"Score: {self.score.score}", 18, WHITE, SCREEN_X / 2, 16)  # Texto do score
 
         self.draw_shield_bar(5, 10) # Shield do Player
@@ -456,6 +450,28 @@ class Game:
         for enemy in self.enemy_group:
             self.enemy_shield_bar.draw_shield_bar(enemy.shield, enemy.rect.x, enemy.rect.y)
 
+    def update_sprites(self):
+        self.background.update()
+        self.player_group_single.update()
+        self.explosion_group.update()
+        self.enemy_group.update()
+        self.asteroid_group.update()
+        self.bullet_group.update()
+        self.enemy_shoot_group.update()
+        self.powerup_group.update()
+
+        pygame.display.update()
+
+    def draw_groups(self):
+        self.background.draw(screen)
+        self.explosion_group.draw(screen)
+        self.enemy_group.draw(screen)
+        self.asteroid_group.draw(screen)
+        self.bullet_group.draw(screen)
+        self.enemy_shoot_group.draw(screen)
+        self.powerup_group.draw(screen)
+        self.player_group_single.draw(screen)
+
     # Checa as colisões do jogo
     def collision_checks(self):
         # Colissão dos tiros do Player com o Asteroid
@@ -463,7 +479,7 @@ class Game:
         for hit in bullet_asteroid_collide:
             self.score.add_score()
             explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
-            self.sprite_group.add(explosion)
+            self.explosion_group.add(explosion)
 
         # Colisão do Player com o Asteroid
         player_asteroid_collide = pygame.sprite.spritecollide(self.player, self.asteroid_group, True, pygame.sprite.collide_mask)
@@ -480,20 +496,19 @@ class Game:
                 # Powerups
                 if randint(0, 10) >= 5:
                     powerup = Powerup(hit.rect.center)
-                    self.sprite_group.add(powerup)
                     self.powerup_group.add(powerup)
 
                 self.score.add_score()
                 hit.kill()
                 explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
-                self.sprite_group.add(explosion)
+                self.explosion_group.add(explosion)
 
         # Colisão entre o Enemy e o Asteroid
         enemy_asteroid_collide = pygame.sprite.groupcollide(self.enemy_group, self.asteroid_group, True, True, pygame.sprite.collide_mask)
         for hit in enemy_asteroid_collide:
             self.new_asteroid()
             explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
-            self.sprite_group.add(explosion)
+            self.explosion_group.add(explosion)
 
         # Colissão do Player com os Powerups
         powerup_collide = pygame.sprite.spritecollide(self.player, self.powerup_group, True)
@@ -520,7 +535,7 @@ class Game:
     def check_shield(self):
         if self.player.shield <= 0:
             self.death_explosion = Explosion(self.player.rect.center, self.explosion_sprite_sheet)
-            self.sprite_group.add(self.death_explosion)
+            self.explosion_group.add(self.death_explosion)
             self.player.hide()  # Esconde o player temporariamete
             self.player.lives -= 1  # Tira uma vida do player
             self.player.shield = 100  # O shield do jogador volta a ser 100
@@ -674,7 +689,6 @@ class Game:
     # Função para criar um novo asteroide
     def new_asteroid(self):
         asteroid = Asteroid(self.asteroid_sprite_sheet)
-        self.sprite_group.add(asteroid)
         self.asteroid_group.add(asteroid)
 
     def asteroid_shower(self):
@@ -701,7 +715,7 @@ class Game:
         if pygame.time.get_ticks() - self.last_enemy > self.create_enemy_delay :
             self.last_enemy = pygame.time.get_ticks()
             enemy_type = randint(1, 3)
-            if enemy_type < 2:
+            if enemy_type <= 2:
                 self.new_solo_enemy()
             if enemy_type == 3:
                 self.new_tripe_enemy()
@@ -719,18 +733,16 @@ class Game:
                 enemy = self.create_enemy(pos_x + distance_x, pos_y - distance_y)
                 distance_x += ENEMY_SIZE_X
                 distance_y -= 20
-            self.sprite_group.add(enemy)
             self.enemy_group.add(enemy)
 
     def new_solo_enemy(self):
         pos_x = randint(ENEMY_SIZE_X / 2, SCREEN_X - (ENEMY_SIZE_X / 2))
         pos_y = -20
         enemy = self.create_enemy(pos_x, pos_y)
-        self.sprite_group.add(enemy)
         self.enemy_group.add(enemy)
 
     def create_enemy(self, x, y):
-        enemy = Enemy(x, y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.enemy_shoot_group, self.sprite_group)
+        enemy = Enemy(x, y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.enemy_shoot_group)
         return enemy
 
     def dev_options(self):

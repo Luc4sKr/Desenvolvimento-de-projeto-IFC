@@ -6,7 +6,7 @@ from scripts.bullet import Bullet
 from scripts.missil import Missil
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, image, attributes, sprite_group, bullet_group):
+    def __init__(self, image, attributes, bullet_group):
         pygame.sprite.Sprite.__init__(self)
 
         self.__image = pygame.image.load(path.join(getcwd() + f"/assets/images/{image}.png")).convert_alpha()
@@ -15,8 +15,7 @@ class Player(pygame.sprite.Sprite):
 
         self.__rect.center = (SCREEN_X / 2,  600)
 
-        # Grupos de sprites
-        self.__sprite_group = sprite_group
+        # Grupos  de sprites
         self.__bullet_group = bullet_group
 
         self.__shield = attributes["shield"] # Escudo/vida da nave
@@ -67,13 +66,11 @@ class Player(pygame.sprite.Sprite):
             self.__last_shoot = pygame.time.get_ticks()
             bullet_1 = Bullet(self.__rect.centerx + 10, self.__rect.top, 5, -10)
             bullet_2 = Bullet(self.__rect.centerx - 10, self.__rect.top, 5, -10)
-            self.__sprite_group.add(bullet_1, bullet_2)
             self.__bullet_group.add(bullet_1, bullet_2)
 
             if self.__power >= 2:
                 bullet_3 = Bullet(self.__rect.right, self.__rect.centery, 5, -10)
                 bullet_4 = Bullet(self.__rect.left, self.__rect.centery, 5, -10)
-                self.__sprite_group.add(bullet_3, bullet_4)
                 self.__bullet_group.add(bullet_3, bullet_4)
 
     def shoot_missil(self, obj_pos):
