@@ -3,7 +3,6 @@ import pygame
 from scripts.constantes import *
 
 from scripts.bullet import Bullet
-from scripts.missil import Missil
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, image, attributes, bullet_group):
