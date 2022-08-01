@@ -374,7 +374,8 @@ class Game:
         self.enemy_shield_bar = Shield_bar(screen)
 
         # Boss
-        self.boss_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/full-boss", 520, 200)
+        self.boss_body_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/body", 128, 128)
+        self.boss_wing_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/wings", 128, 128)
 
         # Score
         self.score = Score()
@@ -416,9 +417,8 @@ class Game:
                         self.asteroid_shower_event = True
 
                     if event.key == pygame.K_q:
-                        self.boss = Boss(self.boss_sprite_sheet)
-                        self.boss_group.add(self.boss)
-
+                        self.boss = Boss(self.boss_body_sprite_sheet, self.boss_wing_sprite_sheet)
+                        self.draw_boss = True
 
 
                     if event.key == pygame.K_F3:
@@ -473,7 +473,9 @@ class Game:
         self.bullet_group.update()
         self.enemy_shoot_group.update()
         self.powerup_group.update()
-        self.boss_group.update()
+
+        if self.draw_boss:
+            self.boss.sprite_group.update()
 
         pygame.display.update()
 
@@ -486,7 +488,9 @@ class Game:
         self.enemy_shoot_group.draw(screen)
         self.powerup_group.draw(screen)
         self.player_group_single.draw(screen)
-        self.boss_group.draw(screen)
+
+        if self.draw_boss:
+            self.boss.sprite_group.draw(screen)
 
     # Checa as colisões do jogo
     def collision_checks(self):
