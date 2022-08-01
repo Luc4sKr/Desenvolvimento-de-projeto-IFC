@@ -8,6 +8,7 @@ from scripts.constantes import *
 from scripts.asteroid import Asteroid
 from scripts.background import Background
 from scripts.enemies import Enemy
+from scripts.enemies import Kamikaze
 from scripts.boss import Boss
 from scripts.explosion import Explosion
 from scripts.player import Player
@@ -355,6 +356,7 @@ class Game:
         self.enemy_shoot_group = pygame.sprite.Group()
         self.explosion_group = pygame.sprite.Group()
         self.boss_group = pygame.sprite.Group()
+        self.kamikaze_group = pygame.sprite.Group()
 
         # Background do jogo - A SPRITE COM MOVIMENTO PRECISA TER 580x2722 !!!!
         self.game_background_rect = Background("game_background_azul_cinza.png")
@@ -433,6 +435,10 @@ class Game:
                     if event.key == pygame.K_q:
                         self.boss = Boss(self.boss_body_sprite_sheet, self.boss_wing_sprite_sheet)
                         self.draw_boss = True
+
+                    if event.key == pygame.K_e:
+                        kamikaze = Kamikaze(SCREEN_X + 10, 4, self.enemy_2_sprite_sheet)
+                        self.enemy_group.add(kamikaze)
 
 
                     if event.key == pygame.K_F3:

@@ -6,7 +6,6 @@ from scripts.bullet import Bullet
 # Inimigo normal
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, x, y, shield, animation_list, enemy_shot_group):
-        super().__init__()
         pygame.sprite.Sprite.__init__(self)
 
         self.__enemy_shot_group = enemy_shot_group
@@ -148,9 +147,75 @@ class Enemy(pygame.sprite.Sprite):
 
 # Kamikaze
 class Kamikaze(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, x, shield, animation_list):
         pygame.sprite.Sprite.__init__(self)
+
+        self.__frame_index = 0 # Frame de animação
+        self.__update_time = pygame.time.get_ticks()
+        self.__animation_list = animation_list # Lista de animação
+
+        self.__shield = shield # É a "vida" do Enemy
+        self.__damage = 30 # Dano
+
+        # Imagem
+        self.__image = self.__animation_list[self.__frame_index]
+        self.__image = pygame.transform.rotate(self.__image, 320)
+        self.__image = pygame.transform.scale(self.__image, (ENEMY_SIZE_X, ENEMY_SIZE_Y))
+        self.__rect = self.__image.get_rect()
+
+        self.__rect.center = (x, -20)
+
+
+    def update(self):
+        self.__rect.y += 5
+        self.__rect.x -= 2
+
+    
+
+
+
+    # Image
+    @property
+    def image(self):
+        return self.__image
+    
+    @image.setter
+    def image(self, image):
+        self.__image = image
+
+
+    # Rect
+    @property
+    def rect(self):
+        return self.__rect
+
+    @rect.setter
+    def rect(self, rect):
+        self.__rect = rect
+
+
+    # Shield
+    @property
+    def shield(self):
+        return self.__shield
+
+    @shield.setter
+    def shield(self, shield):
+        self.__shield = shield
+
+
+    # Damage
+    @property
+    def damage(self):
+        return self.__damage
+    
+    @damage.setter
+    def damage(self, damage):
+        if damage <= 0:
+            self.__damage = 10
+
+
+
 
 
 
