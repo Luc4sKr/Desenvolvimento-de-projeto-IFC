@@ -374,8 +374,8 @@ class Game:
         self.enemy_shield_bar = Shield_bar(screen)
 
         # Boss
-        self.boss_body_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/body", 128, 128)
-        self.boss_wing_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/wings", 128, 128)
+        self.boss_body_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/body", BODY_BOSS_SIZE_X, BODY_BOSS_SIZE_Y)
+        self.boss_wing_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/wings", WING_BOSS_SIZE_X, WING_BOSS_SIZE_Y)
 
         # Score
         self.score = Score()
@@ -593,7 +593,7 @@ class Game:
                         self.click = True
 
             # Título
-            draw_text("PAUSE", LARGE_FONT_SIZE, WHITE, SCREEN_X / 2, 100)
+            draw_text("PAUSE", 42, WHITE, SCREEN_X / 2, 100)
 
             # Botões
             voltar_ao_jogo_button = draw_button(SCREEN_X / 2 - 150, 250, SCREEN_X / 2 + 10, 50, "VOLTAR AO JOGO")
@@ -669,8 +669,8 @@ class Game:
                         self.click = True
 
 
-            draw_text("GAME OVER", LARGE_FONT_SIZE, RED, SCREEN_X / 2, 60)
-            draw_text(f"SCORE: {self.score.score}", MEDIUM_FONT_SIZE, WHITE, SCREEN_X / 2, SCREEN_Y / 2 - 124)
+            draw_text("GAME OVER", 42, RED, SCREEN_X / 2, 60)
+            draw_text(f"SCORE: {self.score.score}", 42, WHITE, SCREEN_X / 2, SCREEN_Y / 2 - 124)
 
             voltar_ao_menu_buttom = draw_button(SCREEN_X/2 - 150, 300, SCREEN_X/2 + 10, 50, "Voltar ao menu")
             jogar_novamente_button = draw_button(SCREEN_X / 2 - 150, 360, SCREEN_X / 2 + 10, 50, "Jogar novamente", font_size=19)
@@ -777,7 +777,7 @@ class Game:
 
         num_of_frames = len(listdir(sprite_directory))
         for i in range(1, num_of_frames):
-            image = pygame.image.load(path.join(getcwd() + f"/{sprite_directory}/sprite-{i}.png"))
+            image = pygame.image.load(path.join(getcwd() + f"/{sprite_directory}/sprite-{i}.png")).convert_alpha()
             image = pygame.transform.scale(image, (sprite_size_x, sprite_size_y))
             animation_list.append(image)
         return animation_list
@@ -796,9 +796,9 @@ class Game:
         READY_DELAY = 1000
         GO_DELAY = 2000
         if READY_DELAY < pygame.time.get_ticks() - self.ready_time < 3000:
-            draw_text("READY?", LARGE_FONT_SIZE, YELLOW, SCREEN_X / 2, 100)
+            draw_text("READY?", 42, YELLOW, SCREEN_X / 2, 100)
         if GO_DELAY < pygame.time.get_ticks() - self.ready_time < 3000:
-            draw_text("GO", LARGE_FONT_SIZE, YELLOW, SCREEN_X / 2, 150)
+            draw_text("GO", 42, YELLOW, SCREEN_X / 2, 150)
             self.ready = True
 
     # Desenha a barra do escudo do player

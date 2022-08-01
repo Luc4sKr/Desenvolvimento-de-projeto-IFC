@@ -6,7 +6,7 @@ class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y, damage, vely):
         pygame.sprite.Sprite.__init__(self)
 
-        self.__image = pygame.image.load(path.join(getcwd() + "/assets/images/bullet/bullet_1.png"))
+        self.__image = pygame.image.load(path.join(getcwd() + "/assets/images/bullet/bullet_1.png")).convert_alpha()
         self.__image = pygame.transform.scale(self.__image, (6, 10))
         self.__rect = self.__image.get_rect()
 

@@ -11,8 +11,8 @@ class Powerup(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         powerup_images = {
-            "shield": pygame.image.load(path.join(getcwd() + "/assets/images/powerups/shield.png")),
-            "gun": pygame.image.load(path.join(getcwd() + "/assets/images/powerups/gun.png"))
+            "shield": pygame.image.load(path.join(getcwd() + "/assets/images/powerups/shield.png")).convert_alpha(),
+            "gun": pygame.image.load(path.join(getcwd() + "/assets/images/powerups/gun.png")).convert_alpha()
         }
 
         # Imagem

@@ -1,8 +1,6 @@
 from os import path, getcwd
 
 # Screen
-import pygame.time
-
 SCREEN_X = 580
 SCREEN_Y = 720
 
@@ -33,6 +31,14 @@ ASTEROID_EVENT_COOLDOWN = 10000 # COOLDOWND do tempo de evento
 ASTEROID_COOLDOWN = 100 # COOLDOWN que os asteroids tem para aparecer
 
 
+# Boss
+BODY_BOSS_SIZE_X = 128
+BODY_BOSS_SIZE_Y = 128
+
+WING_BOSS_SIZE_X = 128
+WING_BOSS_SIZE_Y = 128
+
+
 # FPS
 FPS = 60
 
@@ -57,8 +63,6 @@ RED = (255, 0, 0)
 
 # Fonte
 FONTE = path.join(getcwd() + "/assets/font/8-bit_font.ttf")
-LARGE_FONT_SIZE = 42
-MEDIUM_FONT_SIZE = 28
-SMALL_FONT_SIZE = 14
+
 
 

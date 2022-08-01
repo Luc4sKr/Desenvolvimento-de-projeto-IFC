@@ -6,7 +6,6 @@ class Explosion(pygame.sprite.Sprite):
     def __init__(self, center, animation_list):
         pygame.sprite.Sprite.__init__(self)
 
-        self.__center = center
         self.__animation_list = animation_list
 
         self.__frame_index = 0

@@ -6,7 +6,7 @@ class Background(pygame.sprite.Sprite):
     def __init__(self, background):
         pygame.sprite.Sprite.__init__(self)
 
-        self.__image = pygame.image.load(path.join(getcwd() + f"/assets/images/backgrounds/{background}"))
+        self.__image = pygame.image.load(path.join(getcwd() + f"/assets/images/backgrounds/{background}")).convert()
         self.__rect = self.__image.get_rect()
         self.__direction_y = 4
         self.reset()

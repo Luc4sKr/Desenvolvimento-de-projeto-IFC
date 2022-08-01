@@ -11,7 +11,9 @@ class Asteroid(pygame.sprite.Sprite):
         self.__frame_index = 0
         self.__update_time = pygame.time.get_ticks()
         self.__animation_list = animation_list
+
         self.__image = self.__animation_list[self.__frame_index]
+
         self.__rect = self.__image.get_rect()
 
         self.__rect.x = randrange(SCREEN_X - self.__rect.width)
