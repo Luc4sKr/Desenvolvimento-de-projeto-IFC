@@ -8,6 +8,7 @@ from scripts.constantes import *
 from scripts.asteroid import Asteroid
 from scripts.background import Background
 from scripts.enemies import Enemy
+from scripts.boss import Boss
 from scripts.explosion import Explosion
 from scripts.player import Player
 from scripts.score import Score
@@ -336,8 +337,6 @@ class Game:
         self.asteroid_shower_time = pygame.time.get_ticks()
         self.asteroid_shower_event = False
 
-        # Background do jogo - A SPRITE COM MOVIMENTO PRECISA TER 580x2722 !!!!
-        self.game_background_rect = Background("game_background_azul_cinza.png")
 
     # Cria um novo jogo
     def new_game(self, difficulty):
@@ -348,8 +347,10 @@ class Game:
         self.powerup_group = pygame.sprite.Group()
         self.enemy_shoot_group = pygame.sprite.Group()
         self.explosion_group = pygame.sprite.Group()
+        self.boss_group = pygame.sprite.Group()
 
-        # Background
+        # Background do jogo - A SPRITE COM MOVIMENTO PRECISA TER 580x2722 !!!!
+        self.game_background_rect = Background("game_background_azul_cinza.png")
         self.background = pygame.sprite.GroupSingle(self.game_background_rect)
 
         # Player
@@ -359,18 +360,21 @@ class Game:
         self.player_mini_image = pygame.transform.scale(self.player.image, (35, 35))
 
         # Asteroid
-        self.asteroid_sprite_sheet = self.create_sprite_sheet("asteroid", ASTEROID_SIZE_X, ASTEROID_SIZE_Y)
+        self.asteroid_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/asteroid", ASTEROID_SIZE_X, ASTEROID_SIZE_Y)
 
         # Explosion
-        self.explosion_sprite_sheet = self.create_sprite_sheet("explosion/explosion-1", 50, 50)
+        self.explosion_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/explosion/explosion-1", 50, 50)
         self.explosion_sprite_sheet = self.explosion_sprite_sheet
 
         # Enemy
-        self.enemy_1_sprite_sheet = self.create_sprite_sheet("enemy_1", ENEMY_SIZE_X, ENEMY_SIZE_Y)
-        self.enemy_2_sprite_sheet = self.create_sprite_sheet("enemy_2", ENEMY_SIZE_X, ENEMY_SIZE_Y)
+        self.enemy_1_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/enemy-1", ENEMY_SIZE_X, ENEMY_SIZE_Y)
+        self.enemy_2_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/enemy-2", ENEMY_SIZE_X, ENEMY_SIZE_Y)
         self.create_enemy_delay = 2500
         self.last_enemy = pygame.time.get_ticks()
         self.enemy_shield_bar = Shield_bar(screen)
+
+        # Boss
+        self.boss_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/full-boss", 520, 200)
 
         # Score
         self.score = Score()
@@ -380,6 +384,8 @@ class Game:
 
         # Controle de aparecimento do Enemy
         self.ready = False
+
+        self.draw_boss = False
 
         # Dificuldade
         self.difficulty = difficulty
@@ -409,6 +415,12 @@ class Game:
                     if event.key == pygame.K_p:
                         self.asteroid_shower_event = True
 
+                    if event.key == pygame.K_q:
+                        self.boss = Boss(self.boss_sprite_sheet)
+                        self.boss_group.add(self.boss)
+
+
+
                     if event.key == pygame.K_F3:
                         if not self.draw_dev_options:
                             self.draw_dev_options = True
@@ -417,14 +429,16 @@ class Game:
 
             self.collision_checks()
 
-            if self.ready:
-                self.asteroid_shower()
+            s = True
+            if s:
+                if self.ready:
+                    self.asteroid_shower()
 
-            if not self.asteroid_shower_event:
-                self.generate_enemy()
+                if not self.asteroid_shower_event:
+                    self.generate_enemy()
 
-            self.check_lives()
-            self.check_shield()
+                self.check_lives()
+                self.check_shield()
 
 
             if self.draw_dev_options:
@@ -459,6 +473,7 @@ class Game:
         self.bullet_group.update()
         self.enemy_shoot_group.update()
         self.powerup_group.update()
+        self.boss_group.update()
 
         pygame.display.update()
 
@@ -471,6 +486,7 @@ class Game:
         self.enemy_shoot_group.draw(screen)
         self.powerup_group.draw(screen)
         self.player_group_single.draw(screen)
+        self.boss_group.draw(screen)
 
     # Checa as colisões do jogo
     def collision_checks(self):
@@ -752,12 +768,12 @@ class Game:
 
     # Cria as sprite sheets de naves
     @staticmethod
-    def create_sprite_sheet(sprite, sprite_size_x, sprite_size_y):
+    def create_sprite_sheet(sprite_directory, sprite_size_x, sprite_size_y):
         animation_list = []
 
-        num_of_frames = len(listdir(f"assets/images/sprites/{sprite}"))
+        num_of_frames = len(listdir(sprite_directory))
         for i in range(1, num_of_frames):
-            image = pygame.image.load(path.join(getcwd() + f"/assets/images/sprites/{sprite}/sprite-{i}.png"))
+            image = pygame.image.load(path.join(getcwd() + f"/{sprite_directory}/sprite-{i}.png"))
             image = pygame.transform.scale(image, (sprite_size_x, sprite_size_y))
             animation_list.append(image)
         return animation_list

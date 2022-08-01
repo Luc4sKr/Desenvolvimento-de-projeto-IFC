@@ -72,9 +72,6 @@ class Player(pygame.sprite.Sprite):
                 bullet_4 = Bullet(self.__rect.left, self.__rect.centery, 5, -10)
                 self.__bullet_group.add(bullet_3, bullet_4)
 
-    def shoot_missil(self, obj_pos):
-        self.__missil = Missil(self.__rect.centerx - 5, self.__rect.top, 10, obj_pos)
-
     # Esconde o player temporariamente depois da sua barra de shiel chegar a 0
     def hide(self):
         self.__hidden = True
