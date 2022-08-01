@@ -185,12 +185,19 @@ class Menu:
             if dificil_button.collidepoint((mx, my)) or cursor_point == dificil_button:
                 cursor_point = dificil_button
                 if self.click:
-                    pass
+                    self.click = False
+
+                    self.show_difficulty_menu = False
+                    game.new_game(2)
 
             if insano_button.collidepoint((mx, my)) or cursor_point == insano_button:
                 cursor_point = insano_button
                 if self.click:
-                    pass
+                    self.click = False
+
+                    self.show_difficulty_menu = False
+                    game.new_game(3)
+
 
             # Depois de checar os inputs o click volta a ser falso
             self.click = False
@@ -388,10 +395,17 @@ class Game:
 
         self.draw_boss = False
 
-        # Dificuldade
+        # Dificuldade do jogo
         self.difficulty = difficulty
         if self.difficulty == 1:
-            pass
+            self.create_enemy_delay_multiplier = 0
+        
+        if self.difficulty == 2:
+            self.create_enemy_delay_multiplier = self.create_enemy_delay / 1.5
+
+        if self.difficulty == 3:
+            self.create_enemy_delay_multiplier = self.create_enemy_delay / 2
+
 
         # Roda o jogo
         self.game_over = False
@@ -429,16 +443,15 @@ class Game:
 
             self.collision_checks()
 
-            s = True
-            if s:
-                if self.ready:
-                    self.asteroid_shower()
+            
+            if self.ready:
+                self.asteroid_shower()
 
                 if not self.asteroid_shower_event:
                     self.generate_enemy()
 
-                self.check_lives()
-                self.check_shield()
+            self.check_lives()
+            self.check_shield()
 
 
             if self.draw_dev_options:
@@ -551,6 +564,7 @@ class Game:
         if self.player.lives == 0 and not self.death_explosion.alive(): # -- Teste -- and not self.death_explosion.alive() 
             self.game_over = True
             self.game_over_screen()
+
 
     def check_shield(self):
         if self.player.shield <= 0:
@@ -732,7 +746,7 @@ class Game:
 
     # Gera novos inimigos
     def generate_enemy(self):
-        if pygame.time.get_ticks() - self.last_enemy > self.create_enemy_delay :
+        if pygame.time.get_ticks() - self.last_enemy > self.create_enemy_delay - self.create_enemy_delay_multiplier :
             self.last_enemy = pygame.time.get_ticks()
             enemy_type = randint(1, 3)
             if enemy_type <= 2:
@@ -799,6 +813,7 @@ class Game:
             draw_text("READY?", 42, YELLOW, SCREEN_X / 2, 100)
         if GO_DELAY < pygame.time.get_ticks() - self.ready_time < 3000:
             draw_text("GO", 42, YELLOW, SCREEN_X / 2, 150)
+        if pygame.time.get_ticks() - self.ready_time > 3000:
             self.ready = True
 
     # Desenha a barra do escudo do player

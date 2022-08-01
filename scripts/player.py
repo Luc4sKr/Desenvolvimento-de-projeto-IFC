@@ -32,6 +32,7 @@ class Player(pygame.sprite.Sprite):
         self.__power = 1
         self.__power_time = pygame.time.get_ticks()
 
+
     def movement(self):
         self.__key = pygame.key.get_pressed()
         self.__velocity = self.__spaceship_velocity
@@ -49,6 +50,7 @@ class Player(pygame.sprite.Sprite):
         if self.__key[pygame.K_d] or self.__key[pygame.K_RIGHT]:
             self.__rect.x += self.__velocity
 
+
     def collision(self):
         if self.__rect.left <= 0:
             self.__rect.left = 0
@@ -60,17 +62,21 @@ class Player(pygame.sprite.Sprite):
         if self.__rect.bottom >= SCREEN_Y:
             self.__rect.bottom = SCREEN_Y
 
-    def shoot(self):
-        if pygame.time.get_ticks() - self.__last_shoot > self.__shoot_delay:
-            self.__last_shoot = pygame.time.get_ticks()
-            bullet_1 = Bullet(self.__rect.centerx + 10, self.__rect.top, 5, -10)
-            bullet_2 = Bullet(self.__rect.centerx - 10, self.__rect.top, 5, -10)
-            self.__bullet_group.add(bullet_1, bullet_2)
 
-            if self.__power >= 2:
-                bullet_3 = Bullet(self.__rect.right, self.__rect.centery, 5, -10)
-                bullet_4 = Bullet(self.__rect.left, self.__rect.centery, 5, -10)
-                self.__bullet_group.add(bullet_3, bullet_4)
+    def shoot(self):
+        self.__key = pygame.key.get_pressed()
+        if self.__key[pygame.K_SPACE]:
+            if pygame.time.get_ticks() - self.__last_shoot > self.__shoot_delay:
+                self.__last_shoot = pygame.time.get_ticks()
+                bullet_1 = Bullet(self.__rect.centerx + 10, self.__rect.top, 5, -10)
+                bullet_2 = Bullet(self.__rect.centerx - 10, self.__rect.top, 5, -10)
+                self.__bullet_group.add(bullet_1, bullet_2)
+
+                if self.__power >= 2:
+                    bullet_3 = Bullet(self.__rect.right, self.__rect.centery, 5, -10)
+                    bullet_4 = Bullet(self.__rect.left, self.__rect.centery, 5, -10)
+                    self.__bullet_group.add(bullet_3, bullet_4)
+
 
     # Esconde o player temporariamente depois da sua barra de shiel chegar a 0
     def hide(self):
@@ -78,33 +84,37 @@ class Player(pygame.sprite.Sprite):
         self.__hide_timer = pygame.time.get_ticks()
         self.__rect.center = (SCREEN_X /2, 600)
 
-        self.__image = pygame.image.load(path.join(getcwd() + "/assets/images/invisible_sprite.png"))
+        self.__image = pygame.image.load(path.join(getcwd() + "/assets/images/invisible_sprite.png")).convert_alpha()
+
+
+    def hide_timeout(self):
+        if self.__hidden and pygame.time.get_ticks() - self.__hide_timer > 1000:
+            self.__hidden = False
+            self.__rect.center = (SCREEN_X /2, 600)
+
+            self.__image = pygame.image.load(path.join(getcwd() + "/assets/images/spaceship-1.png")).convert_alpha()
+            self.__image = pygame.transform.scale(self.__image, (PLAYER_SIZE_X, PLAYER_SIZE_Y))
 
 
     def powerup(self):
         self.__power += 1
         self.__power_time = pygame.time.get_ticks()
 
-    def update(self):
-        self.movement()
-        self.collision()
 
-        # Shoot
-        if self.__key[pygame.K_SPACE]:
-            self.shoot()
-
-        if self.__hidden and pygame.time.get_ticks() - self.__hide_timer > 1000:
-            self.__hidden = False
-            self.__rect.center = (SCREEN_X /2, 600)
-
-            self.__image = pygame.image.load(path.join(getcwd() + "/assets/images/spaceship-1.png"))
-            self.__image = pygame.transform.scale(self.__image, (PLAYER_SIZE_X, PLAYER_SIZE_Y))
-
-
+    def powerup_timeout(self):
         # Timeout para os powerups
         if self.__power >= 2 and pygame.time.get_ticks() - self.__power_time > POWERUP_TIME:
             self.__power -= 1
             self.__power_time = pygame.time.get_ticks()
+
+
+    def update(self):
+        self.movement()
+        self.collision()
+        self.powerup_timeout()
+        self.shoot()
+        self.hide_timeout()
+        
 
 
 
