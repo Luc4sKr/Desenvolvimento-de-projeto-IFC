@@ -39,11 +39,9 @@ class Enemy(pygame.sprite.Sprite):
             self.__frame_index = 0
 
     def shoot(self):
-        now = pygame.time.get_ticks()
-        if now - self.__last_shoot > self.__shoot_delay:
-            now = pygame.time.get_ticks()
+        if pygame.time.get_ticks() - self.__last_shoot > self.__shoot_delay:
             self.__last_shoot = pygame.time.get_ticks()
-            bullet = Bullet(self.__rect.centerx, self.__rect.bottom, self.__damage, 7)
+            bullet = Bullet(self.__rect.centerx, self.__rect.bottom, "enemy-bullet", self.__damage, 7)
             self.__enemy_shot_group.add(bullet)
 
     def movement(self):

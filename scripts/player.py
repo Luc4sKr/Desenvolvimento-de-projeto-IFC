@@ -68,13 +68,13 @@ class Player(pygame.sprite.Sprite):
         if self.__key[pygame.K_SPACE]:
             if pygame.time.get_ticks() - self.__last_shoot > self.__shoot_delay:
                 self.__last_shoot = pygame.time.get_ticks()
-                bullet_1 = Bullet(self.__rect.centerx + 10, self.__rect.top, 5, -10)
-                bullet_2 = Bullet(self.__rect.centerx - 10, self.__rect.top, 5, -10)
+                bullet_1 = Bullet(self.__rect.centerx + 10, self.__rect.top, "player-bullet", 5, -10)
+                bullet_2 = Bullet(self.__rect.centerx - 10, self.__rect.top, "player-bullet", 5, -10)
                 self.__bullet_group.add(bullet_1, bullet_2)
 
                 if self.__power >= 2:
-                    bullet_3 = Bullet(self.__rect.right, self.__rect.centery, 5, -10)
-                    bullet_4 = Bullet(self.__rect.left, self.__rect.centery, 5, -10)
+                    bullet_3 = Bullet(self.__rect.right, self.__rect.centery, "player-bullet", 5, -10)
+                    bullet_4 = Bullet(self.__rect.left, self.__rect.centery, "player-bullet", 5, -10)
                     self.__bullet_group.add(bullet_3, bullet_4)
 
 
