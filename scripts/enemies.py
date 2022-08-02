@@ -5,10 +5,11 @@ from scripts.bullet import Bullet
 
 # Inimigo normal
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y, shield, animation_list, enemy_shot_group):
+    def __init__(self, x, y, shield, animation_list, enemy_shot_group, shoot_delay_multiplier):
         pygame.sprite.Sprite.__init__(self)
 
         self.__enemy_shot_group = enemy_shot_group
+        self.__shoot_delay_multiplier = shoot_delay_multiplier
 
         self.__frame_index = 0 # Frame de animação
         self.__update_time = pygame.time.get_ticks()
@@ -19,7 +20,6 @@ class Enemy(pygame.sprite.Sprite):
 
         self.__vel_y = 1 # Velocidade no eixo Y
 
-        self.__shoot_delay = 1700
         self.__last_shoot = pygame.time.get_ticks()
 
         # Imagem
@@ -39,7 +39,7 @@ class Enemy(pygame.sprite.Sprite):
             self.__frame_index = 0
 
     def shoot(self):
-        if pygame.time.get_ticks() - self.__last_shoot > self.__shoot_delay:
+        if pygame.time.get_ticks() - self.__last_shoot > ENEMY_SHOOT_DELAY - self.__shoot_delay_multiplier:
             self.__last_shoot = pygame.time.get_ticks()
             bullet = Bullet(self.__rect.centerx, self.__rect.bottom, "enemy-bullet", self.__damage, 7)
             self.__enemy_shot_group.add(bullet)

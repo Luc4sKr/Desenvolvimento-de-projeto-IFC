@@ -402,12 +402,17 @@ class Game:
         self.difficulty = difficulty
         if self.difficulty == 1:
             self.create_enemy_delay_multiplier = 0
+            self.enemy_shoot_delay_multiplier = 0
         
         if self.difficulty == 2:
-            self.create_enemy_delay_multiplier = self.create_enemy_delay / 1.5
+            self.create_enemy_delay_multiplier = self.create_enemy_delay / 2
+            self.enemy_shoot_delay_multiplier = ENEMY_SHOOT_DELAY / 8
 
         if self.difficulty == 3:
-            self.create_enemy_delay_multiplier = self.create_enemy_delay / 2
+            self.create_enemy_delay_multiplier = self.create_enemy_delay / 1.8
+            self.enemy_shoot_delay_multiplier = ENEMY_SHOOT_DELAY / 6
+
+            self.player.lives = 1
 
 
         # Roda o jogo
@@ -796,7 +801,7 @@ class Game:
         self.enemy_group.add(enemy)
 
     def create_enemy(self, x, y):
-        enemy = Enemy(x, y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.enemy_shoot_group)
+        enemy = Enemy(x, y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.enemy_shoot_group, self.enemy_shoot_delay_multiplier)
         return enemy
 
     def dev_options(self):

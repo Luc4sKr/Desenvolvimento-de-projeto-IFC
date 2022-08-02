@@ -21,6 +21,7 @@ ENEMY_1_SHIELD = 4
 # Barra de shield do Enemy
 ENEMY_BAR_HEIGHT = 5
 ENEMY_BAR_WIDTH = 18
+ENEMY_SHOOT_DELAY = 1700
 
 
 # Asteroid
