@@ -339,12 +339,6 @@ class Game:
         # Click do mouse
         self.click = False
 
-        # Controle de aparição dos asteroides
-        self.asteroid_event_cooldown = pygame.time.get_ticks()
-        self.asteroid_cooldown = pygame.time.get_ticks()
-        self.asteroid_shower_time = pygame.time.get_ticks()
-        self.asteroid_shower_event = False
-
 
     # Cria um novo jogo
     def new_game(self, difficulty):
@@ -356,6 +350,7 @@ class Game:
         self.enemy_shoot_group = pygame.sprite.Group()
         self.explosion_group = pygame.sprite.Group()
         self.boss_group = pygame.sprite.Group()
+        self.boss_wings_group = pygame.sprite.Group()
         self.kamikaze_group = pygame.sprite.Group()
 
         # Background do jogo - A SPRITE COM MOVIMENTO PRECISA TER 580x2722 !!!!
@@ -385,6 +380,12 @@ class Game:
         # Boss
         self.boss_body_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/body", BODY_BOSS_SIZE_X, BODY_BOSS_SIZE_Y)
         self.boss_wing_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/wings", WING_BOSS_SIZE_X, WING_BOSS_SIZE_Y)
+
+        # Controle de aparição dos asteroides
+        self.asteroid_event_cooldown = pygame.time.get_ticks()
+        self.asteroid_cooldown = pygame.time.get_ticks()
+        self.asteroid_shower_time = pygame.time.get_ticks()
+        self.asteroid_shower_event = False
 
         # Score
         self.score = Score()
@@ -434,6 +435,10 @@ class Game:
 
                     if event.key == pygame.K_q:
                         self.boss = Boss(self.boss_body_sprite_sheet, self.boss_wing_sprite_sheet)
+                        self.boss_group.add(self.boss)
+                        self.boss_wings_group.add(self.boss.left_wing)
+                        self.boss_wings_group.add(self.boss.right_wing)
+
                         self.draw_boss = True
 
                     if event.key == pygame.K_e:
@@ -483,6 +488,7 @@ class Game:
         for enemy in self.enemy_group:
             self.enemy_shield_bar.draw_shield_bar(enemy.shield, enemy.rect.x, enemy.rect.y)
 
+
     def update_sprites(self):
         self.background.update()
         self.player_group_single.update()
@@ -494,9 +500,11 @@ class Game:
         self.powerup_group.update()
 
         if self.draw_boss:
-            self.boss.sprite_group.update()
+            self.boss_group.update()
+            self.boss_wings_group.update()
 
         pygame.display.update()
+
 
     def draw_groups(self):
         self.background.draw(screen)
@@ -509,7 +517,8 @@ class Game:
         self.player_group_single.draw(screen)
 
         if self.draw_boss:
-            self.boss.sprite_group.draw(screen)
+            self.boss_group.draw(screen)
+            self.boss_wings_group.draw(screen)
 
     # Checa as colisões do jogo
     def collision_checks(self):
@@ -564,6 +573,7 @@ class Game:
         enemy_shoot_collision = pygame.sprite.spritecollide(self.player, self.enemy_shoot_group, True)
         for hit in enemy_shoot_collision:
             self.player.shield -= hit.damage
+
 
     def check_lives(self):
         # Verifica se o player ainda tem vidas
@@ -730,6 +740,7 @@ class Game:
     def new_asteroid(self):
         asteroid = Asteroid(self.asteroid_sprite_sheet)
         self.asteroid_group.add(asteroid)
+
 
     def asteroid_shower(self):
         if pygame.time.get_ticks() - self.asteroid_shower_time > ASTEROID_TIME or self.asteroid_shower_event:
