@@ -157,16 +157,24 @@ class Kamikaze(pygame.sprite.Sprite):
 
         # Imagem
         self.__image = self.__animation_list[self.__frame_index]
-        self.__image = pygame.transform.rotate(self.__image, 320)
         self.__image = pygame.transform.scale(self.__image, (ENEMY_SIZE_X, ENEMY_SIZE_Y))
         self.__rect = self.__image.get_rect()
 
-        self.__rect.center = (x, -20)
+        self.__rect.center = (x, 40)
+
+        if self.__rect.x > SCREEN_X / 2:
+            self.__image = pygame.transform.rotate(self.__image, 350)
+        if self.__rect.x < SCREEN_X / 2:
+            self.__image = pygame.transform.rotate(self.__image, 10)
 
 
     def update(self):
         self.__rect.y += 5
-        self.__rect.x -= 2
+
+        if self.__rect.x > SCREEN_X / 2:
+            self.__rect.x -= 1.2
+        if self.__rect.x < SCREEN_X / 2:
+            self.__rect.x += 1.2
 
     
 

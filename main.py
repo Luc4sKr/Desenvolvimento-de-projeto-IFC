@@ -442,8 +442,11 @@ class Game:
                         self.draw_boss = True
 
                     if event.key == pygame.K_e:
-                        kamikaze = Kamikaze(SCREEN_X + 10, 4, self.enemy_2_sprite_sheet)
-                        self.enemy_group.add(kamikaze)
+                        kamikaze2 = Kamikaze(10, 4, self.enemy_2_sprite_sheet)
+                        kamikaze1 = Kamikaze(SCREEN_X -10, 4, self.enemy_2_sprite_sheet)
+
+                        self.enemy_group.add(kamikaze1)
+                        self.enemy_group.add(kamikaze2)
 
 
                     if event.key == pygame.K_F3:
