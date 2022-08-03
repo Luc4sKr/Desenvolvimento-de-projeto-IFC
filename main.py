@@ -447,8 +447,8 @@ class Game:
                         self.draw_boss = True
 
                     if event.key == pygame.K_e:
-                        kamikaze2 = Kamikaze(10, 4, self.enemy_2_sprite_sheet)
-                        kamikaze1 = Kamikaze(SCREEN_X -10, 4, self.enemy_2_sprite_sheet)
+                        kamikaze1 = Kamikaze(SCREEN_X - 50, 4, self.enemy_2_sprite_sheet)
+                        kamikaze2 = Kamikaze(50, 4, self.enemy_2_sprite_sheet)
 
                         self.enemy_group.add(kamikaze1)
                         self.enemy_group.add(kamikaze2)
@@ -887,9 +887,9 @@ def draw_loja_button(sprite, left, top, width, height, nome, vidas, shield):
     image_rect.center = (left + 60, top + (height / 2))
     screen.blit(image, image_rect)
 
-    draw_text(nome, 16, YELLOW, left + 130, top + 10, topleft=True)             # Nome
-    draw_text(f"Vidas: {vidas}", 10, WHITE, left + 130, top + 35, topleft=True) # Vidas
-    draw_text(f"Escudo: {shield}", 10, WHITE, left + 130, top + 55, topleft=True)
+    draw_text(nome, 16, YELLOW, left + 130, top + 10, topleft=True)               # Nome
+    draw_text(f"Vidas: {vidas}", 10, WHITE, left + 130, top + 35, topleft=True)   # Vidas
+    draw_text(f"Escudo: {shield}", 10, WHITE, left + 130, top + 55, topleft=True) # Escudo
     return  button
 
 

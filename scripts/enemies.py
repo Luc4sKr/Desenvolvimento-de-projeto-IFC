@@ -1,6 +1,7 @@
 import pygame
 
 from scripts.constantes import *
+
 from scripts.bullet import Bullet
 
 # Inimigo normal
@@ -153,29 +154,35 @@ class Kamikaze(pygame.sprite.Sprite):
         self.__animation_list = animation_list # Lista de animação
 
         self.__shield = shield # É a "vida" do Enemy
-        self.__damage = 30 # Dano
+        self.__damage = 50 # Dano
 
         # Imagem
         self.__image = self.__animation_list[self.__frame_index]
         self.__image = pygame.transform.scale(self.__image, (ENEMY_SIZE_X, ENEMY_SIZE_Y))
         self.__rect = self.__image.get_rect()
 
-        self.__rect.center = (x, 40)
+        self.__rect.center = (x, -10)
 
         if self.__rect.x > SCREEN_X / 2:
             self.__image = pygame.transform.rotate(self.__image, 350)
         if self.__rect.x < SCREEN_X / 2:
             self.__image = pygame.transform.rotate(self.__image, 10)
 
+    def collision_botton(self):
+        if self.__rect.top > SCREEN_Y:
+            self.kill()
+
 
     def update(self):
-        self.__rect.y += 5
+        self.collision_botton()
+
 
         if self.__rect.x > SCREEN_X / 2:
-            self.__rect.x -= 1.2
+            self.__rect.x -= 0.9
+            self.__rect.y += 5
         if self.__rect.x < SCREEN_X / 2:
-            self.__rect.x += 1.2
-
+            self.__rect.x += 1.1
+            self.__rect.y += 5
     
 
 
