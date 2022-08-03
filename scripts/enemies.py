@@ -146,7 +146,7 @@ class Enemy(pygame.sprite.Sprite):
 
 # Kamikaze
 class Kamikaze(pygame.sprite.Sprite):
-    def __init__(self, shield, animation_list):
+    def __init__(self, x, shield, animation_list):
         pygame.sprite.Sprite.__init__(self)
 
         self.__frame_index = 0 # Frame de animação
@@ -161,7 +161,7 @@ class Kamikaze(pygame.sprite.Sprite):
         self.__image = pygame.transform.scale(self.__image, (ENEMY_SIZE_X, ENEMY_SIZE_Y))
         self.__rect = self.__image.get_rect()
 
-        self.__rect.center = (50, -10)
+        self.__rect.center = (x, -20)
 
         if self.__rect.x > SCREEN_X / 2:
             self.__image = pygame.transform.rotate(self.__image, 340)
@@ -178,13 +178,11 @@ class Kamikaze(pygame.sprite.Sprite):
     def update(self):
         self.collision_botton()
 
-
+        self.__rect.y += 4.8
         if self.__rect.x > SCREEN_X / 2:
             self.__rect.x -= 0.9
-            self.__rect.y += 5
         if self.__rect.x < SCREEN_X / 2:
             self.__rect.x += 1.1
-            self.__rect.y += 5
     
 
 

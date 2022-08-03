@@ -372,10 +372,18 @@ class Game:
 
         # Enemy
         self.enemy_1_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/enemy-1", ENEMY_SIZE_X, ENEMY_SIZE_Y)
-        self.enemy_2_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/enemy-2", ENEMY_SIZE_X, ENEMY_SIZE_Y)
         self.create_enemy_delay = 2500
         self.last_enemy = pygame.time.get_ticks()
+
+        # Kamikaze
+        self.kamikaze_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/enemy-2", ENEMY_SIZE_X, ENEMY_SIZE_Y)
+        self.create_kamikaze_delay = 7000
+        self.last_kemikaze = pygame.time.get_ticks()
+
+        # Shield bar
         self.enemy_shield_bar = Shield_bar(screen)
+        self.kamikaze_shield_bar = Shield_bar(screen)
+
 
         # Boss
         self.boss_body_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/body", BODY_BOSS_SIZE_X, BODY_BOSS_SIZE_Y)
@@ -447,11 +455,11 @@ class Game:
                         self.draw_boss = True
 
                     if event.key == pygame.K_e:
-                        kamikaze1 = Kamikaze(SCREEN_X - 50, 4, self.enemy_2_sprite_sheet)
-                        kamikaze2 = Kamikaze(50, 4, self.enemy_2_sprite_sheet)
+                        kamikaze1 = Kamikaze(KAMIKAZE_XPOS_1, 4, self.kamikaze_sprite_sheet)
+                        kamikaze2 = Kamikaze(KAMIKAZE_XPOS_2, 4, self.kamikaze_sprite_sheet)
 
-                        self.enemy_group.add(kamikaze1)
-                        self.enemy_group.add(kamikaze2)
+                        self.kamikaze_group.add(kamikaze1)
+                        self.kamikaze_group.add(kamikaze2)
 
 
                     if event.key == pygame.K_F3:
@@ -468,6 +476,7 @@ class Game:
 
                 if not self.asteroid_shower_event:
                     self.generate_enemy()
+                    self.generate_kamikaze()
 
             self.check_lives()
             self.check_shield()
@@ -492,9 +501,13 @@ class Game:
 
         self.draw_ready()
 
-        # Shield do player
+        # Shield bar do enemy
         for enemy in self.enemy_group:
             self.enemy_shield_bar.draw_shield_bar(enemy.shield, enemy.rect)
+        
+        # Shield bar do kamikaze
+        for kamikaze in self.kamikaze_group:
+            self.kamikaze_shield_bar.draw_shield_bar(kamikaze.shield, kamikaze.rect)
 
 
     def update_sprites(self):
@@ -506,6 +519,7 @@ class Game:
         self.bullet_group.update()
         self.enemy_shoot_group.update()
         self.powerup_group.update()
+        self.kamikaze_group.update()
 
         if self.draw_boss:
             self.boss_group.update()
@@ -523,6 +537,7 @@ class Game:
         self.enemy_shoot_group.draw(screen)
         self.powerup_group.draw(screen)
         self.player_group_single.draw(screen)
+        self.kamikaze_group.draw(screen)
 
         if self.draw_boss:
             self.boss_group.draw(screen)
@@ -794,19 +809,33 @@ class Game:
                 distance_y -= 20
             self.enemy_group.add(enemy)
 
+
     def new_solo_enemy(self):
         pos_x = randint(ENEMY_SIZE_X / 2, SCREEN_X - (ENEMY_SIZE_X / 2))
         pos_y = -20
         enemy = self.create_enemy(pos_x, pos_y)
         self.enemy_group.add(enemy)
 
+
+    def new_kamikaze(self):
+        kamikaze_1 = self.create_kemikaze(KAMIKAZE_XPOS_1, KAMIKAZE_SHIELD)
+        kamikaze_2 = self.create_kemikaze(KAMIKAZE_XPOS_2, KAMIKAZE_SHIELD)
+        self.kamikaze_group.add(kamikaze_1, kamikaze_2)
+
+    
+    def generate_kamikaze(self):
+        if pygame.time.get_ticks() - self.last_kemikaze > self.create_kamikaze_delay:
+            self.last_kemikaze = pygame.time.get_ticks()
+            self.new_kamikaze()
+
+
     def create_enemy(self, x, y):
         enemy = Enemy(x, y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.enemy_shoot_group, self.enemy_shoot_delay_multiplier)
         return enemy
 
     
-    def create_kemikaze(self, shield):
-        kamikaze = Kamikaze(shield, self.enemy_2_sprite_sheet)
+    def create_kemikaze(self, x, shield):
+        kamikaze = Kamikaze(x, shield, self.kamikaze_sprite_sheet)
         return kamikaze
 
 
@@ -827,7 +856,6 @@ class Game:
             animation_list.append(image)
         return animation_list
 
-    # !! ------------------------ DRAW ------------------------ !! #
     # Desenha a quantidade de vidas do jogador
     def draw_lives(self, x, y, image):
         for i in range(self.player.lives):
