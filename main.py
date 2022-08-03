@@ -494,7 +494,7 @@ class Game:
 
         # Shield do player
         for enemy in self.enemy_group:
-            self.enemy_shield_bar.draw_shield_bar(enemy.shield, enemy.rect.x, enemy.rect.y)
+            self.enemy_shield_bar.draw_shield_bar(enemy.shield, enemy.rect)
 
 
     def update_sprites(self):
@@ -803,6 +803,12 @@ class Game:
     def create_enemy(self, x, y):
         enemy = Enemy(x, y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.enemy_shoot_group, self.enemy_shoot_delay_multiplier)
         return enemy
+
+    
+    def create_kemikaze(self, shield):
+        kamikaze = Kamikaze(shield, self.enemy_2_sprite_sheet)
+        return kamikaze
+
 
     def dev_options(self):
         draw_text(f"FPS: {clock.get_fps():.2f}", 12, RED, 20, 100, topleft=True)
