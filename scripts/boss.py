@@ -26,20 +26,31 @@ class Boss(pygame.sprite.Sprite):
             if self.direction == "right":
                 self.image = pygame.transform.flip(self.image, True, False)
 
+
+            self.shield = WING_BOSS_SHIELD
+
+
         def get_body_rect(self, body_rect):
             self.body_rect = body_rect
 
+        
+        def check_shield(self):
+            if self.shield <= 0:
+                self.kill()
+
 
         def update(self):
+            self.check_shield()
+
             self.image = Boss.update_animation(self.image, self.wing_animatin_list, self.direction)
 
             if self.direction == "left":
-                self.rect.y = self.body_rect.y
-                self.rect.right = self.body_rect.left + 10
+                self.rect.y = self.body_rect.y - 15
+                self.rect.right = self.body_rect.left + 15
 
             if self.direction == "right":
-                self.rect.y = self.body_rect.y
-                self.rect.left = self.body_rect.right - 10
+                self.rect.y = self.body_rect.y - 15
+                self.rect.left = self.body_rect.right - 15
 
 
     def __init__(self, body_animation_list, wing_animation_list):

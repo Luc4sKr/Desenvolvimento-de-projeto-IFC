@@ -383,6 +383,7 @@ class Game:
         # Shield bar
         self.enemy_shield_bar = Shield_bar(screen)
         self.kamikaze_shield_bar = Shield_bar(screen)
+        self.boss_wings_shield_bar = Shield_bar(screen)
 
         # Boss
         self.boss_body_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/body", BODY_BOSS_SIZE_X, BODY_BOSS_SIZE_Y)
@@ -514,6 +515,10 @@ class Game:
         for kamikaze in self.kamikaze_group:
             self.kamikaze_shield_bar.draw_shield_bar(kamikaze.shield, kamikaze.rect)
 
+        if self.boss_event:
+            for wing in self.boss_wings_group:
+                self.boss_wings_shield_bar.draw_shield_bar(wing.shield, wing.rect)
+
 
     def update_sprites(self):
         self.background.update()
@@ -560,16 +565,15 @@ class Game:
         # Colisão do Player com o Asteroid
         player_asteroid_collide = pygame.sprite.spritecollide(self.player, self.asteroid_group, True, pygame.sprite.collide_mask)
         for hit in player_asteroid_collide:
-            self.player.shield -= 20  # Tira o shield do player
-            self.new_asteroid()  # Cria um novo asteroide
+            self.player.shield -= ASTEROID_DAMAGE  # Tira o shield do player
 
-        # Colisão com o tiro do Player
+        # Colisão do Enemy com o tiro do Player
         player_shot_collide = pygame.sprite.groupcollide(self.enemy_group, self.bullet_group, False, True, pygame.sprite.collide_mask)
         for hit in player_shot_collide:
-            hit.shield -= 1
-            if hit.shield <= 0:
+            hit.shield -= self.player.damage
 
-                # Powerups
+            if hit.shield <= 0:
+                # Chance de dropar um powerup
                 if randint(0, 10) >= 5:
                     powerup = Powerup(hit.rect.center)
                     self.powerup_group.add(powerup)
@@ -582,7 +586,6 @@ class Game:
         # Colisão entre o Enemy e o Asteroid
         enemy_asteroid_collide = pygame.sprite.groupcollide(self.enemy_group, self.asteroid_group, True, True, pygame.sprite.collide_mask)
         for hit in enemy_asteroid_collide:
-            self.new_asteroid()
             explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
             self.explosion_group.add(explosion)
 
@@ -601,6 +604,12 @@ class Game:
         enemy_shoot_collision = pygame.sprite.spritecollide(self.player, self.enemy_shoot_group, True)
         for hit in enemy_shoot_collision:
             self.player.shield -= hit.damage
+
+        
+        # Colisão entre os tiros do Player com a Asa do Boss
+        shoot_collision_wing = pygame.sprite.groupcollide(self.boss_wings_group, self.bullet_group, False, True, pygame.sprite.collide_mask)
+        for hit in shoot_collision_wing:
+            hit.shield -= self.player.damage
 
 
     def check_lives(self):
@@ -859,8 +868,8 @@ class Game:
         
 
 
-    # Cria as sprite sheets de naves
-    @staticmethod
+    
+    @staticmethod # Cria as sprite sheets de naves
     def create_sprite_sheet(sprite_directory, sprite_size_x, sprite_size_y):
         animation_list = []
 

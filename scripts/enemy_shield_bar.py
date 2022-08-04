@@ -22,7 +22,7 @@ class Shield_bar(pygame.sprite.Sprite):
         self.__rect.y = enemy_rect.y
         self.__surface.blit(self.__image, self.__rect)
 
-        if shield < 0:
+        if shield <= 0:
             self.kill()
 
 

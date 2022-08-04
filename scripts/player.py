@@ -166,7 +166,7 @@ class Player(pygame.sprite.Sprite):
     # Damage
     @property
     def damage(self):
-        return self.damage
+        return self.__damage
     
     @damage.setter
     def damage(self, damage):
