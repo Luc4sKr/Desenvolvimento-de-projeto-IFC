@@ -3,6 +3,7 @@ import pygame
 from os import listdir
 from random import randint
 from sys import exit
+from math import sin
 
 from scripts.constantes import *
 from scripts.asteroid import Asteroid
@@ -389,6 +390,7 @@ class Game:
         self.boss_body_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/body", BODY_BOSS_SIZE_X, BODY_BOSS_SIZE_Y)
         self.boss_wing_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/wings", WING_BOSS_SIZE_X, WING_BOSS_SIZE_Y)
         self.boss_event = False
+        self.last_explosion = pygame.time.get_ticks()
 
         # Controle de aparição dos asteroides
         self.asteroid_event_cooldown = pygame.time.get_ticks()
@@ -605,11 +607,25 @@ class Game:
         for hit in enemy_shoot_collision:
             self.player.shield -= hit.damage
 
-        
+           
         # Colisão entre os tiros do Player com a Asa do Boss
         shoot_collision_wing = pygame.sprite.groupcollide(self.boss_wings_group, self.bullet_group, False, True, pygame.sprite.collide_mask)
         for hit in shoot_collision_wing:
-            hit.shield -= self.player.damage * 5
+            hit.shield -= self.player.damage * 7
+
+            if hit.shield <= 0:
+                self.score.add_score(20)
+
+                explosion_pos = [hit.rect.right - 20, hit.rect.top + 50]
+                
+
+                for i in range(10):
+                    explosion_pos[0] = explosion_pos[0] - (i * 10)
+                    explosion_pos[1] = explosion_pos[1] * (sin(i) + 0.8)
+                    explosion = Explosion(explosion_pos, self.explosion_sprite_sheet)
+                    self.explosion_group.add(explosion)
+
+                hit.kill()
 
 
     def check_lives(self):

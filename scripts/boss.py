@@ -2,6 +2,7 @@ import pygame
 
 from scripts.constantes import *
 
+
 class Boss(pygame.sprite.Sprite):
 
     frame_index = 0  # Frame de animação
@@ -33,15 +34,8 @@ class Boss(pygame.sprite.Sprite):
         def get_body_rect(self, body_rect):
             self.body_rect = body_rect
 
-        
-        def check_shield(self):
-            if self.shield <= 0:
-                self.kill()
-
 
         def update(self):
-            self.check_shield()
-
             self.image = Boss.update_animation(self.image, self.wing_animatin_list, self.direction)
 
             if self.direction == "left":
