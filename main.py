@@ -609,7 +609,7 @@ class Game:
         # Colisão entre os tiros do Player com a Asa do Boss
         shoot_collision_wing = pygame.sprite.groupcollide(self.boss_wings_group, self.bullet_group, False, True, pygame.sprite.collide_mask)
         for hit in shoot_collision_wing:
-            hit.shield -= self.player.damage
+            hit.shield -= self.player.damage * 5
 
 
     def check_lives(self):
