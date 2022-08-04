@@ -384,10 +384,10 @@ class Game:
         self.enemy_shield_bar = Shield_bar(screen)
         self.kamikaze_shield_bar = Shield_bar(screen)
 
-
         # Boss
         self.boss_body_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/body", BODY_BOSS_SIZE_X, BODY_BOSS_SIZE_Y)
         self.boss_wing_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/wings", WING_BOSS_SIZE_X, WING_BOSS_SIZE_Y)
+        self.boss_event = False
 
         # Controle de aparição dos asteroides
         self.asteroid_event_cooldown = pygame.time.get_ticks()
@@ -445,6 +445,9 @@ class Game:
 
                     if event.key == pygame.K_p:
                         self.asteroid_shower_event = True
+                    
+                    if event.key == pygame.K_i:
+                        self.score.add_score(100)
 
                     if event.key == pygame.K_q:
                         self.boss = Boss(self.boss_body_sprite_sheet, self.boss_wing_sprite_sheet)
@@ -474,9 +477,11 @@ class Game:
             if self.ready:
                 self.asteroid_shower()
 
-                if not self.asteroid_shower_event:
+                if not self.asteroid_shower_event and not self.boss_event:
                     self.generate_enemy()
                     self.generate_kamikaze()
+
+            self.fBoss_event()
 
             self.check_lives()
             self.check_shield()
@@ -494,7 +499,7 @@ class Game:
 
         self.draw_groups()
 
-        draw_text(f"Score: {self.score.score}", 18, WHITE, SCREEN_X / 2, 16)  # Texto do score
+        draw_text(f"Score: {self.score.get_score()}", 18, WHITE, SCREEN_X / 2, 16)  # Texto do score
 
         self.draw_shield_bar(5, 10) # Shield do Player
         self.draw_lives(480, 10, self.player_mini_image) # Vidas do Player
@@ -723,7 +728,7 @@ class Game:
 
 
             draw_text("GAME OVER", 42, RED, SCREEN_X / 2, 60)
-            draw_text(f"SCORE: {self.score.score}", 42, WHITE, SCREEN_X / 2, SCREEN_Y / 2 - 124)
+            draw_text(f"SCORE: {self.score.get_score()}", 42, WHITE, SCREEN_X / 2, SCREEN_Y / 2 - 124)
 
             voltar_ao_menu_buttom = draw_button(SCREEN_X/2 - 150, 300, SCREEN_X/2 + 10, 50, "Voltar ao menu")
             jogar_novamente_button = draw_button(SCREEN_X / 2 - 150, 360, SCREEN_X / 2 + 10, 50, "Jogar novamente", font_size=19)
@@ -839,9 +844,19 @@ class Game:
         return kamikaze
 
 
+    def fBoss_event(self):
+        if self.score.get_score() >= 100 and not self.boss_event:
+            self.boss_event = True
+            boss = Boss(self.boss_body_sprite_sheet, self.boss_wing_sprite_sheet)
+            self.boss_group.add(boss)
+            self.boss_wings_group.add(boss.left_wing)
+            self.boss_wings_group.add(boss.right_wing)
+            self.draw_boss = True      
+
+
     def dev_options(self):
         draw_text(f"FPS: {clock.get_fps():.2f}", 12, RED, 20, 100, topleft=True)
-        #draw_text(F"get_ticks: {pygame.time.get_ticks()}", 12, RED, 20, 115, topleft=True)
+        
 
 
     # Cria as sprite sheets de naves

@@ -51,7 +51,7 @@ class Boss(pygame.sprite.Sprite):
         self.image = self.body_animation_list[Boss.frame_index]
         self.rect = self.image.get_rect()
 
-        self.rect.center = (SCREEN_X / 2, 100)
+        self.rect.center = (SCREEN_X / 2, -30)
 
         self.left_wing = Boss.Boss_wing(self.wing_animation_list, "left")
         self.right_wing = Boss.Boss_wing(self.wing_animation_list, "right")
@@ -69,24 +69,19 @@ class Boss(pygame.sprite.Sprite):
             Boss.frame_index = 0
         return image
 
-
-    def update(self):
-        self.image = self.update_animation(self.image, self.body_animation_list)
-
-        self.rect.y += 1
+    
+    def movement(self):
+        if self.rect.y <= 50:
+            self.rect.y += 1
 
         self.left_wing.get_body_rect(self.rect)
         self.right_wing.get_body_rect(self.rect)
 
 
+    def update(self):
+        self.movement()
 
+        self.image = self.update_animation(self.image, self.body_animation_list)
 
-
-
-
-
-
-
-
-
+        
 
