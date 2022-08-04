@@ -56,7 +56,7 @@ class Boss(pygame.sprite.Sprite):
         self.image = self.body_animation_list[Boss.frame_index]
         self.rect = self.image.get_rect()
 
-        self.rect.center = (SCREEN_X / 2, -30)
+        self.rect.center = (SCREEN_X / 2, -110)
 
         self.left_wing = Boss.Boss_wing(self.wing_animation_list, "left")
         self.right_wing = Boss.Boss_wing(self.wing_animation_list, "right")

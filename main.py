@@ -390,7 +390,12 @@ class Game:
         self.boss_body_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/body", BODY_BOSS_SIZE_X, BODY_BOSS_SIZE_Y)
         self.boss_wing_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/wings", WING_BOSS_SIZE_X, WING_BOSS_SIZE_Y)
         self.boss_event = False
-        self.last_explosion = pygame.time.get_ticks()
+        self.boss_created= False
+        self.wing_explosion = False
+        self.left_wing_destroyed = False
+        self.right_wing_destroyed = False
+        self.boss_wing_last_explosion = pygame.time.get_ticks()
+        self.boss_wing_last_explosion_index = 1
 
         # Controle de aparição dos asteroides
         self.asteroid_event_cooldown = pygame.time.get_ticks()
@@ -483,8 +488,9 @@ class Game:
                 if not self.asteroid_shower_event and not self.boss_event:
                     self.generate_enemy()
                     self.generate_kamikaze()
-
-            self.fBoss_event()
+            
+            if self.score.get_score() >= 100:
+                self.fBoss_event()
 
             self.check_lives()
             self.check_shield()
@@ -533,7 +539,7 @@ class Game:
         self.powerup_group.update()
         self.kamikaze_group.update()
 
-        if self.draw_boss:
+        if self.boss_event:
             self.boss_group.update()
             self.boss_wings_group.update()
 
@@ -551,7 +557,7 @@ class Game:
         self.player_group_single.draw(screen)
         self.kamikaze_group.draw(screen)
 
-        if self.draw_boss:
+        if self.boss_event:
             self.boss_group.draw(screen)
             self.boss_wings_group.draw(screen)
 
@@ -606,26 +612,55 @@ class Game:
         enemy_shoot_collision = pygame.sprite.spritecollide(self.player, self.enemy_shoot_group, True)
         for hit in enemy_shoot_collision:
             self.player.shield -= hit.damage
-
            
         # Colisão entre os tiros do Player com a Asa do Boss
         shoot_collision_wing = pygame.sprite.groupcollide(self.boss_wings_group, self.bullet_group, False, True, pygame.sprite.collide_mask)
-        for hit in shoot_collision_wing:
-            hit.shield -= self.player.damage * 7
+        for self.wing_hit in shoot_collision_wing:
+            self.wing_hit.shield -= self.player.damage * 7
 
-            if hit.shield <= 0:
+            if self.wing_hit.shield <= 0:
                 self.score.add_score(20)
 
-                explosion_pos = [hit.rect.right - 20, hit.rect.top + 50]
-                
+                self.wing_explosion = True
 
-                for i in range(10):
-                    explosion_pos[0] = explosion_pos[0] - (i * 10)
-                    explosion_pos[1] = explosion_pos[1] * (sin(i) + 0.8)
-                    explosion = Explosion(explosion_pos, self.explosion_sprite_sheet)
-                    self.explosion_group.add(explosion)
+                self.wing_hit.kill()
 
-                hit.kill()
+    
+    def wing_explosion_event(self):
+
+        if self.boss.left_wing.shield <= 0 and not self.left_wing_destroyed:
+            explosion_pos = [self.boss.left_wing.rect.right - 20, self.boss.rect.top + 90]
+
+            if pygame.time.get_ticks() - self.boss_wing_last_explosion > 2000:
+                explosion_pos[0] = explosion_pos[0] - self.boss_wing_last_explosion_index * 8
+                explosion_pos[1] = explosion_pos[1] + (sin(self.boss_wing_last_explosion_index) * 50)
+
+                explosion = Explosion(explosion_pos, self.explosion_sprite_sheet)
+                self.explosion_group.add(explosion)
+
+                self.boss_wing_last_explosion_index += 1
+
+                if self.boss_wing_last_explosion_index > 21:
+                    self.boss_wing_last_explosion_index = 1
+                    self.wing_explosion = False
+                    self.left_wing_destroyed = True
+        
+        if self.boss.right_wing.shield <= 0 and not self.right_wing_destroyed:
+            explosion_pos = [self.boss.right_wing.rect.left + 20, self.boss.rect.top + 90]
+
+            if pygame.time.get_ticks() - self.boss_wing_last_explosion > 2000:
+                explosion_pos[0] = explosion_pos[0] + self.boss_wing_last_explosion_index * 8
+                explosion_pos[1] = explosion_pos[1] + (sin(self.boss_wing_last_explosion_index) * 50)
+
+                explosion = Explosion(explosion_pos, self.explosion_sprite_sheet)
+                self.explosion_group.add(explosion)
+
+                self.boss_wing_last_explosion_index += 1
+
+                if self.boss_wing_last_explosion_index > 21:
+                    self.boss_wing_last_explosion_index = 1
+                    self.wing_explosion = False
+                    self.right_wing_destroyed = True
 
 
     def check_lives(self):
@@ -870,13 +905,23 @@ class Game:
 
 
     def fBoss_event(self):
-        if self.score.get_score() >= 100 and not self.boss_event:
-            self.boss_event = True
-            boss = Boss(self.boss_body_sprite_sheet, self.boss_wing_sprite_sheet)
-            self.boss_group.add(boss)
-            self.boss_wings_group.add(boss.left_wing)
-            self.boss_wings_group.add(boss.right_wing)
-            self.draw_boss = True      
+        self.boss_event = True
+
+        if not self.boss_created:
+            self.create_boss()
+    
+        if self.boss_created:
+            if self.wing_explosion:
+                self.wing_explosion_event()
+
+    
+    def create_boss(self):
+        self.boss_created = True
+        self.boss = Boss(self.boss_body_sprite_sheet, self.boss_wing_sprite_sheet)
+        self.boss_group.add(self.boss)
+        self.boss_wings_group.add(self.boss.left_wing)
+        self.boss_wings_group.add(self.boss.right_wing)
+
 
 
     def dev_options(self):
