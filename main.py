@@ -15,7 +15,7 @@ from scripts.explosion import Explosion
 from scripts.player import Player
 from scripts.score import Score
 from scripts.powerup import Powerup
-from scripts.enemy_shield_bar import Shield_bar
+from scripts.shield_bar import Shield_bar
 
 from scripts.data.util import Util
 
@@ -390,7 +390,7 @@ class Game:
         self.boss_body_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/body", BODY_BOSS_SIZE_X, BODY_BOSS_SIZE_Y)
         self.boss_wing_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/wings", WING_BOSS_SIZE_X, WING_BOSS_SIZE_Y)
         self.boss_event = False
-        self.boss_created= False
+        self.boss_created = False
         self.wing_explosion = False
         self.left_wing_destroyed = False
         self.right_wing_destroyed = False
@@ -525,7 +525,15 @@ class Game:
 
         if self.boss_event:
             for wing in self.boss_wings_group:
-                self.boss_wings_shield_bar.draw_shield_bar(wing.shield, wing.rect)
+                if wing.rect.x < SCREEN_X / 2:
+                    margin = -40
+                    pos_x_add = 25
+                if wing.rect.x > SCREEN_X / 2:
+                    margin = -40
+                    pos_x_add = -25 + (margin * -1)
+                pos_y_add = 40
+
+                self.boss_wings_shield_bar.draw_shield_bar(wing.shield, wing.rect, additional_x_position=pos_x_add, additional_y_position=pos_y_add, margin=margin)
 
 
     def update_sprites(self):
@@ -923,8 +931,8 @@ class Game:
         self.boss_wings_group.add(self.boss.right_wing)
 
 
-
-    def dev_options(self):
+    @staticmethod
+    def dev_options():
         draw_text(f"FPS: {clock.get_fps():.2f}", 12, RED, 20, 100, topleft=True)
         
 
@@ -937,7 +945,7 @@ class Game:
         num_of_frames = len(listdir(sprite_directory))
         for i in range(1, num_of_frames):
             image = pygame.image.load(path.join(getcwd() + f"/{sprite_directory}/sprite-{i}.png")).convert_alpha()
-            image = pygame.transform.scale(image, (sprite_size_x, sprite_size_y))
+            image = pygame.transform.scale(image, (int(sprite_size_x), int(sprite_size_y)))
             animation_list.append(image)
         return animation_list
 
@@ -964,9 +972,9 @@ class Game:
     def draw_shield_bar(self, x, y):
         if self.player.shield < 0:
             self.player.shield = 0
-        fill = (self.player.shield / 100) * BAR_WIDTH
-        outline_rect = pygame.Rect(x, y, BAR_WIDTH, BAR_HEIGHT)
-        fill_rect = pygame.Rect(x, y, fill, BAR_HEIGHT)
+        fill = (self.player.shield / 100) * PLAYER_BAR_WIDTH
+        outline_rect = pygame.Rect(x, y, PLAYER_BAR_WIDTH, PLAYER_BAR_HEIGHT)
+        fill_rect = pygame.Rect(x, y, fill, PLAYER_BAR_HEIGHT)
         pygame.draw.rect(screen, GREEN, fill_rect)
         pygame.draw.rect(screen, WHITE, outline_rect, 2)
 
