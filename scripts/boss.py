@@ -61,6 +61,8 @@ class Boss(pygame.sprite.Sprite):
         self.left_wing = Boss.Boss_wing(self.wing_animation_list, "left")
         self.right_wing = Boss.Boss_wing(self.wing_animation_list, "right")
 
+        self.shield = 100
+
     # Update de animação
     @staticmethod
     def update_animation(image, animation_list, direction="left"):
