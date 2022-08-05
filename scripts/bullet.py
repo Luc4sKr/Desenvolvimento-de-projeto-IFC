@@ -3,11 +3,11 @@ import pygame
 from scripts.constantes import *
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x, y, bullet, damage, vely):
+    def __init__(self, x, y, bullet, damage, vely, scale_x=8, scale_y=12):
         pygame.sprite.Sprite.__init__(self)
 
         self.__image = pygame.image.load(path.join(getcwd() + f"/assets/images/bullet/{bullet}.png")).convert_alpha()
-        self.__image = pygame.transform.scale(self.__image, (8, 12))
+        self.__image = pygame.transform.scale(self.__image, (scale_x, scale_y))
         self.__rect = self.__image.get_rect()
 
         self.__rect.bottom = y

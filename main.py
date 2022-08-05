@@ -352,6 +352,7 @@ class Game:
         self.explosion_group = pygame.sprite.Group()
         self.boss_group = pygame.sprite.Group()
         self.boss_wings_group = pygame.sprite.Group()
+        self.boss_shoot_group = pygame.sprite.Group()
         self.kamikaze_group = pygame.sprite.Group()
 
         # Background do jogo - A SPRITE COM MOVIMENTO PRECISA TER 580x2722 !!!!
@@ -537,6 +538,7 @@ class Game:
         self.kamikaze_group.update()
 
         if self.boss_event:
+            self.boss_shoot_group.update()
             self.boss_group.update()
             self.boss_wings_group.update()
 
@@ -556,9 +558,10 @@ class Game:
         self.kamikaze_group.draw(screen)
 
         if self.boss_event:
+            self.boss_shoot_group.draw(screen)
             self.boss_group.draw(screen)
             self.boss_wings_group.draw(screen)
-
+        
         self.explosion_group.draw(screen)
 
 
@@ -628,6 +631,7 @@ class Game:
                 self.wing_explosion = True
                 wing_hit.kill()
 
+        # Colisão entre os tiros do Player com o Boss
         shoot_collision_body = pygame.sprite.groupcollide(self.boss_group, self.bullet_group, False, True,pygame.sprite.collide_mask)
         if self.draw_body_boss_shield_bar:
             for body_hit in shoot_collision_body:
@@ -636,7 +640,17 @@ class Game:
                     self.score.add_score(50)
                     self.body_explosion = True
                     body_hit.kill()
-                
+
+        # Colisão do Player com o Boss
+        player_collision_boss = pygame.sprite.spritecollide(self.player, self.boss_group, False, pygame.sprite.collide_mask)
+        if player_collision_boss:
+            self.player.shield = 0
+        
+        # Colisão do Player com as asas do Boss
+        player_collision_boss_wings = pygame.sprite.spritecollide(self.player, self.boss_wings_group, False, pygame.sprite.collide_mask)
+        if player_collision_boss_wings:
+            self.player.shield = 0
+        # -- /BOSS -- #
 
 
     def check_lives(self):
@@ -904,8 +918,6 @@ class Game:
                 explosion_pos[0] += (sin(self.boss_last_explosion_index) * 60)
                 explosion_pos[1] -= self.boss_last_explosion_index * 8
 
-                print(sin(self.boss_last_explosion_index) * 50)
-
                 explosion = Explosion(explosion_pos, self.explosion_sprite_sheet)
                 self.explosion_group.add(explosion)
 
@@ -954,7 +966,7 @@ class Game:
     
     def create_boss(self):
         self.boss_created = True
-        self.boss = Boss(self.boss_body_sprite_sheet, self.boss_wing_sprite_sheet)
+        self.boss = Boss(self.boss_body_sprite_sheet, self.boss_wing_sprite_sheet, self.boss_shoot_group)
         self.boss_group.add(self.boss)
         self.boss_wings_group.add(self.boss.left_wing)
         self.boss_wings_group.add(self.boss.right_wing)
