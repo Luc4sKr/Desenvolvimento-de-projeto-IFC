@@ -40,9 +40,14 @@ class Boss(pygame.sprite.Sprite):
 
         
         def big_shoot(self):
+            if self.rect.x < SCREEN_X / 2:
+                pos_x_add = -3
+            if self.rect.x > SCREEN_X / 2:
+                pos_x_add = 3
+
             if pygame.time.get_ticks() - self.last_big_shoot > BOSS_BIG_SHOOT_DELAY:
                 self.last_big_shoot = pygame.time.get_ticks()
-                big_bullet = Bullet(self.rect.centerx, self.rect.bottom, "boss-bullet-1", self.damage, BOSS_BIG_SHOOT_VELY, scale_x=32, scale_y=32)
+                big_bullet = Bullet(self.rect.centerx + pos_x_add, self.rect.bottom - 20, "boss-bullet-1", self.damage, BOSS_BIG_SHOOT_VELY, scale_x=32, scale_y=32)
                 self.shoot_group.add(big_bullet)
                 
 

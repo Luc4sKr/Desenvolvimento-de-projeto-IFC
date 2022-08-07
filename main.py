@@ -478,7 +478,7 @@ class Game:
                     self.generate_enemy()
                     self.generate_kamikaze()
             
-            if self.score.get_score() >= 100:
+            if self.score.get_score() >= 100 and not self.boss_destroyed:
                 self.fBoss_event()
 
             self.check_lives()
@@ -567,7 +567,6 @@ class Game:
 
     def events(self):
         pass
-
 
     # Checa as colisões do jogo
     def collision_checks(self):
@@ -906,6 +905,8 @@ class Game:
             
             if self.body_explosion:
                 self.body_explosion_event()
+                self.boss_event = False
+                self.boss_destroyed = True
 
             if self.left_wing_destroyed and self.right_wing_destroyed:
                 self.draw_body_boss_shield_bar = True
