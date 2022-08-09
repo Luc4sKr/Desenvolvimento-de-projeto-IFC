@@ -619,6 +619,27 @@ class Game:
         enemy_shoot_collision = pygame.sprite.spritecollide(self.player, self.enemy_shoot_group, True)
         for hit in enemy_shoot_collision:
             self.player.shield -= hit.damage
+
+        # Colisão dos tiros com o Kamikaze
+        player_shoot_collide_kamikaze = pygame.sprite.groupcollide(self.kamikaze_group, self.bullet_group, False, True, pygame.sprite.collide_mask)
+        for kamikaze_hit in player_shoot_collide_kamikaze:
+            kamikaze_hit.shield -= self.player.damage
+
+            if kamikaze_hit.shield <= 0:
+                explosion = Explosion(kamikaze_hit.rect.center, self.explosion_sprite_sheet)
+                self.explosion_group.add(explosion)
+                self.score.add_score()
+                kamikaze_hit.kill()
+
+        # Colisão quando o Kamikaze bate no Player
+        kamikaze_player_collide = pygame.sprite.spritecollide(self.player, self.kamikaze_group,  False)
+        for hit in kamikaze_player_collide:
+            self.player.shield -= hit.damage
+            explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
+            self.explosion_group.add(explosion)
+            hit.kill()
+
+        
            
         # -- BOSS -- #
         # Colisão entre os tiros do Player com a Asa do Boss
@@ -906,7 +927,7 @@ class Game:
             if self.body_explosion:
                 self.body_explosion_event()
                 self.boss_event = False
-                self.boss_destroyed = True
+                
 
             if self.left_wing_destroyed and self.right_wing_destroyed:
                 self.draw_body_boss_shield_bar = True
@@ -927,6 +948,7 @@ class Game:
                 if self.boss_last_explosion_index > 25:
                     self.boss_last_explosion_index = 1
                     self.body_explosion = False
+                    self.boss_destroyed = True
 
 
     def wing_explosion_event(self):

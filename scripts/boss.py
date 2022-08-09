@@ -85,7 +85,7 @@ class Boss(pygame.sprite.Sprite):
 
     def movement(self):
         if self.rect.y <= 50:
-            self.rect.y += 11
+            self.rect.y += 1
 
         self.left_wing.get_body_rect(self.rect)
         self.right_wing.get_body_rect(self.rect)
