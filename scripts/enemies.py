@@ -154,7 +154,7 @@ class Kamikaze(pygame.sprite.Sprite):
         self.__animation_list = animation_list # Lista de animação
 
         self.__shield = shield # É a "vida" do Enemy
-        self.__damage = 50 # Dano
+        self.__damage = KAMIKAZE_DAMAGE # Dano
 
         # Imagem
         self.__image = self.__animation_list[self.__frame_index]
