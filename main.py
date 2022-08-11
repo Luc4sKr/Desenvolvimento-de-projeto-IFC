@@ -446,30 +446,8 @@ class Game:
         #  Loop principal do jogo
         while not self.game_over:
             clock.tick(FPS)
-            # Eventos do jogo
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.game_over = True
-                    exit()
-
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        self.show_pause = True
-                        self.pause_screen()
-
-                    if event.key == pygame.K_p:
-                        self.asteroid_shower_event = True
-                    
-                    if event.key == pygame.K_i:
-                        self.score.add_score(100)
-
-                    if event.key == pygame.K_F3:
-                        if not self.draw_dev_options:
-                            self.draw_dev_options = True
-                        else:
-                            self.draw_dev_options = False
-
-            self.collision_checks()
+            self.events() # Eventos do jogo
+            self.collision_checks() # Verificação das colisões do jogo
             
             if self.ready:
                 self.asteroid_shower()
@@ -566,7 +544,27 @@ class Game:
 
 
     def events(self):
-        pass
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.game_over = True
+                exit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.show_pause = True
+                    self.pause_screen()
+
+                if event.key == pygame.K_p:
+                    self.asteroid_shower_event = True
+
+                if event.key == pygame.K_i:
+                    self.score.add_score(100)
+
+                if event.key == pygame.K_F3:
+                    if not self.draw_dev_options:
+                        self.draw_dev_options = True
+                    else:
+                        self.draw_dev_options = False
 
     # Checa as colisões do jogo
     def collision_checks(self):
@@ -639,7 +637,13 @@ class Game:
             self.explosion_group.add(explosion)
             hit.kill()
 
-        
+        # Colisão do Player com o Enemy
+        player_collide_enemy = pygame.sprite.spritecollide(self.player, self.enemy_group, False)
+        for hit in player_collide_enemy:
+            self.player.shield -= COLLIDE_DAMAGE
+            explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
+            self.explosion_group.add(explosion)
+            hit.kill()
            
         # -- BOSS -- #
         # Colisão entre os tiros do Player com a Asa do Boss
