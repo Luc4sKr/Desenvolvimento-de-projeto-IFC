@@ -2,6 +2,7 @@ import json
 
 from os import getcwd, path
 
+
 class Util:
     def __init__(self):
         self.open_file()

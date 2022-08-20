@@ -133,7 +133,7 @@ class Boss(pygame.sprite.Sprite):
 
     def movement(self):
         if self.rect.y < 50:
-            self.rect.y += 11
+            self.rect.y += 1
         if self.rect.y >= 50:
             Boss.boss_ready = True
 

@@ -19,6 +19,8 @@ from scripts.shield_bar import Shield_bar
 
 from scripts.data.util import Util
 
+from scripts.utils.music_framework import Music_framework
+
 
 class Menu:
     def __init__(self):
@@ -64,6 +66,10 @@ class Menu:
 
                     if event.key == pygame.K_RETURN:
                         self.click = True
+
+                    if event.key == pygame.K_F1:
+                        music_framework = Music_framework(screen, clock)
+                        music_framework.run()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
@@ -652,7 +658,7 @@ class Game:
         shoot_collision_wing = pygame.sprite.groupcollide(self.boss_wings_group, self.bullet_group, False, True,
                                                           pygame.sprite.collide_mask)
         for wing_hit in shoot_collision_wing:
-            wing_hit.shield -= self.player.damage * 100
+            wing_hit.shield -= self.player.damage * 1
             if wing_hit.shield <= 0:
                 self.score.add_score(20)
                 self.wing_explosion = True
@@ -663,7 +669,7 @@ class Game:
                                                           pygame.sprite.collide_mask)
         if self.draw_body_boss_shield_bar:
             for body_hit in shoot_collision_body:
-                body_hit.shield -= self.player.damage * 100
+                body_hit.shield -= self.player.damage * 1
                 if body_hit.shield <= 0:
                     self.score.add_score(50)
                     self.body_explosion = True
