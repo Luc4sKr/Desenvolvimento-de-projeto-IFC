@@ -4,6 +4,7 @@ from scripts.constantes import *
 
 from scripts.bullet import Bullet
 
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, image, attributes, bullet_group):
         pygame.sprite.Sprite.__init__(self)
@@ -14,25 +15,26 @@ class Player(pygame.sprite.Sprite):
 
         self.__rect.center = (SCREEN_X / 2,  600)
 
-        # Grupos  de sprites
+        # Grupos de sprites
         self.__bullet_group = bullet_group
 
-        self.__shield = attributes["shield"] # Escudo/vida da nave
-        self.__shoot_delay = attributes["shoot_delay"] # Delay do tiro
+        self.__shield = attributes["shield"]  # Escudo/vida da nave
+        self.__shoot_delay = attributes["shoot_delay"]  # Delay do tiro
         self.__lives = attributes["lives"]  # Vidas
         self.__damage = attributes["damage"]  # Dano
-        self.__spaceship_velocity = attributes["velocity"] # Velocidade
+        self.__spaceship_velocity = attributes["velocity"]  # Velocidade
 
-        self.__last_shoot = pygame.time.get_ticks() # Tempo do ultimo tiro
+        self.__last_shoot = pygame.time.get_ticks()  # Tempo do ultimo tiro
         self.__hidden = False 
         self.__hide_timer = pygame.time.get_ticks()
         self.__key = None
+        self.__velocity = None
 
         # Powerups
         self.__power = 1
         self.__power_time = pygame.time.get_ticks()
 
-
+    # Movimentação da nave
     def movement(self):
         self.__key = pygame.key.get_pressed()
         self.__velocity = self.__spaceship_velocity
@@ -50,7 +52,7 @@ class Player(pygame.sprite.Sprite):
         if self.__key[pygame.K_d] or self.__key[pygame.K_RIGHT]:
             self.__rect.x += self.__velocity
 
-
+    # Colisão com a borda da tela
     def collision(self):
         if self.__rect.left <= 0:
             self.__rect.left = 0
@@ -62,7 +64,7 @@ class Player(pygame.sprite.Sprite):
         if self.__rect.bottom >= SCREEN_Y:
             self.__rect.bottom = SCREEN_Y
 
-
+    # Tiro da nave
     def shoot(self):
         self.__key = pygame.key.get_pressed()
         if not self.__hidden:
@@ -78,37 +80,36 @@ class Player(pygame.sprite.Sprite):
                         bullet_4 = Bullet(self.__rect.left, self.__rect.centery, "player-bullet", 5, -10)
                         self.__bullet_group.add(bullet_3, bullet_4)
 
-
     # Esconde o player temporariamente depois da sua barra de shiel chegar a 0
     def hide(self):
         self.__hidden = True
         self.__hide_timer = pygame.time.get_ticks()
-        self.__rect.center = (SCREEN_X /2, 600)
+        self.__rect.center = (SCREEN_X / 2, 600)
 
         self.__image = pygame.image.load(path.join(getcwd() + "/assets/images/invisible_sprite.png")).convert_alpha()
 
-
+    # Timeout que deixa o player invisivel
     def hide_timeout(self):
         if self.__hidden and pygame.time.get_ticks() - self.__hide_timer > 1000:
             self.__hidden = False
-            self.__rect.center = (SCREEN_X /2, 600)
+            self.__rect.center = (SCREEN_X / 2, 600)
 
             self.__image = pygame.image.load(path.join(getcwd() + "/assets/images/spaceship-1.png")).convert_alpha()
             self.__image = pygame.transform.scale(self.__image, (PLAYER_SIZE_X, PLAYER_SIZE_Y))
 
-
+    # Ativa o powerup
     def powerup(self):
         self.__power += 1
         self.__power_time = pygame.time.get_ticks()
 
-
+    # Timeout do powerup
     def powerup_timeout(self):
         # Timeout para os powerups
         if self.__power >= 2 and pygame.time.get_ticks() - self.__power_time > POWERUP_TIME:
             self.__power -= 1
             self.__power_time = pygame.time.get_ticks()
 
-
+    # Atualiza tudo
     def update(self):
         self.movement()
         self.collision()

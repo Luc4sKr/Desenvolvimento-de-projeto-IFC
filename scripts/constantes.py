@@ -10,8 +10,8 @@ GO_DELAY = 2000
 
 
 # Player
-PLAYER_SIZE_X = 80
-PLAYER_SIZE_Y = 80
+PLAYER_SIZE_X = int(32 * 2.5)
+PLAYER_SIZE_Y = int(32 * 2.5)
 # Barra de shield do Player
 PLAYER_BAR_HEIGHT = 15
 PLAYER_BAR_WIDTH = 150
