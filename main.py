@@ -99,7 +99,6 @@ class Menu:
                 cursor_point = jogar_button
                 if self.click:
                     self.click = False
-
                     self.show_menu = False
                     self.difficulty_menu()
 
@@ -107,19 +106,18 @@ class Menu:
                 cursor_point = loja_button
                 if self.click:
                     self.click = False
-
                     self.loja_menu()
 
             if opcoes_button.collidepoint((mx, my)) or cursor_point == opcoes_button:
                 cursor_point = opcoes_button
                 if self.click:
                     self.click = False
+                    self.opcoes_menu()
 
             if creditos_button.collidepoint((mx, my)) or cursor_point == creditos_button:
                 cursor_point = creditos_button
                 if self.click:
                     self.click = False
-
                     self.credios_menu()
 
             if sair_button.collidepoint((mx, my)) or cursor_point == sair_button:
@@ -269,6 +267,21 @@ class Menu:
                     pygame.quit()
                     exit()
 
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.show_opcoes_menu = False
+
+            draw_text("OPÇÕES", 44, WHITE, SCREEN_X / 2, 80)
+
+            sons_button = draw_button(SCREEN_X / 2 - 150, 250, SCREEN_X / 2 + 10, 50, "SONS")
+            acessibilidade_button = draw_button(SCREEN_X / 2 - 150, 320, SCREEN_X / 2 + 10, 50, "ACESSIBILIDADE PARA DALTÔNICOS", font_size=9)
+
+            back_to_menu_button = draw_button(30, 670, 100, 30, "Voltar", font_size=14)
+
+            # Update na tela
+            pygame.display.update()
+            screen.fill(BLACK)
+
     def credios_menu(self):
         self.show_creditos_menu = True
         while self.show_creditos_menu:
@@ -317,12 +330,12 @@ class Menu:
             screen.fill(BLACK)
 
     @staticmethod
-    def cursor_event(button_list, cursor_point, type):
-        if type == "UP":
+    def cursor_event(button_list, cursor_point, button):
+        if button == "UP":
             if button_list.index(cursor_point) >= 0:
                 return button_list[button_list.index(cursor_point) - 1]
 
-        if type == "DOWN":
+        if button == "DOWN":
             if button_list.index(cursor_point) < len(button_list) - 1:
                 return button_list[button_list.index(cursor_point) + 1]
 
