@@ -15,7 +15,7 @@ from scripts.explosion import Explosion
 from scripts.player import Player
 from scripts.score import Score
 from scripts.powerup import Powerup
-from scripts.shield_bar import Shield_bar
+from scripts.shield_bar import Enemy_shield_bar, Player_shield_bar
 
 from scripts.data.util import Util
 
@@ -237,8 +237,8 @@ class Menu:
             draw_text("LOJA", 44, WHITE, SCREEN_X / 2, 80)
             draw_text(f"Coins: {util.get_coins()}", 14, WHITE, 70, 150, topleft=True)
 
-            nave_1_button = draw_loja_button("nave_teste.png", 70, 180, 440, 120, "Nave teste", 3, 100)
-            nave_2_button = draw_loja_button("nave_teste.png", 70, 330, 440, 120, "Nave teste", 3, 100)
+            nave_1_button = draw_loja_button("spaceship-1.png", 70, 180, 440, 120, "Violet Rocket", 3, 100)
+            nave_2_button = draw_loja_button("spaceship-2.png", 70, 330, 440, 120, "Nave teste", 3, 100)
             nave_3_button = draw_loja_button("nave_teste.png", 70, 480, 440, 120, "Nave teste", 3, 100)
 
             back_to_menu_button = draw_button(30, 670, 100, 30, "Voltar", font_size=14)
@@ -348,6 +348,7 @@ class Game:
         self.show_pause = False
         self.show_game_over_screen = False
         self.draw_dev_options = False
+        self.ready = False
 
         # Click do mouse
         self.click = False
@@ -397,10 +398,11 @@ class Game:
         self.last_kemikaze = pygame.time.get_ticks()
 
         # Shield bar
-        self.enemy_shield_bar = Shield_bar(screen)
-        self.kamikaze_shield_bar = Shield_bar(screen)
-        self.boss_wings_shield_bar = Shield_bar(screen)
-        self.boss_body_shield_bar = Shield_bar(screen)
+        self.player_shield_bar = Player_shield_bar(screen)
+        self.enemy_shield_bar = Enemy_shield_bar(screen)
+        self.kamikaze_shield_bar = Enemy_shield_bar(screen)
+        self.boss_wings_shield_bar = Enemy_shield_bar(screen)
+        self.boss_body_shield_bar = Enemy_shield_bar(screen)
 
         # Boss
         self.boss_body_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/body", BODY_BOSS_SIZE_X,
@@ -491,7 +493,6 @@ class Game:
 
         draw_text(f"Score: {self.score.get_score()}", 18, WHITE, SCREEN_X / 2, 16)  # Texto do score
 
-        self.draw_shield_bar(5, 10)  # Shield do Player
         self.draw_lives(480, 10, self.player_mini_image)  # Vidas do Player
 
         self.draw_ready()
@@ -519,6 +520,8 @@ class Game:
 
             if self.draw_body_boss_shield_bar:
                 self.boss_body_shield_bar.draw_shield_bar(self.boss.shield, self.boss.rect)
+
+            self.player_shield_bar.draw_shield_bar(self.player.shield)  # Shield do Player
 
     # Atualiza os grupos de sprites
     def update_sprites(self):
@@ -1038,16 +1041,6 @@ class Game:
             draw_text("GO", 42, YELLOW, SCREEN_X / 2, 150)
         if pygame.time.get_ticks() - self.ready_time > 3000:
             self.ready = True
-
-    # Desenha a barra do escudo do player
-    def draw_shield_bar(self, x, y):
-        if self.player.shield < 0:
-            self.player.shield = 0
-        fill = (self.player.shield / 100) * PLAYER_BAR_WIDTH
-        outline_rect = pygame.Rect(x, y, PLAYER_BAR_WIDTH, PLAYER_BAR_HEIGHT)
-        fill_rect = pygame.Rect(x, y, fill, PLAYER_BAR_HEIGHT)
-        pygame.draw.rect(screen, GREEN, fill_rect)
-        pygame.draw.rect(screen, WHITE, outline_rect, 2)
 
     # Opções de desenvolvedor
     @staticmethod

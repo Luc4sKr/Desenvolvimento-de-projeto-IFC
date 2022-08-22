@@ -10,6 +10,20 @@
       "damage": 1,
       "velocity": 5,
       "shoot_delay": 300
+    },
+    "spaceship-2": {
+      "shield": 150,
+      "lives": 3,
+      "damage": 1,
+      "velocity": 5,
+      "shoot_delay": 300
+    },
+    "spaceship-3": {
+      "shield": 200,
+      "lives": 4,
+      "damage": 1,
+      "velocity": 5,
+      "shoot_delay": 300
     }
   }
 }
