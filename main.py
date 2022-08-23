@@ -1133,7 +1133,7 @@ def draw_loja_button(sprite, left, top, width, height, nome, price, lives, shiel
     pygame.draw.rect(screen, WHITE, button_border)
     pygame.draw.rect(screen, BLACK, button)
 
-    image = pygame.image.load(path.join(getcwd() + f"/assets/images/{sprite}"))
+    image = pygame.image.load(path.join(getcwd() + f"/assets/images/sprites/spaceships/{sprite}"))
     image = pygame.transform.scale(image, (75, 75))
     image_rect = image.get_rect()
     image_rect.center = (left + 60, top + (height / 2))
