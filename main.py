@@ -536,6 +536,8 @@ class Game:
 
         self.draw_ready()
 
+        self.player_shield_bar.draw_shield_bar(self.player.shield)  # Shield do Player
+
         # Shield bar do enemy
         for enemy in self.enemy_group:
             self.enemy_shield_bar.draw_shield_bar(enemy.shield, enemy.rect)
@@ -560,7 +562,7 @@ class Game:
             if self.draw_body_boss_shield_bar:
                 self.boss_body_shield_bar.draw_shield_bar(self.boss.shield, self.boss.rect)
 
-            self.player_shield_bar.draw_shield_bar(self.player.shield)  # Shield do Player
+
 
     # Atualiza os grupos de sprites
     def update_sprites(self):
