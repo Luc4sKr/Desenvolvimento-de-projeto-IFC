@@ -240,7 +240,7 @@ class Menu:
             spaceship_2_attributes = util.get_spaceships("spaceship-2")
             spaceship_3_attributes = util.get_spaceships("spaceship-3")
 
-            nave_1_button = draw_loja_button("spaceship-1.png", 70, 180, 440, 120, "Violet Rocket",
+            ship_1_button = draw_loja_button("spaceship-1.png", 70, 180, 440, 120, "Violet Rocket",
                                              spaceship_1_attributes["price"],
                                              spaceship_1_attributes["lives"],
                                              spaceship_1_attributes["shield"],
@@ -248,7 +248,7 @@ class Menu:
                                              spaceship_1_attributes["velocity"],
                                              spaceship_1_attributes["shoot_delay"])
 
-            nave_2_button = draw_loja_button("spaceship-2.png", 70, 330, 440, 120, "Nave teste",
+            ship_2_button = draw_loja_button("spaceship-2.png", 70, 330, 440, 120, "Nave teste",
                                              spaceship_2_attributes["price"],
                                              spaceship_2_attributes["lives"],
                                              spaceship_2_attributes["shield"],
@@ -256,7 +256,7 @@ class Menu:
                                              spaceship_2_attributes["velocity"],
                                              spaceship_2_attributes["shoot_delay"])
 
-            nave_3_button = draw_loja_button("nave_teste.png", 70, 480, 440, 120, "Nave teste",
+            ship_3_button = draw_loja_button("nave_teste.png", 70, 480, 440, 120, "Nave teste",
                                              spaceship_3_attributes["price"],
                                              spaceship_3_attributes["lives"],
                                              spaceship_3_attributes["shield"],
@@ -274,6 +274,24 @@ class Menu:
                 if self.click:
                     self.click = False
                     self.show_loja_menu = False
+
+            if ship_1_button.collidepoint((mx, my)):
+                if self.click:
+                    if "spaceship-1" in util.get_purchased_ships():
+                        util.set_spaceship("spaceship-1")
+
+            if ship_2_button.collidepoint((mx, my)):
+                if self.click:
+                    if "spaceship-2" in util.get_purchased_ships():
+                        util.set_spaceship("spaceship-2")
+                    elif util.get_coins() >= spaceship_2_attributes["price"]:
+                        util.set_coins(util.get_coins() - spaceship_2_attributes["price"])
+                        util.set_purchased_ships("spaceship-2")
+
+            if ship_3_button.collidepoint((mx, my)):
+                if self.click:
+                    if "spaceship-3" in util.get_purchased_ships():
+                        util.set_spaceship("spaceship-3")
 
             self.click = False
 
@@ -1132,7 +1150,7 @@ def draw_loja_button(sprite, left, top, width, height, nome, price, lives, shiel
         if sprite[:11] in util.get_purchased_ships():
             draw_text("Equipar", 16, WHITE, left + 110, top + 100, topleft=True)
         else:
-            draw_text(f"5000 Kwanza", 16, WHITE, left + 110, top + 100, topleft=True)
+            draw_text(f"{price} Coins", 16, WHITE, left + 110, top + 100, topleft=True)
 
     return button
 
