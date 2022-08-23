@@ -15,7 +15,13 @@ class Util:
         return self.json_obj["player"]["coins"]
 
     def get_spaceship(self):
-        return self.json_obj["player"]["nave"]
+        return self.json_obj["player"]["ship"]
+
+    def get_spaceships(self, spaceship_name):
+        return self.json_obj["naves"][spaceship_name]
+
+    def get_purchased_ships(self):
+        return self.json_obj["player"]["purchased-ships"]
 
     def spaceship_attributes(self):
         return self.json_obj["naves"][self.get_spaceship()]

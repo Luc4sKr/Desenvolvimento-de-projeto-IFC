@@ -6,14 +6,15 @@ from scripts.bullet import Bullet
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, image, attributes, bullet_group):
+    def __init__(self, spaceship, attributes, bullet_group):
         pygame.sprite.Sprite.__init__(self)
 
-        self.__image = pygame.image.load(path.join(getcwd() + f"/assets/images/{image}.png")).convert_alpha()
+        self.__image = pygame.image.load(path.join(getcwd() + f"/assets/images/{spaceship}.png")).convert_alpha()
         self.__image = pygame.transform.scale(self.__image, (PLAYER_SIZE_X, PLAYER_SIZE_Y))
         self.__rect = self.__image.get_rect()
 
         self.__rect.center = (SCREEN_X / 2,  600)
+        self.spaceship = spaceship
 
         # Grupos de sprites
         self.__bullet_group = bullet_group

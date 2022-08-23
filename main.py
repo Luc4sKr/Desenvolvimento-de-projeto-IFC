@@ -44,6 +44,7 @@ class Menu:
         self.menu_background_sprite.rect = self.menu_background_sprite.image.get_rect()
         self.menu_background = pygame.sprite.GroupSingle(self.menu_background_sprite)
 
+
     def menu(self):
         button_list = []
         cursor_point = None
@@ -235,9 +236,33 @@ class Menu:
             draw_text("LOJA", 44, WHITE, SCREEN_X / 2, 80)
             draw_text(f"Coins: {util.get_coins()}", 14, WHITE, 70, 150, topleft=True)
 
-            nave_1_button = draw_loja_button("spaceship-1.png", 70, 180, 440, 120, "Violet Rocket", 3, 100)
-            nave_2_button = draw_loja_button("spaceship-2.png", 70, 330, 440, 120, "Nave teste", 3, 100)
-            nave_3_button = draw_loja_button("nave_teste.png", 70, 480, 440, 120, "Nave teste", 3, 100)
+            spaceship_1_attributes = util.get_spaceships("spaceship-1")
+            spaceship_2_attributes = util.get_spaceships("spaceship-2")
+            spaceship_3_attributes = util.get_spaceships("spaceship-3")
+
+            nave_1_button = draw_loja_button("spaceship-1.png", 70, 180, 440, 120, "Violet Rocket",
+                                             spaceship_1_attributes["price"],
+                                             spaceship_1_attributes["lives"],
+                                             spaceship_1_attributes["shield"],
+                                             spaceship_1_attributes["damage"],
+                                             spaceship_1_attributes["velocity"],
+                                             spaceship_1_attributes["shoot_delay"])
+
+            nave_2_button = draw_loja_button("spaceship-2.png", 70, 330, 440, 120, "Nave teste",
+                                             spaceship_2_attributes["price"],
+                                             spaceship_2_attributes["lives"],
+                                             spaceship_2_attributes["shield"],
+                                             spaceship_2_attributes["damage"],
+                                             spaceship_2_attributes["velocity"],
+                                             spaceship_2_attributes["shoot_delay"])
+
+            nave_3_button = draw_loja_button("nave_teste.png", 70, 480, 440, 120, "Nave teste",
+                                             spaceship_3_attributes["price"],
+                                             spaceship_3_attributes["lives"],
+                                             spaceship_3_attributes["shield"],
+                                             spaceship_3_attributes["damage"],
+                                             spaceship_3_attributes["velocity"],
+                                             spaceship_3_attributes["shoot_delay"])
 
             back_to_menu_button = draw_button(30, 670, 100, 30, "Voltar", font_size=14)
 
@@ -1082,7 +1107,7 @@ def draw_button(left, top, width, height, text, font_size=20, color=(0, 0, 0)):
     return button
 
 
-def draw_loja_button(sprite, left, top, width, height, nome, vidas, shield):
+def draw_loja_button(sprite, left, top, width, height, nome, price, lives, shield, damage, velocity, shoot_dedaly):
     button_border = pygame.Rect(left - 2, top - 2, width + 4, height + 4)
     button = pygame.Rect(left, top, width, height)
     pygame.draw.rect(screen, WHITE, button_border)
@@ -1094,9 +1119,21 @@ def draw_loja_button(sprite, left, top, width, height, nome, vidas, shield):
     image_rect.center = (left + 60, top + (height / 2))
     screen.blit(image, image_rect)
 
-    draw_text(nome, 16, YELLOW, left + 130, top + 10, topleft=True)  # Nome
-    draw_text(f"Vidas: {vidas}", 10, WHITE, left + 130, top + 35, topleft=True)  # Vidas
-    draw_text(f"Escudo: {shield}", 10, WHITE, left + 130, top + 55, topleft=True)  # Escudo
+    draw_text(nome, 16, YELLOW, left + 130, top + 10, topleft=True)                           # Nome
+    draw_text(f"Vidas: {lives}", 10, WHITE, left + 130, top + 35, topleft=True)               # Vidas
+    draw_text(f"Escudo: {shield}", 10, WHITE, left + 130, top + 55, topleft=True)             # Escudo
+    draw_text(f"Dano: {damage}", 10, WHITE, left + 270, top + 35, topleft=True)               # Dano
+    draw_text(f"Velocidade: {velocity}", 10, WHITE, left + 270, top + 55, topleft=True)       # Velocidade
+    draw_text(f"Shoot delay: {shoot_dedaly}", 10, WHITE, left + 270, top + 75, topleft=True)  # Shoot delay
+
+    if util.get_spaceship() == sprite[:11]:
+        draw_text("Equipado", 16, WHITE, left + 110, top + 100, topleft=True)
+    else:
+        if sprite[:11] in util.get_purchased_ships():
+            draw_text("Equipar", 16, WHITE, left + 110, top + 100, topleft=True)
+        else:
+            draw_text(f"5000 Kwanza", 16, WHITE, left + 110, top + 100, topleft=True)
+
     return button
 
 
