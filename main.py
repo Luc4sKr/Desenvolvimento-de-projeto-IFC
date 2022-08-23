@@ -19,7 +19,7 @@ from scripts.shield_bar import Enemy_shield_bar, Player_shield_bar
 
 from scripts.data.util import Util
 
-from scripts.utils.music_framework import Music_framework
+from scripts.utils.music_engine import Music_framework
 
 
 class Menu:
@@ -135,9 +135,8 @@ class Menu:
             except:
                 cursor_point = jogar_button
 
-            # Update na tela
-            pygame.display.update()
-            screen.fill(BLACK)
+            screen_update()
+
 
     def difficulty_menu(self):
         button_list = []
@@ -212,9 +211,8 @@ class Menu:
             except:
                 cursor_point = normal_button
 
-            # Update na tela
-            pygame.display.update()
-            screen.fill(BLACK)
+            screen_update()
+
 
     def loja_menu(self):
         self.show_loja_menu = True
@@ -254,8 +252,8 @@ class Menu:
 
             self.click = False
 
-            pygame.display.update()
-            screen.fill(BLACK)
+            screen_update()
+
 
     def opcoes_menu(self):
         self.show_opcoes_menu = True
@@ -278,9 +276,8 @@ class Menu:
 
             back_to_menu_button = draw_button(30, 670, 100, 30, "Voltar", font_size=14)
 
-            # Update na tela
-            pygame.display.update()
-            screen.fill(BLACK)
+            screen_update()
+
 
     def credios_menu(self):
         self.show_creditos_menu = True
@@ -325,9 +322,8 @@ class Menu:
 
             self.click = False
 
-            # Update na tela
-            pygame.display.update()
-            screen.fill(BLACK)
+            screen_update()
+
 
     @staticmethod
     def cursor_event(button_list, cursor_point, button):
@@ -799,8 +795,7 @@ class Game:
             # Depois de checar os inputs o click fica falso
             self.click = False
 
-            pygame.display.update()
-            screen.fill(BLACK)
+            screen_update()
 
     # Tela de game over
     def game_over_screen(self):
@@ -862,8 +857,7 @@ class Game:
             except:
                 cursor_point = voltar_ao_menu_buttom
 
-            pygame.display.update()
-            screen.fill(BLACK)
+            screen_update()
 
     # Função para criar um novo asteroide
     def new_asteroid(self):
@@ -1061,6 +1055,11 @@ class Game:
 
 
 # -------------------------------------------------------- // -------------------------------------------------------- #
+
+
+def screen_update():
+    pygame.display.update()
+    screen.fill(BLACK)
 
 
 def draw_text(text, tam, color, x, y, topleft=False):
