@@ -5,6 +5,7 @@ from os import getcwd, path
 
 class Util:
     def __init__(self):
+        self.json_obj = None
         self.open_file()
 
     def open_file(self):
