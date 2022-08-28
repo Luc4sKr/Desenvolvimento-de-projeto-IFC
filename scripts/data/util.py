@@ -36,6 +36,9 @@ class Util:
         self.json_obj["player"]["purchased-ships"].append(spaceship)
         self.save_file()
 
+    def get_music(self):
+        return self.json_obj["music"]
+
     def spaceship_attributes(self):
         return self.json_obj["naves"][self.get_spaceship()]
 

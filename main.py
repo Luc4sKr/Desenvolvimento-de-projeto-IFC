@@ -312,12 +312,25 @@ class Menu:
                     if event.key == pygame.K_ESCAPE:
                         self.show_opcoes_menu = False
 
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        self.click = True
+
             draw_text("OPÇÕES", 44, WHITE, SCREEN_X / 2, 80)
 
             sons_button = draw_button(SCREEN_X / 2 - 150, 250, SCREEN_X / 2 + 10, 50, "SONS")
             acessibilidade_button = draw_button(SCREEN_X / 2 - 150, 320, SCREEN_X / 2 + 10, 50, "ACESSIBILIDADE PARA DALTÔNICOS", font_size=9)
 
             back_to_menu_button = draw_button(30, 670, 100, 30, "Voltar", font_size=14)
+
+            mx, my = pygame.mouse.get_pos()
+
+            if back_to_menu_button.collidepoint((mx, my)):
+                if self.click:
+                    self.click = False
+                    self.show_opcoes_menu = False
+
+            self.click = False
 
             screen_update()
 
@@ -406,6 +419,10 @@ class Game:
         self.boss_shoot_group = pygame.sprite.Group()
         self.kamikaze_group = pygame.sprite.Group()
 
+        # Musica tema do jogo
+        pygame.mixer.music.load(path.join(getcwd() + f"/assets/music/{util.get_music()}"))
+        pygame.mixer.music.play()
+
         # Background do jogo - A SPRITE COM MOVIMENTO PRECISA TER 580x2722 !!!!
         self.game_background_rect = Background("game_background_azul_cinza.png")
         self.background = pygame.sprite.GroupSingle(self.game_background_rect)
@@ -414,7 +431,7 @@ class Game:
         self.player = Player(util.get_spaceship(), util.spaceship_attributes(), self.bullet_group)
         self.player_group_single = pygame.sprite.GroupSingle(self.player)
         # Imagem do player que serve como contador de vidas
-        self.player_mini_image = pygame.transform.scale(self.player.image, (35, 35))
+        self.player_mini_image = pygame.transform.scale(self.player.image, (MINI_PLAYER_IMG, MINI_PLAYER_IMG))
 
         # Asteroid
         self.asteroid_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/asteroid", ASTEROID_SIZE_X,
@@ -532,7 +549,7 @@ class Game:
 
         draw_text(f"Score: {self.score.get_score()}", 18, WHITE, SCREEN_X / 2, 16)  # Texto do score
 
-        self.draw_lives(480, 10, self.player_mini_image)  # Vidas do Player
+        self.draw_lives(self.player_mini_image)  # Vidas do Player
 
         self.draw_ready()
 
@@ -561,9 +578,7 @@ class Game:
 
             if self.draw_body_boss_shield_bar:
                 self.boss_body_shield_bar.draw_shield_bar(self.boss.shield, self.boss.rect)
-
-
-
+    
     # Atualiza os grupos de sprites
     def update_sprites(self):
         self.background.update()
@@ -612,6 +627,7 @@ class Game:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     self.show_pause = True
+                    pygame.mixer.music.pause()
                     self.pause_screen()
 
                 if event.key == pygame.K_p:
@@ -779,6 +795,7 @@ class Game:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.show_pause = False
+                        pygame.mixer.music.unpause()
 
                     if event.key == pygame.K_UP:
                         cursor_point = menu.cursor_event(button_list, cursor_point, "UP")
@@ -812,6 +829,7 @@ class Game:
                     self.click = False
 
                     self.show_pause = False
+                    pygame.mixer.music.unpause()
 
             if voltar_ao_menu_button.collidepoint((mx, my)) or cursor_point == voltar_ao_menu_button:
                 cursor_point = voltar_ao_menu_button
@@ -820,6 +838,7 @@ class Game:
 
                     self.show_pause = False
                     self.game_over = True
+                    pygame.mixer.music.stop()
                     menu.menu()
 
             if sair_do_jogo_button.collidepoint((mx, my)) or cursor_point == sair_do_jogo_button:
@@ -1065,11 +1084,11 @@ class Game:
         self.boss_wings_group.add(self.boss.right_wing)
 
     # Desenha a quantidade de vidas do jogador
-    def draw_lives(self, x, y, image):
+    def draw_lives(self, image):
         for i in range(self.player.lives):
             image_rect = image.get_rect()
-            image_rect.x = x + 30 * i
-            image_rect.y = y
+            image_rect.x = (SCREEN_X - 50) + (MINI_PLAYER_IMG + 10) * -i
+            image_rect.y = 10
             screen.blit(image, image_rect)
 
     # Denha o texto de READY no início do jogo
@@ -1150,7 +1169,7 @@ def draw_loja_button(sprite, left, top, width, height, nome, price, lives, shiel
         draw_text("Equipado", 16, WHITE, left + 110, top + 100, topleft=True)
     else:
         if sprite[:11] in util.get_purchased_ships():
-            draw_text("Equipar", 16, WHITE, left + 110, top + 100, topleft=True)
+            draw_text("Disponível", 16, WHITE, left + 110, top + 100, topleft=True)
         else:
             draw_text(f"{price} Coins", 16, WHITE, left + 110, top + 100, topleft=True)
 
