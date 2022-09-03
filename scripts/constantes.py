@@ -1,4 +1,7 @@
+import pygame
 from os import path, getcwd
+
+pygame.mixer.init()
 
 # Screen
 SCREEN_X = 580
@@ -89,6 +92,10 @@ YELLOW  = (255, 255, 0)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
+# Sons
+SHOOT_SOUND_1 = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/shoot-1.wav"))
+SELECT_SOUND = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/select-3.wav"))
+SELECT_SOUND.set_volume(0.1)
 
 # Fonte
 FONTE = path.join(getcwd() + "/assets/font/8-bit_font.ttf")

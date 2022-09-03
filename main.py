@@ -97,6 +97,8 @@ class Menu:
 
             # Inputs do mouse com os botões do menu
             if jogar_button.collidepoint((mx, my)) or cursor_point == jogar_button:
+                if cursor_point != jogar_button:
+                    pygame.mixer.Sound.play(SELECT_SOUND)
                 cursor_point = jogar_button
                 if self.click:
                     self.click = False
@@ -104,24 +106,32 @@ class Menu:
                     self.difficulty_menu()
 
             if loja_button.collidepoint((mx, my)) or cursor_point == loja_button:
+                if cursor_point != loja_button:
+                    pygame.mixer.Sound.play(SELECT_SOUND)
                 cursor_point = loja_button
                 if self.click:
                     self.click = False
                     self.loja_menu()
 
             if opcoes_button.collidepoint((mx, my)) or cursor_point == opcoes_button:
+                if cursor_point != opcoes_button:
+                    pygame.mixer.Sound.play(SELECT_SOUND)
                 cursor_point = opcoes_button
                 if self.click:
                     self.click = False
                     self.opcoes_menu()
 
             if creditos_button.collidepoint((mx, my)) or cursor_point == creditos_button:
+                if cursor_point != creditos_button:
+                    pygame.mixer.Sound.play(SELECT_SOUND)
                 cursor_point = creditos_button
                 if self.click:
                     self.click = False
                     self.credios_menu()
 
             if sair_button.collidepoint((mx, my)) or cursor_point == sair_button:
+                if cursor_point != sair_button:
+                    pygame.mixer.Sound.play(SELECT_SOUND)
                 cursor_point = sair_button
                 if self.click:
                     self.show_menu = False
@@ -383,6 +393,7 @@ class Menu:
 
     @staticmethod
     def cursor_event(button_list, cursor_point, button):
+        pygame.mixer.Sound.play(SELECT_SOUND)
         if button == "UP":
             if button_list.index(cursor_point) >= 0:
                 return button_list[button_list.index(cursor_point) - 1]
@@ -419,9 +430,10 @@ class Game:
         self.boss_shoot_group = pygame.sprite.Group()
         self.kamikaze_group = pygame.sprite.Group()
 
-        # Musica tema do jogo
+        # Música tema do jogo
         pygame.mixer.music.load(path.join(getcwd() + f"/assets/music/{util.get_music()}"))
         pygame.mixer.music.play()
+        pygame.mixer.music.set_volume(0.3)
 
         # Background do jogo - A SPRITE COM MOVIMENTO PRECISA TER 580x2722 !!!!
         self.game_background_rect = Background("game_background_azul_cinza.png")

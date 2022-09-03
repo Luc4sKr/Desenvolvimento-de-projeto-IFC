@@ -3,8 +3,7 @@
         "coins": 0,
         "ship": "spaceship-1",
         "purchased-ships": [
-            "spaceship-1",
-            "spaceship-2"
+            "spaceship-1"
         ]
     },
     "naves": {
