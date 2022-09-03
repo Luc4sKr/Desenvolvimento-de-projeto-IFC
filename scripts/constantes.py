@@ -94,7 +94,13 @@ RED = (255, 0, 0)
 
 # Sons
 SHOOT_SOUND_1 = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/shoot-1.wav"))
+SHOOT_SOUND_2 = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/shoot-2.wav"))
+EXPLOSION_SOUND = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/explosion-1.wav"))
 SELECT_SOUND = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/select-3.wav"))
+
+SHOOT_SOUND_1.set_volume(1)
+SHOOT_SOUND_2.set_volume(0.1)
+EXPLOSION_SOUND.set_volume(0.9)
 SELECT_SOUND.set_volume(0.1)
 
 # Fonte
