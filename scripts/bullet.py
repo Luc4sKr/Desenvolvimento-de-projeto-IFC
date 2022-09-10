@@ -1,6 +1,5 @@
-import pygame
-
 from scripts.constantes import *
+
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, x, y, bullet, damage, vely, scale_x=8, scale_y=12):
@@ -12,19 +11,17 @@ class Bullet(pygame.sprite.Sprite):
 
         self.__rect.bottom = y
         self.__rect.centerx = x
-
         self.__speed_y = vely
         self.__damage = damage
 
     def update(self):
         self.__rect.y += self.__speed_y
-
         if self.__rect.bottom < 0 or self.__rect.top > SCREEN_Y:
             self.kill()
 
+    # --- GETTERS AND SETTERS --- #
 
-
-    # Image
+    # --Image
     @property
     def image(self):
         return self.__image
@@ -33,8 +30,7 @@ class Bullet(pygame.sprite.Sprite):
     def image(self, image):
         self.__image = image
 
-
-    # Rect
+    # --Rect
     @property
     def rect(self):
         return self.__rect
@@ -43,8 +39,7 @@ class Bullet(pygame.sprite.Sprite):
     def rect(self, rect):
         self.__rect = rect
 
-
-    # Damage
+    # --Damage
     @property
     def damage(self):
         return self.__damage
@@ -53,8 +48,7 @@ class Bullet(pygame.sprite.Sprite):
     def damage(self, damage):
         self.__damage = damage
 
-
-    # Speed
+    # --Speed
     @property
     def speed_y(self):
         return self.__speed_y
@@ -62,4 +56,3 @@ class Bullet(pygame.sprite.Sprite):
     @speed_y.setter
     def speed_y(self, speed_y):
         self.__speed_y = speed_y
-
