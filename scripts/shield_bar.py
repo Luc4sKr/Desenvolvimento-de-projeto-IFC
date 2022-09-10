@@ -1,6 +1,6 @@
 import pygame
 
-from scripts.constantes import *
+from scripts.constants import *
 
 
 class Player_shield_bar(pygame.sprite.Sprite):
@@ -44,7 +44,7 @@ class Enemy_shield_bar(pygame.sprite.Sprite):
         if shield > self.__temp:
             self.__temp = shield
 
-        self.__image = pygame.Surface(((shield * (enemy_rect.width + margin)) / self.__temp, SHIELD_BAR_HEIGHT))
+        self.__image = pygame.Surface(((shield * (enemy_rect.width + margin)) / self.__temp, ENEMY_SHIELD_BAR_HEIGHT))
         self.__image.fill(GREEN)
         self.__rect = self.__image.get_rect()
         self.__rect.x = enemy_rect.x + additional_x_position

@@ -1,6 +1,6 @@
 import pygame
 
-from scripts.constantes import *
+from scripts.constants import *
 
 from scripts.bullet import Bullet
 

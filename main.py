@@ -5,11 +5,11 @@ from random import randint
 from sys import exit
 from math import sin
 
-from scripts.constantes import *
+from scripts.constants import *
 from scripts.asteroid import Asteroid
 from scripts.background import Background
-from scripts.enemies import Enemy
-from scripts.enemies import Kamikaze
+from scripts.enemy import Enemy
+from scripts.kamikaze import Kamikaze
 from scripts.boss import Boss
 from scripts.explosion import Explosion
 from scripts.player import Player
@@ -434,7 +434,6 @@ class Menu:
 
             screen_update()
                 
-
 
 class Game:
     def __init__(self):
@@ -1039,7 +1038,7 @@ class Game:
 
     # Cria o inimigo
     def create_enemy(self, x, y):
-        enemy = Enemy(x, y, ENEMY_1_SHIELD, self.enemy_1_sprite_sheet, self.enemy_shoot_group,
+        enemy = Enemy(x, y, ENEMY_SHIELD, ENEMY_DAMGE, self.enemy_1_sprite_sheet, self.enemy_shoot_group,
                       self.enemy_shoot_delay_multiplier)
         return enemy
 

@@ -1,6 +1,6 @@
 from random import randrange
 
-from scripts.constantes import *
+from scripts.constants import *
 
 
 class Asteroid(pygame.sprite.Sprite):

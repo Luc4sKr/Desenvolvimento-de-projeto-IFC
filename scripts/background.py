@@ -1,4 +1,4 @@
-from scripts.constantes import *
+from scripts.constants import *
 
 
 class Background(pygame.sprite.Sprite):

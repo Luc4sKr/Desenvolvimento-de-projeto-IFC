@@ -3,7 +3,7 @@ import pygame
 from sys import exit
 from os import listdir, getcwd, path
 
-from scripts.constantes import *
+from scripts.constants import *
 
 
 class Music_framework:

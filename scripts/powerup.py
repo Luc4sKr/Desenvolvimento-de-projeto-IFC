@@ -3,7 +3,7 @@ import pygame
 from random import choice
 from os import path, getcwd
 
-from scripts.constantes import *
+from scripts.constants import *
 
 
 class Powerup(pygame.sprite.Sprite):
