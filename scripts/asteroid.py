@@ -1,8 +1,7 @@
-import pygame
-
 from random import randrange
 
 from scripts.constantes import *
+
 
 class Asteroid(pygame.sprite.Sprite):
     def __init__(self, animation_list):
@@ -44,13 +43,12 @@ class Asteroid(pygame.sprite.Sprite):
         if self.__rect.left > SCREEN_X:
             self.kill()
 
-
     def update(self):
         self.movement()
         self.check_inside_on_screen()
         self.update_animation()
 
-
+    # --- GETTERS AND SETTERS --- #
 
     # Image
     @property
@@ -61,7 +59,6 @@ class Asteroid(pygame.sprite.Sprite):
     def image(self, image):
         self.__image = image
 
-    
     # Rect
     @property
     def rect(self):
@@ -70,7 +67,6 @@ class Asteroid(pygame.sprite.Sprite):
     @rect.setter
     def rect(self, rect):
         self.__rect = rect
-
 
     # Speedx
     @property
@@ -81,12 +77,11 @@ class Asteroid(pygame.sprite.Sprite):
     def speedx(self, speedx):
         self.__speedx = speedx
 
-    
     # Speedy
     @property
     def speedy(self):
         return self.__speedy
-    
+
     @speedy.setter
     def speedy(self, speedy):
         self.speedy = speedy

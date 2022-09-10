@@ -1,34 +1,27 @@
 import pygame
 from os import path, getcwd
 
-pygame.mixer.init()
-
 # Screen
 SCREEN_X = 580
 SCREEN_Y = 720
 
-
+# Delays
 READY_DELAY = 1000
 GO_DELAY = 2000
 
-
 # Player
-PLAYER_SIZE_X = int(32 * 2.5)
-PLAYER_SIZE_Y = int(32 * 2.5)
-MINI_PLAYER_IMG = 35
-# Barra de shield do Player
-PLAYER_SHIELD_BAR_HEIGHT = 15
-PLAYER_SHIELD_BAR_WIDTH = 170
+PLAYER_SIZE_X = 32 * 2.5       # Largura do PLayer
+PLAYER_SIZE_Y = 32 * 2.5       # Altura do Player
+MINI_PLAYER_IMG = 35           # Imagem utilizada para a contagem das vidas do Player
+PLAYER_SHIELD_BAR_HEIGHT = 15  # Altura da barra de shield do Player
+PLAYER_SHIELD_BAR_WIDTH = 170  # Largura da barra de shield do Player
 
-COLLIDE_DAMAGE = 50
-
+COLLIDE_DAMAGE = 50  # Dano de colisão com naves inimigas
 
 # Enemy
 ENEMY_SIZE_X = 70
 ENEMY_SIZE_Y = 70
-
 ENEMY_1_SHIELD = 4
-
 ENEMY_SHOOT_VELY = 7
 
 # Barra de shield do Enemy
@@ -36,22 +29,19 @@ SHIELD_BAR_HEIGHT = 5
 
 ENEMY_SHOOT_DELAY = 1700
 
-
 # Kamikaze
 KAMIKAZE_XPOS_1 = -10
 KAMIKAZE_XPOS_2 = SCREEN_X - 10
 KAMIKAZE_SHIELD = 4
 KAMIKAZE_DAMAGE = 50
 
-
 # Asteroid
-ASTEROID_SIZE_X = 60
-ASTEROID_SIZE_Y = 60
-ASTEROID_TIME = 20000 # Tempo para ter a chance de começar o evento
-ASTEROID_EVENT_COOLDOWN = 10000 # COOLDOWND do tempo de evento
-ASTEROID_COOLDOWN = 100 # COOLDOWN que os asteroids tem para aparecer
-ASTEROID_DAMAGE = 20
-
+ASTEROID_SIZE_X = 60                   # Largura do asteroide
+ASTEROID_SIZE_Y = 60                   # Altura do asteroide
+ASTEROID_SHOWER_COOLDOWN_TIME = 20000  # Tempo para ter a chance de começar o evento
+ASTEROID_EVENT_COOLDOWN = 10000        # COOLDOWND do tempo de evento
+ASTEROID_COOLDOWN = 100                # COOLDOWN para gerar um novo asteroide
+ASTEROID_DAMAGE = 20                   # Dano do asteroide
 
 # Boss
 BODY_BOSS_SIZE_X = 128 * 1.6
@@ -70,10 +60,8 @@ BOSS_SMALL_SHOOT_DELAY = 1800
 BOSS_SMALL_SHOOT_TEMP_DELAY = 200
 BOSS_SMALL_SHOOT_VELY = 6
 
-
 # FPS
 FPS = 60
-
 
 # Cooldown de animação do Asteroid
 ASTEROID_ANIMATION_COOLDOWN = 100
@@ -88,11 +76,13 @@ POWERUP_TIME = 5000
 # Colors
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-YELLOW  = (255, 255, 0)
+YELLOW = (255, 255, 0)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 
 # Sons
+pygame.mixer.init()
+
 SHOOT_SOUND_1 = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/shoot-1.wav"))
 SHOOT_SOUND_2 = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/shoot-2.wav"))
 EXPLOSION_SOUND = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/explosion-1.wav"))
@@ -105,6 +95,3 @@ SELECT_SOUND.set_volume(0.1)
 
 # Fonte
 FONTE = path.join(getcwd() + "/assets/font/8-bit_font.ttf")
-
-
-

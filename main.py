@@ -975,7 +975,7 @@ class Game:
 
     # Evento de chuva de asteroides
     def asteroid_shower(self):
-        if pygame.time.get_ticks() - self.asteroid_shower_time > ASTEROID_TIME or self.asteroid_shower_event:
+        if pygame.time.get_ticks() - self.asteroid_shower_time > ASTEROID_SHOWER_COOLDOWN_TIME or self.asteroid_shower_event:
             self.asteroid_shower_time = pygame.time.get_ticks()
 
             if randint(0, 100) >= 80 and not self.asteroid_shower_event:
