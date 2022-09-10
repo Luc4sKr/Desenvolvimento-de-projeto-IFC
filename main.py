@@ -339,6 +339,10 @@ class Menu:
                 if self.click:
                     self.click = False
                     self.show_opcoes_menu = False
+            if sons_button.collidepoint((mx, my)):
+                if self.click:
+                    self.click = False
+                    self.sons_options()
 
             self.click = False
 
@@ -401,6 +405,35 @@ class Menu:
         if button == "DOWN":
             if button_list.index(cursor_point) < len(button_list) - 1:
                 return button_list[button_list.index(cursor_point) + 1]
+
+    def sons_options(self):
+        self.show_options_sons_menu = True
+        while self.show_options_sons_menu:
+            clock.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.show_options_sons_menu = False
+                    pygame.quit()
+                    exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.show_options_sons_menu = False
+
+            min_line_sound = (SCREEN_X - 425, 300)
+            max_line_sound = (SCREEN_X - 150, 300)
+
+            
+            draw_text("SONS", 44, WHITE, SCREEN_X / 2, 80)
+            
+            pygame.draw.line(screen, WHITE, min_line_sound, max_line_sound, 2)
+            
+            pygame.draw.line(screen, RED, (SCREEN_X/2, 0), (SCREEN_X/2, SCREEN_Y), 1)
+            pygame.draw.line(screen, GREEN, (SCREEN_X - 425, 315), (SCREEN_X/2, 315), 1)
+            pygame.draw.line(screen, GREEN, (SCREEN_X/2, 315), (SCREEN_X - 150, 315), 1)
+
+            screen_update()
+                
 
 
 class Game:
