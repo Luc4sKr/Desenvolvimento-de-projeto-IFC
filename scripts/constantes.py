@@ -5,6 +5,9 @@ from os import path, getcwd
 SCREEN_X = 580
 SCREEN_Y = 720
 
+# Background
+BACKGROUND_MOVEMENT_SPEED_Y = 4
+
 # Delays
 READY_DELAY = 1000
 GO_DELAY = 2000
