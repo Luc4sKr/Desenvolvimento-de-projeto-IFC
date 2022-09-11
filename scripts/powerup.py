@@ -12,27 +12,17 @@ class Powerup(pygame.sprite.Sprite):
         }
 
         # Imagem
-        self.__type = choice(["shield", "gun"])  # Escolhe aleatoriamente o tipo
+        self.__type = choice(["shield", "gun"])
         self.__image = powerup_images[self.__type]
-
-        if self.__type == "shield":
-            self.__image = pygame.transform.scale(self.__image, (40, 40))
-        else:
-            self.__image = pygame.transform.scale(self.__image, (40, 40))
-
         self.__rect = self.__image.get_rect()
         self.__rect.center = center
 
-        # Velocidade y
-        self.__speedy = 3
-
     def update(self):
-        self.__rect.y += self.__speedy
-
+        self.__rect.y += POWERUP_SPEED_Y
         if self.__rect.top > SCREEN_Y:
             self.kill()
 
-
+    # --- GETTERS AND SETTERS --- #
 
     # Image
     @property
@@ -51,25 +41,3 @@ class Powerup(pygame.sprite.Sprite):
     @rect.setter
     def rect(self, rect):
         self.__rect = rect
-
-
-    # Speedy
-    @property
-    def speedy(self):
-        return self.__speedy
-
-    @speedy.setter
-    def speedy(self, speedy):
-        self.__speedy = speedy
-
-
-    # Type
-    @property
-    def type(self):
-        return self.__type
-
-    @type.setter
-    def type(self, type):
-        self.__type = type
-
-

@@ -21,6 +21,10 @@ PLAYER_SHIELD_BAR_WIDTH = 170    # Largura da barra de shield do Player
 PLAYER_BULLET = "player-bullet"  # Nome do arquivo da sprite do tiro
 PLAYER_SHOOT_SPEED = -10         # Velocidade do tiro do Player
 
+# Player shield bar
+PLAYER_SHIELD_BAR_POS_X = 10  # Posição X da barra de shield do Player
+PLAYER_SHIELD_BAR_POS_Y = 10  # Posição Y da barra de shield do Player
+
 
 COLLIDE_DAMAGE = 50  # Dano de colisão com naves inimigas
 
@@ -76,8 +80,9 @@ EXPLOSION_ANIMATION_COOLDOWN = 100
 
 ENEMIES_ANIMATION_COOLDOWN = 100
 
-# Tempo de powerup
+# Powerup
 POWERUP_TIME = 5000
+POWERUP_SPEED_Y = 3
 
 # Colors
 BLACK = (0, 0, 0)
@@ -100,4 +105,10 @@ EXPLOSION_SOUND.set_volume(0.9)
 SELECT_SOUND.set_volume(0.1)
 
 # Fonte
-FONTE = path.join(getcwd() + "/assets/font/8-bit_font.ttf")
+FONT = path.join(getcwd() + "/assets/font/8-bit_font.ttf")
+LOGO_FONT = 60
+TITLE_FONT = 44
+SUB_TITLE_FONT = 22
+SMALL_FONT = 14
+
+

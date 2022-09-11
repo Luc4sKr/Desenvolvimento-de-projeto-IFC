@@ -7,4 +7,3 @@ class Score:
 
     def get_score(self):
         return self.__score
-

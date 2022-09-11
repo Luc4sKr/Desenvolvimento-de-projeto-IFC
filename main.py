@@ -44,7 +44,6 @@ class Menu:
         self.menu_background_sprite.rect = self.menu_background_sprite.image.get_rect()
         self.menu_background = pygame.sprite.GroupSingle(self.menu_background_sprite)
 
-
     def menu(self):
         button_list = []
         cursor_point = None
@@ -59,11 +58,8 @@ class Menu:
                     exit()
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
-                        cursor_point = self.cursor_event(button_list, cursor_point, "UP")
-
-                    if event.key == pygame.K_DOWN:
-                        cursor_point = self.cursor_event(button_list, cursor_point, "DOWN")
+                    if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                        cursor_point = self.cursor_event(button_list, cursor_point, event.key)
 
                     if event.key == pygame.K_RETURN:
                         self.click = True
@@ -80,8 +76,8 @@ class Menu:
             self.menu_background.draw(screen)
 
             # Título do jogo
-            draw_text("SPACE", 60, YELLOW, SCREEN_X / 2, 100)
-            draw_text("BATTLE", 60, YELLOW, SCREEN_X / 2, 160)
+            draw_text("SPACE", LOGO_FONT, YELLOW, SCREEN_X / 2, 100)
+            draw_text("BATTLE", LOGO_FONT, YELLOW, SCREEN_X / 2, 160)
 
             # Botões do menu
             jogar_button = draw_button(SCREEN_X / 2 - 120, 250, SCREEN_X / 2 - 50, 50, "JOGAR")
@@ -148,7 +144,6 @@ class Menu:
 
             screen_update()
 
-
     def difficulty_menu(self):
         button_list = []
         cursor_point = None
@@ -163,11 +158,8 @@ class Menu:
                     exit()
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
-                        cursor_point = self.cursor_event(button_list, cursor_point, "UP")
-
-                    if event.key == pygame.K_DOWN:
-                        cursor_point = self.cursor_event(button_list, cursor_point, "DOWN")
+                    if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                        cursor_point = self.cursor_event(button_list, cursor_point, event.key)
 
                     if event.key == pygame.K_RETURN:
                         self.click = True
@@ -177,7 +169,7 @@ class Menu:
                         self.click = True
 
             # Título
-            draw_text("Dificuldade", 44, WHITE, SCREEN_X / 2, 80)
+            draw_text("Dificuldade", TITLE_FONT, WHITE, SCREEN_X / 2, 80)
 
             # Botões
             normal_button = draw_button(SCREEN_X / 2 - 120, 250, SCREEN_X / 2 - 50, 50, "Normal")
@@ -224,7 +216,6 @@ class Menu:
 
             screen_update()
 
-
     def loja_menu(self):
         self.show_loja_menu = True
         while self.show_loja_menu:
@@ -243,7 +234,7 @@ class Menu:
                     if event.button == 1:
                         self.click = True
 
-            draw_text("LOJA", 44, WHITE, SCREEN_X / 2, 80)
+            draw_text("LOJA", TITLE_FONT, WHITE, SCREEN_X / 2, 80)
             draw_text(f"Coins: {util.get_coins()}", 14, WHITE, 70, 150, topleft=True)
 
             spaceship_1_attributes = util.get_spaceships("spaceship-1")
@@ -307,7 +298,6 @@ class Menu:
 
             screen_update()
 
-
     def opcoes_menu(self):
         self.show_opcoes_menu = True
         while self.show_opcoes_menu:
@@ -326,7 +316,7 @@ class Menu:
                     if event.button == 1:
                         self.click = True
 
-            draw_text("OPÇÕES", 44, WHITE, SCREEN_X / 2, 80)
+            draw_text("OPÇÕES", TITLE_FONT, WHITE, SCREEN_X / 2, 80)
 
             sons_button = draw_button(SCREEN_X / 2 - 150, 250, SCREEN_X / 2 + 10, 50, "SONS")
             acessibilidade_button = draw_button(SCREEN_X / 2 - 150, 320, SCREEN_X / 2 + 10, 50, "ACESSIBILIDADE PARA DALTÔNICOS", font_size=9)
@@ -348,7 +338,6 @@ class Menu:
 
             screen_update()
 
-
     def credios_menu(self):
         self.show_creditos_menu = True
         while self.show_creditos_menu:
@@ -367,17 +356,17 @@ class Menu:
                     if event.button == 1:
                         self.click = True
 
-            draw_text("CRÉDITOS", 44, WHITE, SCREEN_X / 2, 80)
+            draw_text("CRÉDITOS", TITLE_FONT, WHITE, SCREEN_X / 2, 80)
 
-            draw_text("DESENVOLVEDORES:", 22, WHITE, 40, 170, topleft=True)
-            draw_text("LUCAS EDUARDO KREUCH", 14, WHITE, 100, 220, topleft=True)
-            draw_text("MARIA CLARA DE SOUZA", 14, WHITE, 100, 240, topleft=True)
-            draw_text("ALINE AMARAL DE SOUZA", 14, WHITE, 100, 260, topleft=True)
-            draw_text("HAIDY JANDRE", 14, WHITE, 100, 280, topleft=True)
+            draw_text("DESENVOLVEDORES:", SUB_TITLE_FONT, WHITE, 40, 170, topleft=True)
+            draw_text("LUCAS EDUARDO KREUCH", SMALL_FONT, WHITE, 100, 220, topleft=True)
+            draw_text("MARIA CLARA DE SOUZA", SMALL_FONT, WHITE, 100, 240, topleft=True)
+            draw_text("ALINE AMARAL DE SOUZA", SMALL_FONT, WHITE, 100, 260, topleft=True)
+            draw_text("HAIDY JANDRE", SMALL_FONT, WHITE, 100, 280, topleft=True)
 
-            draw_text("PROFESSORES:", 22, WHITE, 40, 370, topleft=True)
-            draw_text("RICARDO DE LA ROCHA LADEIRA", 14, WHITE, 100, 420, topleft=True)
-            draw_text("LUIZ RICARDO URIARTE", 14, WHITE, 100, 440, topleft=True)
+            draw_text("PROFESSORES:", SUB_TITLE_FONT, WHITE, 40, 370, topleft=True)
+            draw_text("RICARDO DE LA ROCHA LADEIRA", SMALL_FONT, WHITE, 100, 420, topleft=True)
+            draw_text("LUIZ RICARDO URIARTE", SMALL_FONT, WHITE, 100, 440, topleft=True)
 
             back_to_menu_button = draw_button(30, 670, 100, 30, "Voltar", font_size=14)
 
@@ -393,18 +382,6 @@ class Menu:
             self.click = False
 
             screen_update()
-
-
-    @staticmethod
-    def cursor_event(button_list, cursor_point, button):
-        pygame.mixer.Sound.play(SELECT_SOUND)
-        if button == "UP":
-            if button_list.index(cursor_point) >= 0:
-                return button_list[button_list.index(cursor_point) - 1]
-
-        if button == "DOWN":
-            if button_list.index(cursor_point) < len(button_list) - 1:
-                return button_list[button_list.index(cursor_point) + 1]
 
     def sons_options(self):
         self.show_options_sons_menu = True
@@ -423,8 +400,7 @@ class Menu:
             min_line_sound = (SCREEN_X - 425, 300)
             max_line_sound = (SCREEN_X - 150, 300)
 
-            
-            draw_text("SONS", 44, WHITE, SCREEN_X / 2, 80)
+            draw_text("SONS", TITLE_FONT, WHITE, SCREEN_X / 2, 80)
             
             pygame.draw.line(screen, WHITE, min_line_sound, max_line_sound, 2)
             
@@ -433,6 +409,16 @@ class Menu:
             pygame.draw.line(screen, GREEN, (SCREEN_X/2, 315), (SCREEN_X - 150, 315), 1)
 
             screen_update()
+
+    @staticmethod
+    def cursor_event(button_list, cursor_point, button):
+        pygame.mixer.Sound.play(SELECT_SOUND)
+        if button == pygame.K_UP:
+            if button_list.index(cursor_point) >= 0:
+                return button_list[button_list.index(cursor_point) - 1]
+        if button == pygame.K_DOWN:
+            if button_list.index(cursor_point) < len(button_list) - 1:
+                return button_list[button_list.index(cursor_point) + 1]
                 
 
 class Game:
@@ -595,10 +581,11 @@ class Game:
         draw_text(f"Score: {self.score.get_score()}", 18, WHITE, SCREEN_X / 2, 16)  # Texto do score
 
         self.draw_lives(self.player_mini_image)  # Vidas do Player
+        self.player_shield_bar.draw_shield_bar(self.player.shield)  # Shield do Player
 
         self.draw_ready()
 
-        self.player_shield_bar.draw_shield_bar(self.player.shield)  # Shield do Player
+
 
         # Shield bar do enemy
         for enemy in self.enemy_group:
@@ -843,11 +830,9 @@ class Game:
                         self.show_pause = False
                         pygame.mixer.music.unpause()
 
-                    if event.key == pygame.K_UP:
-                        cursor_point = menu.cursor_event(button_list, cursor_point, "UP")
-
-                    if event.key == pygame.K_DOWN:
-                        cursor_point = menu.cursor_event(button_list, cursor_point, "DOWN")
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                            cursor_point = menu.cursor_event(button_list, cursor_point, event.key)
 
                     if event.key == pygame.K_RETURN:
                         self.click = True
@@ -857,7 +842,7 @@ class Game:
                         self.click = True
 
             # Título
-            draw_text("PAUSE", 42, WHITE, SCREEN_X / 2, 100)
+            draw_text("PAUSE", TITLE_FONT, WHITE, SCREEN_X / 2, 100)
 
             # Botões
             voltar_ao_jogo_button = draw_button(SCREEN_X / 2 - 150, 250, SCREEN_X / 2 + 10, 50, "VOLTAR AO JOGO")
@@ -1173,7 +1158,7 @@ def screen_update():
 
 
 def draw_text(text, tam, color, x, y, topleft=False):
-    fonte = pygame.font.Font(FONTE, tam)
+    fonte = pygame.font.Font(FONT, tam)
     text_obj = fonte.render(text, False, color)
     text_rect = text_obj.get_rect()
     if topleft:
