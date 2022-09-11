@@ -54,30 +54,26 @@ ASTEROID_COOLDOWN = 100                # COOLDOWN para gerar um novo asteroide
 ASTEROID_DAMAGE = 20                   # Dano do asteroide
 
 # Boss
-BODY_BOSS_SIZE_X = 128 * 1.6
-BODY_BOSS_SIZE_Y = 128 * 1.5
-
-WING_BOSS_SIZE_X = 128 * 1.6
-WING_BOSS_SIZE_Y = 128 * 1.5
-
-WING_BOSS_SHIELD = 50
-BODY_BOSS_SHIELD = 100
-
-BOSS_BIG_SHOOT_DELAY = 2000
-BOSS_BIG_SHOOT_VELY = 5
-
-BOSS_SMALL_SHOOT_DELAY = 1800
-BOSS_SMALL_SHOOT_TEMP_DELAY = 200
-BOSS_SMALL_SHOOT_VELY = 6
+BODY_BOSS_SIZE_X = 128 * 1.6        # Largura do corpo do Boss
+BODY_BOSS_SIZE_Y = 128 * 1.5        # Altura do corpo do Boss
+WING_BOSS_SIZE_X = 128 * 1.6        # Largura da asa do Boss
+WING_BOSS_SIZE_Y = 128 * 1.5        # Altura da asa do Boss
+WING_BOSS_SHIELD = 50               # Shield da asa do Boss
+BODY_BOSS_SHIELD = 100              # Shield do corpo do Boss
+BOSS_BIG_SHOOT_DELAY = 2000         # Delay do tiro grande do Boss
+BOSS_SMALL_SHOOT_DELAY = 1800       # Delay do tiro pequeno do Boss
+BOSS_SMALL_SHOOT_TEMP_DELAY = 200   # Tempo de dalay do tiro pequeno
+BOSS_SMALL_SHOOT_SPEED_Y = 6        # Velocidade do tiro pequeno
+BOSS_BIG_SHOOT_SPEED_Y = 5          # Velocidade do tiro grade
+BOSS_SMALL_SHOOT_DAMAGE = 10        # Dano do tiro pequeno
+BOSS_BIG_SHOOT_DAMAGE = 30          # Dano do tiro grande
 
 # FPS
 FPS = 60
 
-# Cooldown de animação do Asteroid
+# Cooldown de animação
 ASTEROID_ANIMATION_COOLDOWN = 100
-
 EXPLOSION_ANIMATION_COOLDOWN = 100
-
 ENEMIES_ANIMATION_COOLDOWN = 100
 
 # Powerup
@@ -105,10 +101,10 @@ EXPLOSION_SOUND.set_volume(0.9)
 SELECT_SOUND.set_volume(0.1)
 
 # Fonte
-FONT = path.join(getcwd() + "/assets/font/8-bit_font.ttf")
-LOGO_FONT = 60
-TITLE_FONT = 44
-SUB_TITLE_FONT = 22
-SMALL_FONT = 14
+FONT_STYLE = path.join(getcwd() + "/assets/font/8-bit_font.ttf")
+LOGO_FONT = 60          # Fonte da logo principal
+TITLE_FONT = 44         # Fonte do título dos menus
+SUB_TITLE_FONT = 22     # Fonte do sub-título
+SMALL_FONT = 14         # Fonte pequena
 
 

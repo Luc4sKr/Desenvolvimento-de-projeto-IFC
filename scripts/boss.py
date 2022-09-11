@@ -1,14 +1,11 @@
-import pygame
-
 from scripts.constants import *
-
 from scripts.bullet import Bullet
 
 
 class Boss(pygame.sprite.Sprite):
-    frame_index = 0  # Frame de animação
-    update_time = pygame.time.get_ticks()  # Tempo de atualização
-    boss_ready = False
+    frame_index = 0                         # Frame de animação
+    update_time = pygame.time.get_ticks()   # Tempo de atualização
+    boss_ready = False                      #
 
     class Boss_wing(pygame.sprite.Sprite):
         def __init__(self, wing_animation_list, direction, shoot_group):
@@ -30,7 +27,7 @@ class Boss(pygame.sprite.Sprite):
                 self.image = pygame.transform.flip(self.image, True, False)
 
             self.shield = WING_BOSS_SHIELD
-            self.damage = 30
+            self.damage = BOSS_SMALL_SHOOT_DAMAGE
 
             self.last_big_shoot = pygame.time.get_ticks()
             self.last_small_shoot = pygame.time.get_ticks()
@@ -61,8 +58,7 @@ class Boss(pygame.sprite.Sprite):
 
             if pygame.time.get_ticks() - self.last_big_shoot > BOSS_BIG_SHOOT_DELAY:
                 self.last_big_shoot = pygame.time.get_ticks()
-                big_shoot = Bullet(self.rect.centerx + pos_x_add, self.rect.bottom - 20, "boss-bullet-1", self.damage,
-                                   BOSS_BIG_SHOOT_VELY, scale_x=28, scale_y=28)
+                big_shoot = Bullet(self.rect.centerx + pos_x_add, self.rect.bottom - 20, "boss-bullet-1", self.damage, SHOOT_SOUND_2, BOSS_BIG_SHOOT_SPEED_Y, scale_x=28, scale_y=28)
                 self.shoot_group.add(big_shoot)
 
         def small_shoot(self):
@@ -79,11 +75,9 @@ class Boss(pygame.sprite.Sprite):
                 if pygame.time.get_ticks() - self.small_shoot_temp > BOSS_SMALL_SHOOT_TEMP_DELAY:
                     self.small_shoot_temp = pygame.time.get_ticks()
                     small_shoot_1 = Bullet(self.rect.centerx + pos_x1_add, self.rect.bottom - 20, "boss-bullet-1",
-                                           self.damage,
-                                           BOSS_SMALL_SHOOT_VELY, scale_x=16, scale_y=16)
+                                           self.damage, SHOOT_SOUND_2, BOSS_SMALL_SHOOT_SPEED_Y, scale_x=16, scale_y=16)
                     small_shoot_2 = Bullet(self.rect.centerx + pos_x2_add, self.rect.bottom - 30, "boss-bullet-1",
-                                           self.damage,
-                                           BOSS_SMALL_SHOOT_VELY, scale_x=16, scale_y=16)
+                                           self.damage, SHOOT_SOUND_2, BOSS_SMALL_SHOOT_SPEED_Y, scale_x=16, scale_y=16)
 
                     self.shoot_group.add(small_shoot_1, small_shoot_2)
 
@@ -130,7 +124,7 @@ class Boss(pygame.sprite.Sprite):
         self.left_wing = Boss.Boss_wing(self.wing_animation_list, "left", self.shoot_group)
         self.right_wing = Boss.Boss_wing(self.wing_animation_list, "right", self.shoot_group)
 
-        self.shield = 100
+        self.shield = BODY_BOSS_SHIELD
 
     def movement(self):
         if self.rect.y < 50:

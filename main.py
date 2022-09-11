@@ -1158,7 +1158,7 @@ def screen_update():
 
 
 def draw_text(text, tam, color, x, y, topleft=False):
-    fonte = pygame.font.Font(FONT, tam)
+    fonte = pygame.font.Font(FONT_STYLE, tam)
     text_obj = fonte.render(text, False, color)
     text_rect = text_obj.get_rect()
     if topleft:
