@@ -75,4 +75,3 @@ class Kamikaze(pygame.sprite.Sprite):
     def damage(self, damage):
         if damage <= 0:
             self.__damage = 10
-            

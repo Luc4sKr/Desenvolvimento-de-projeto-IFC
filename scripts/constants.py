@@ -13,29 +13,33 @@ READY_DELAY = 1000
 GO_DELAY = 2000
 
 # Player
-PLAYER_SIZE_X = 32 * 2.5       # Largura do PLayer
-PLAYER_SIZE_Y = 32 * 2.5       # Altura do Player
-MINI_PLAYER_IMG = 35           # Imagem utilizada para a contagem das vidas do Player
-PLAYER_SHIELD_BAR_HEIGHT = 15  # Altura da barra de shield do Player
-PLAYER_SHIELD_BAR_WIDTH = 170  # Largura da barra de shield do Player
+PLAYER_SIZE_X = 32 * 2.5         # Largura do PLayer
+PLAYER_SIZE_Y = 32 * 2.5         # Altura do Player
+MINI_PLAYER_IMG = 35             # Imagem utilizada para a contagem das vidas do Player
+PLAYER_SHIELD_BAR_HEIGHT = 15    # Altura da barra de shield do Player
+PLAYER_SHIELD_BAR_WIDTH = 170    # Largura da barra de shield do Player
+PLAYER_BULLET = "player-bullet"  # Nome do arquivo da sprite do tiro
+PLAYER_SHOOT_SPEED = -10         # Velocidade do tiro do Player
+
 
 COLLIDE_DAMAGE = 50  # Dano de colisão com naves inimigas
 
 # Enemy
-ENEMY_SIZE_X = 70            # Largura do inimigo
-ENEMY_SIZE_Y = 70            # Altura do inimigo
-ENEMY_SHIELD = 4             # Shield do inimigo
-ENEMY_DAMGE = 30             # Dano do inimigo
-ENEMY_SHOOT_SPEED_Y = 7      # Velocidade do tiro
-ENEMY_SPEED_Y = 1            # Velocidade do inimigo
-ENEMY_SHIELD_BAR_HEIGHT = 5  # Barra de shield do inimigo
-ENEMY_SHOOT_DELAY = 1700     # Delay do tiro
+ENEMY_SIZE_X = 70              # Largura do inimigo
+ENEMY_SIZE_Y = 70              # Altura do inimigo
+ENEMY_SHIELD = 4               # Shield do inimigo
+ENEMY_DAMGE = 30               # Dano do inimigo
+ENEMY_SHOOT_SPEED_Y = 7        # Velocidade do tiro
+ENEMY_SPEED_Y = 1              # Velocidade do inimigo
+ENEMY_SHIELD_BAR_HEIGHT = 5    # Barra de shield do inimigo
+ENEMY_SHOOT_DELAY = 1700       # Delay do tiro
+ENEMY_BULLET = "enemy-bullet"  # Nome do arquivo da sprite do tiro
 
 # Kamikaze
-KAMIKAZE_XPOS_1 = -10
-KAMIKAZE_XPOS_2 = SCREEN_X - 10
-KAMIKAZE_SHIELD = 4
-KAMIKAZE_DAMAGE = 50
+KAMIKAZE_X_POS_1 = -10             # Posição X do kamikaze quando spawna no lado esquerdo da tela
+KAMIKAZE_X_POS_2 = SCREEN_X - 10   # Posição X do kamikaze quando spawna no lado direito da tela
+KAMIKAZE_SHIELD = 4                # Shield
+KAMIKAZE_DAMAGE = 50               # Dano
 
 # Asteroid
 ASTEROID_SIZE_X = 60                   # Largura do asteroide
@@ -90,7 +94,7 @@ SHOOT_SOUND_2 = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/shoot-2.
 EXPLOSION_SOUND = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/explosion-1.wav"))
 SELECT_SOUND = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/select-3.wav"))
 
-SHOOT_SOUND_1.set_volume(1)
+SHOOT_SOUND_1.set_volume(0.5)
 SHOOT_SOUND_2.set_volume(0.1)
 EXPLOSION_SOUND.set_volume(0.9)
 SELECT_SOUND.set_volume(0.1)

@@ -1,5 +1,3 @@
-import pygame
-
 from scripts.constants import *
 
 from scripts.bullet import Bullet
@@ -19,21 +17,20 @@ class Player(pygame.sprite.Sprite):
         # Grupos de sprites
         self.__bullet_group = bullet_group
 
-        self.__shield = attributes["shield"]  # Escudo/vida da nave
-        self.__shoot_delay = attributes["shoot_delay"]  # Delay do tiro
-        self.__lives = attributes["lives"]  # Vidas
-        self.__damage = attributes["damage"]  # Dano
+        # Atributos do Player
+        self.__shield = attributes["shield"]                # Escudo/vida da nave
+        self.__shoot_delay = attributes["shoot_delay"]      # Delay do tiro
+        self.__lives = attributes["lives"]                  # Vidas
+        self.__damage = attributes["damage"]                # Dano
         self.__spaceship_velocity = attributes["velocity"]  # Velocidade
 
-        self.__last_shoot = pygame.time.get_ticks()  # Tempo do ultimo tiro
-        self.__hidden = False 
-        self.__hide_timer = pygame.time.get_ticks()
-        self.__key = None
-        self.__velocity = None
-
-        # Powerups
-        self.__power = 1
-        self.__power_time = pygame.time.get_ticks()
+        self.__last_shoot = pygame.time.get_ticks()         # Tempo do ultimo tiro
+        self.__hidden = False                               # Serve para deixar o Player invisível
+        self.__hide_timer = pygame.time.get_ticks()         # Ajuda a controlar o tempo que o Player fica invisível
+        self.__key = None                                   # Botão pressionado
+        self.__velocity = None                              # Velocidade que pode sofrer modificações
+        self.__shoot_power = False                          # Ativa o powerup de tiro
+        self.__shoot_power_time = pygame.time.get_ticks()   # Ajuda a controlar o tempo que o powerup fica ativado
 
     # Movimentação da nave
     def movement(self):
@@ -72,14 +69,17 @@ class Player(pygame.sprite.Sprite):
             if self.__key[pygame.K_SPACE]:
                 if pygame.time.get_ticks() - self.__last_shoot > self.__shoot_delay:
                     self.__last_shoot = pygame.time.get_ticks()
-                    pygame.mixer.Sound.play(SHOOT_SOUND_1)
-                    bullet_1 = Bullet(self.__rect.centerx + 10, self.__rect.top, "player-bullet", 5, -10)
-                    bullet_2 = Bullet(self.__rect.centerx - 10, self.__rect.top, "player-bullet", 5, -10)
+                    bullet_1 = Bullet(self.__rect.centerx + 10, self.__rect.top, PLAYER_BULLET, self.__damage,
+                                      SHOOT_SOUND_1, PLAYER_SHOOT_SPEED)
+                    bullet_2 = Bullet(self.__rect.centerx - 10, self.__rect.top, PLAYER_BULLET, self.__damage,
+                                      SHOOT_SOUND_1, PLAYER_SHOOT_SPEED)
                     self.__bullet_group.add(bullet_1, bullet_2)
 
-                    if self.__power >= 2:
-                        bullet_3 = Bullet(self.__rect.right, self.__rect.centery, "player-bullet", 5, -10)
-                        bullet_4 = Bullet(self.__rect.left, self.__rect.centery, "player-bullet", 5, -10)
+                    if self.__shoot_power >= 2:
+                        bullet_3 = Bullet(self.__rect.right, self.__rect.centery, PLAYER_BULLET, self.__damage,
+                                          SHOOT_SOUND_1, PLAYER_SHOOT_SPEED)
+                        bullet_4 = Bullet(self.__rect.left, self.__rect.centery, PLAYER_BULLET, self.__damage,
+                                          SHOOT_SOUND_1, PLAYER_SHOOT_SPEED)
                         self.__bullet_group.add(bullet_3, bullet_4)
 
     # Esconde o player temporariamente depois da sua barra de shiel chegar a 0
@@ -101,15 +101,15 @@ class Player(pygame.sprite.Sprite):
 
     # Ativa o powerup
     def powerup(self):
-        self.__power += 1
-        self.__power_time = pygame.time.get_ticks()
+        self.__shoot_power = True
+        self.__shoot_power_time = pygame.time.get_ticks()
 
     # Timeout do powerup
     def powerup_timeout(self):
         # Timeout para os powerups
-        if self.__power >= 2 and pygame.time.get_ticks() - self.__power_time > POWERUP_TIME:
-            self.__power -= 1
-            self.__power_time = pygame.time.get_ticks()
+        if self.__shoot_power and pygame.time.get_ticks() - self.__shoot_power_time > POWERUP_TIME:
+            self.__shoot_power = False
+            self.__shoot_power_time = pygame.time.get_ticks()
 
     # Atualiza tudo
     def update(self):
@@ -118,11 +118,10 @@ class Player(pygame.sprite.Sprite):
         self.powerup_timeout()
         self.shoot()
         self.hide_timeout()
-        
 
+    # --- GETTERS AND SETTERS --- #
 
-
-    # Image
+    # --Image
     @property
     def image(self):
         return self.__image
@@ -131,8 +130,7 @@ class Player(pygame.sprite.Sprite):
     def image(self, image):
         self.__image = image
 
-
-    # Rect
+    # --Rect
     @property
     def rect(self):
         return self.__rect
@@ -141,8 +139,7 @@ class Player(pygame.sprite.Sprite):
     def rect(self, rect):
         self.__rect = rect
 
-
-    # Shield
+    # --Shield
     @property
     def shield(self):
         return self.__shield
@@ -153,8 +150,7 @@ class Player(pygame.sprite.Sprite):
             shield = 0
         self.__shield = shield
 
-
-    # Lives
+    # --Lives
     @property
     def lives(self):
         return self.__lives
@@ -165,8 +161,7 @@ class Player(pygame.sprite.Sprite):
             lives = 0
         self.__lives = lives
 
-
-    # Damage
+    # --Damage
     @property
     def damage(self):
         return self.__damage
@@ -177,28 +172,16 @@ class Player(pygame.sprite.Sprite):
             damage = 1
         self.__damage = damage
 
-
-    # Power
+    # --Power
     @property
     def power(self):
-        return self.__power
+        return self.__shoot_power
 
     @power.setter
     def power(self, power):
-        self.__power = power
+        self.__shoot_power = power
 
-
-    # Power time
-    @property
-    def power_time(self):
-        return self.__power_time
-
-    @power_time.setter
-    def power_time(self, power_time):
-        self.__power_time = power_time
-
-
-    # Velocity
+    # --Velocity
     @property
     def velocity(self):
         return self.__velocity
@@ -206,5 +189,3 @@ class Player(pygame.sprite.Sprite):
     @velocity.setter
     def velocity(self, velocity):
         self.__velocity = velocity
-
-

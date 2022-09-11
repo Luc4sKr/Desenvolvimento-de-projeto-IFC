@@ -2,7 +2,7 @@ from scripts.constants import *
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, x, y, bullet, damage, vely, scale_x=8, scale_y=12):
+    def __init__(self, x, y, bullet, damage, shoot_sound, vely, scale_x=8, scale_y=12):
         pygame.sprite.Sprite.__init__(self)
 
         self.__image = pygame.image.load(path.join(getcwd() + f"/assets/images/bullet/{bullet}.png")).convert_alpha()
@@ -13,6 +13,9 @@ class Bullet(pygame.sprite.Sprite):
         self.__rect.centerx = x
         self.__speed_y = vely
         self.__damage = damage
+        self.__shoot_sound = shoot_sound
+
+        pygame.mixer.Sound.play(shoot_sound)
 
     def update(self):
         self.__rect.y += self.__speed_y

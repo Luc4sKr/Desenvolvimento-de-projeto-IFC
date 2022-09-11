@@ -563,8 +563,9 @@ class Game:
         #  Loop principal do jogo
         while not self.game_over:
             clock.tick(FPS)
-            self.events()  # Eventos do jogo
+            self.events()            # Eventos do jogo
             self.collision_checks()  # Verificação das colisões do jogo
+            self.powerups_checks()   # Verifica a colissão com os powerups
 
             if self.ready:
                 self.asteroid_shower()
@@ -726,17 +727,6 @@ class Game:
             explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
             self.explosion_group.add(explosion)
 
-        # Colissão do Player com os Powerups
-        powerup_collide = pygame.sprite.spritecollide(self.player, self.powerup_group, True)
-        for hit in powerup_collide:
-            if hit.type == "shield":
-                self.player.shield += 20
-                if self.player.shield >= 100:
-                    self.player.shield = 100
-
-            if hit.type == "gun":
-                self.player.powerup()
-
         # Colisão dos tiros inimigos com o Player
         enemy_shoot_collision = pygame.sprite.spritecollide(self.player, self.enemy_shoot_group, True)
         for hit in enemy_shoot_collision:
@@ -804,6 +794,18 @@ class Game:
         if player_collision_boss_wings:
             self.player.shield = 0
         # -- /BOSS -- #
+
+    # Colissão do Player com os Powerups
+    def powerups_checks(self):
+        powerup_collide = pygame.sprite.spritecollide(self.player, self.powerup_group, True)
+        for hit in powerup_collide:
+            if hit.type == "shield":
+                self.player.shield += 20
+                if self.player.shield >= 100:
+                    self.player.shield = 100
+
+            if hit.type == "gun":
+                self.player.powerup()
 
     # Checa se o Player tem vidas
     def check_lives(self):
@@ -1026,8 +1028,8 @@ class Game:
 
     # Novo kamikaze
     def new_kamikaze(self):
-        kamikaze_1 = self.create_kemikaze(KAMIKAZE_XPOS_1, KAMIKAZE_SHIELD)
-        kamikaze_2 = self.create_kemikaze(KAMIKAZE_XPOS_2, KAMIKAZE_SHIELD)
+        kamikaze_1 = self.create_kemikaze(KAMIKAZE_X_POS_1, KAMIKAZE_SHIELD)
+        kamikaze_2 = self.create_kemikaze(KAMIKAZE_X_POS_2, KAMIKAZE_SHIELD)
         self.kamikaze_group.add(kamikaze_1, kamikaze_2)
 
     # Gera o kamikaze

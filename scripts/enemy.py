@@ -34,8 +34,8 @@ class Enemy(pygame.sprite.Sprite):
     def shoot(self):
         if pygame.time.get_ticks() - self.__last_shoot > ENEMY_SHOOT_DELAY - self.__shoot_delay_multiplier:
             self.__last_shoot = pygame.time.get_ticks()
-            pygame.mixer.Sound.play(SHOOT_SOUND_2)
-            bullet = Bullet(self.__rect.centerx, self.__rect.bottom, "enemy-bullet", self.__damage, ENEMY_SHOOT_SPEED_Y)
+            bullet = Bullet(self.__rect.centerx, self.__rect.bottom, ENEMY_BULLET, self.__damage,
+                            SHOOT_SOUND_2, ENEMY_SHOOT_SPEED_Y)
             self.__enemy_shot_group.add(bullet)
 
     def movement(self):

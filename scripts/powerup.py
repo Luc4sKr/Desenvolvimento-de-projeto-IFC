@@ -1,8 +1,4 @@
-import pygame
-
 from random import choice
-from os import path, getcwd
-
 from scripts.constants import *
 
 
@@ -16,7 +12,7 @@ class Powerup(pygame.sprite.Sprite):
         }
 
         # Imagem
-        self.__type = choice(["shield", "gun"]) # Escolhe aleatoriamente o tipo
+        self.__type = choice(["shield", "gun"])  # Escolhe aleatoriamente o tipo
         self.__image = powerup_images[self.__type]
 
         if self.__type == "shield":

@@ -1,5 +1,3 @@
-import pygame
-
 from scripts.constants import *
 
 
