@@ -23,6 +23,7 @@ GUN_POWERUP_IMAGE = f"{IMAGE_DIR}/powerups/gun.png"
 BULLET_PLAYER_IMAGE = f"{IMAGE_DIR}/bullet/player-bullet.png"
 BULLET_ENEMY_IMAGE = f"{IMAGE_DIR}/bullet/enemy-bullet.png"
 BULLET_BOSS_BLUE_IMAGE = f"{IMAGE_DIR}/bullet/boss-bullet-blue.png"
+COIN_IMAGE = f"{IMAGE_DIR}/coins/coin-1.png"
 
 # Screen
 SCREEN_X = 580
@@ -47,10 +48,11 @@ PLAYER_SHOOT_SPEED = -10         # Velocidade do tiro do Player
 # Player shield bar
 PLAYER_SHIELD_BAR_POS_X = 10  # Posição X da barra de shield do Player
 PLAYER_SHIELD_BAR_POS_Y = 10  # Posição Y da barra de shield do Player
+PLAYER_COLLIDE_DAMAGE = 50  # Dano de colisão com naves inimigas
 
-
-COLLIDE_DAMAGE = 50  # Dano de colisão com naves inimigas
-
+# Coin
+COIN_WIDTH = int(32 * 0.4)
+COIN_HEIGHT = int(32 * 0.4)
 
 # Enemy
 ENEMY_SIZE_X = 70              # Largura do inimigo
@@ -127,7 +129,7 @@ SELECT_SOUND = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/select-3.
 
 SHOOT_SOUND_1.set_volume(0.15)
 SHOOT_SOUND_2.set_volume(0.1)
-EXPLOSION_SOUND.set_volume(0.9)
+EXPLOSION_SOUND.set_volume(0.8)
 SELECT_SOUND.set_volume(0.1)
 
 # Fonte

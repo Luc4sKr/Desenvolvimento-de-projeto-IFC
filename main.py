@@ -14,6 +14,7 @@ from scripts.boss import Boss
 from scripts.explosion import Explosion
 from scripts.player import Player
 from scripts.score import Score
+from scripts.coin import Coin
 from scripts.powerup import Powerup
 from scripts.shield_bar import Enemy_shield_bar, Player_shield_bar
 
@@ -445,10 +446,11 @@ class Game:
         self.boss_wings_group = pygame.sprite.Group()
         self.boss_shoot_group = pygame.sprite.Group()
         self.kamikaze_group = pygame.sprite.Group()
+        self.coin_group = pygame.sprite.Group()
 
         # Música tema do jogo
         pygame.mixer.music.load(path.join(getcwd() + f"/assets/music/{util.get_music()}"))
-        pygame.mixer.music.play()
+        pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.3)
 
         # Background do jogo - A SPRITE COM MOVIMENTO PRECISA TER 580x2722 !!!!
@@ -543,7 +545,7 @@ class Game:
             clock.tick(FPS)
             self.events()            # Eventos do jogo
             self.collision_checks()  # Verificação das colisões do jogo
-            self.powerups_checks()   # Verifica a colissão com os powerups
+            self.powerups_collision_checks()   # Verifica a colissão com os powerups
 
             if self.ready:
                 self.asteroid_shower()
@@ -606,6 +608,7 @@ class Game:
     # Atualiza os grupos de sprites
     def update_sprites(self):
         self.background.update()
+        self.coin_group.update()
         self.player_group_single.update()
         self.explosion_group.update()
         self.asteroid_group.update()
@@ -620,12 +623,12 @@ class Game:
             self.boss_wings_group.update()
 
         self.enemy_group.update()
-
         pygame.display.update()
 
     # Desenha na tela os grupos de sprites
     def draw_groups(self):
         self.background.draw(screen)
+        self.coin_group.draw(screen)
         self.enemy_group.draw(screen)
         self.asteroid_group.draw(screen)
         self.bullet_group.draw(screen)
@@ -699,6 +702,8 @@ class Game:
                 explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
                 self.explosion_group.add(explosion)
 
+                self.chance_to_drop_coins(hit.rect.centerx, hit.rect.centery)
+
         # Colisão entre o Enemy e o Asteroid
         enemy_asteroid_collide = pygame.sprite.groupcollide(self.enemy_group, self.asteroid_group, True, True,
                                                             pygame.sprite.collide_mask)
@@ -734,7 +739,7 @@ class Game:
         # Colisão do Player com o Enemy
         player_collide_enemy = pygame.sprite.spritecollide(self.player, self.enemy_group, False)
         for hit in player_collide_enemy:
-            self.player.shield -= COLLIDE_DAMAGE
+            self.player.shield -= PLAYER_COLLIDE_DAMAGE
             explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
             self.explosion_group.add(explosion)
             hit.kill()
@@ -775,7 +780,7 @@ class Game:
         # -- /BOSS -- #
 
     # Colissão do Player com os Powerups
-    def powerups_checks(self):
+    def powerups_collision_checks(self):
         powerup_collide = pygame.sprite.spritecollide(self.player, self.powerup_group, True)
         for hit in powerup_collide:
             if hit.type == "shield":
@@ -945,6 +950,11 @@ class Game:
                 cursor_point = voltar_ao_menu_buttom
 
             screen_update()
+
+    # Chance de dropar moedas
+    def chance_to_drop_coins(self, pos_x, pos_y):
+        if randint(1, 2) > 0:
+            coin = Coin(pos_x, pos_y, self.coin_group)
 
     # Função para criar um novo asteroide
     def new_asteroid(self):
