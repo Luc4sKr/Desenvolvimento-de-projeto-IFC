@@ -1,5 +1,28 @@
 import pygame
 from os import path, getcwd
+from scripts.data.util import Util
+
+util = Util()
+
+# Diretórios
+IMAGE_DIR = path.join(getcwd() + f"/assets/images/{util.get_image()}")
+
+ASTEROID_IMAGE_DIR = f"{IMAGE_DIR}/sprites/asteroid"
+EXPLOSION_IMAGE_DIR = f"{IMAGE_DIR}/sprites/explosion"
+ENEMY_IMAGE_DIR = f"{IMAGE_DIR}/sprites/enemy"
+KAMIKADE_IMAGE_DIR = f"{IMAGE_DIR}/sprites/kamikaze"
+BOSS_BODY_IMAGE_DIR = f"{IMAGE_DIR}/sprites/boss/body"
+BOSS_WING_IMAGE_DIR = f"{IMAGE_DIR}/sprites/boss/wings"
+
+# Imagens
+MENU_IMAGE_BACKGROUND = f"{IMAGE_DIR}/backgrounds/menu-background.png"
+GAME_IMAGE_BACKGROUND = f"{IMAGE_DIR}/backgrounds/game-background.png"
+PLAYER_IMAGE = f"{IMAGE_DIR}/sprites/spaceships/{util.get_spaceship()}.png"
+SHIELD_POWERUP_IMAGE = f"{IMAGE_DIR}/powerups/shield.png"
+GUN_POWERUP_IMAGE = f"{IMAGE_DIR}/powerups/gun.png"
+BULLET_PLAYER_IMAGE = f"{IMAGE_DIR}/bullet/player-bullet.png"
+BULLET_ENEMY_IMAGE = f"{IMAGE_DIR}/bullet/enemy-bullet.png"
+BULLET_BOSS_BLUE_IMAGE = f"{IMAGE_DIR}/bullet/boss-bullet-blue.png"
 
 # Screen
 SCREEN_X = 580
@@ -13,8 +36,8 @@ READY_DELAY = 1000
 GO_DELAY = 2000
 
 # Player
-PLAYER_SIZE_X = 32 * 2.5         # Largura do PLayer
-PLAYER_SIZE_Y = 32 * 2.5         # Altura do Player
+PLAYER_SIZE_X = int(32 * 2.5)     # Largura do PLayer
+PLAYER_SIZE_Y = int(32 * 2.5)    # Altura do Player
 MINI_PLAYER_IMG = 35             # Imagem utilizada para a contagem das vidas do Player
 PLAYER_SHIELD_BAR_HEIGHT = 15    # Altura da barra de shield do Player
 PLAYER_SHIELD_BAR_WIDTH = 170    # Largura da barra de shield do Player
@@ -27,6 +50,7 @@ PLAYER_SHIELD_BAR_POS_Y = 10  # Posição Y da barra de shield do Player
 
 
 COLLIDE_DAMAGE = 50  # Dano de colisão com naves inimigas
+
 
 # Enemy
 ENEMY_SIZE_X = 70              # Largura do inimigo
@@ -68,6 +92,10 @@ BOSS_BIG_SHOOT_SPEED_Y = 5          # Velocidade do tiro grade
 BOSS_SMALL_SHOOT_DAMAGE = 10        # Dano do tiro pequeno
 BOSS_BIG_SHOOT_DAMAGE = 30          # Dano do tiro grande
 
+# Explosion
+EXPLOSION_WIDTH = 50
+EXPLOSION_HEIGHT = 50
+
 # FPS
 FPS = 60
 
@@ -79,6 +107,8 @@ ENEMIES_ANIMATION_COOLDOWN = 100
 # Powerup
 POWERUP_TIME = 5000
 POWERUP_SPEED_Y = 3
+POWERUP_WIDTH = int(32 * 1.3)
+POWERUP_HEIGHT = int(32 * 1.3)
 
 # Colors
 BLACK = (0, 0, 0)
@@ -95,7 +125,7 @@ SHOOT_SOUND_2 = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/shoot-2.
 EXPLOSION_SOUND = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/explosion-1.wav"))
 SELECT_SOUND = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/select-3.wav"))
 
-SHOOT_SOUND_1.set_volume(0.5)
+SHOOT_SOUND_1.set_volume(0.15)
 SHOOT_SOUND_2.set_volume(0.1)
 EXPLOSION_SOUND.set_volume(0.9)
 SELECT_SOUND.set_volume(0.1)

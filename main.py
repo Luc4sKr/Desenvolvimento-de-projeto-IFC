@@ -37,10 +37,8 @@ class Menu:
 
         # Background
         self.menu_background_sprite = pygame.sprite.Sprite()
-        self.menu_background_sprite.image = pygame.image.load(
-            path.join(getcwd() + "/assets/images/backgrounds/menu_background.png"))
-        self.menu_background_sprite.image = pygame.transform.scale(self.menu_background_sprite.image,
-                                                                   (SCREEN_X, SCREEN_Y))
+        self.menu_background_sprite.image = pygame.image.load(MENU_IMAGE_BACKGROUND)
+        self.menu_background_sprite.image = pygame.transform.scale(self.menu_background_sprite.image, (SCREEN_X, SCREEN_Y))
         self.menu_background_sprite.rect = self.menu_background_sprite.image.get_rect()
         self.menu_background = pygame.sprite.GroupSingle(self.menu_background_sprite)
 
@@ -454,7 +452,7 @@ class Game:
         pygame.mixer.music.set_volume(0.3)
 
         # Background do jogo - A SPRITE COM MOVIMENTO PRECISA TER 580x2722 !!!!
-        self.game_background_rect = Background("game_background_azul_cinza.png")
+        self.game_background_rect = Background(GAME_IMAGE_BACKGROUND)
         self.background = pygame.sprite.GroupSingle(self.game_background_rect)
 
         # Player
@@ -464,22 +462,18 @@ class Game:
         self.player_mini_image = pygame.transform.scale(self.player.image, (MINI_PLAYER_IMG, MINI_PLAYER_IMG))
 
         # Asteroid
-        self.asteroid_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/asteroid", ASTEROID_SIZE_X,
-                                                              ASTEROID_SIZE_Y)
+        self.asteroid_sprite_sheet = self.create_sprite_sheet(ASTEROID_IMAGE_DIR, ASTEROID_SIZE_X, ASTEROID_SIZE_Y)
 
         # Explosion
-        self.explosion_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/explosion/explosion-1", 50, 50)
-        self.explosion_sprite_sheet = self.explosion_sprite_sheet
+        self.explosion_sprite_sheet = self.create_sprite_sheet(EXPLOSION_IMAGE_DIR, EXPLOSION_WIDTH, EXPLOSION_HEIGHT)
 
         # Enemy
-        self.enemy_1_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/enemy-1", ENEMY_SIZE_X,
-                                                             ENEMY_SIZE_Y)
+        self.enemy_1_sprite_sheet = self.create_sprite_sheet(ENEMY_IMAGE_DIR, ENEMY_SIZE_X, ENEMY_SIZE_Y)
         self.create_enemy_delay = 2500
         self.last_enemy = pygame.time.get_ticks()
 
         # Kamikaze
-        self.kamikaze_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/enemy-2", ENEMY_SIZE_X,
-                                                              ENEMY_SIZE_Y)
+        self.kamikaze_sprite_sheet = self.create_sprite_sheet(KAMIKADE_IMAGE_DIR, ENEMY_SIZE_X, ENEMY_SIZE_Y)
         self.create_kamikaze_delay = 7000
         self.last_kemikaze = pygame.time.get_ticks()
 
@@ -491,10 +485,8 @@ class Game:
         self.boss_body_shield_bar = Enemy_shield_bar(screen)
 
         # Boss
-        self.boss_body_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/body", BODY_BOSS_SIZE_X,
-                                                               BODY_BOSS_SIZE_Y)
-        self.boss_wing_sprite_sheet = self.create_sprite_sheet("assets/images/sprites/boss/wings", WING_BOSS_SIZE_X,
-                                                               WING_BOSS_SIZE_Y)
+        self.boss_body_sprite_sheet = self.create_sprite_sheet(BOSS_BODY_IMAGE_DIR, BODY_BOSS_SIZE_X, BODY_BOSS_SIZE_Y)
+        self.boss_wing_sprite_sheet = self.create_sprite_sheet(BOSS_WING_IMAGE_DIR, WING_BOSS_SIZE_X, WING_BOSS_SIZE_Y)
         self.boss_event = False
         self.boss_created = False
         self.wing_explosion = False
@@ -1140,10 +1132,9 @@ class Game:
     @staticmethod
     def create_sprite_sheet(sprite_directory, sprite_size_x, sprite_size_y):
         animation_list = []
-
         num_of_frames = len(listdir(sprite_directory))
         for i in range(1, num_of_frames):
-            image = pygame.image.load(path.join(getcwd() + f"/{sprite_directory}/sprite-{i}.png")).convert_alpha()
+            image = pygame.image.load(f"{sprite_directory}/sprite-{i}.png").convert_alpha()
             image = pygame.transform.scale(image, (int(sprite_size_x), int(sprite_size_y)))
             animation_list.append(image)
         return animation_list
@@ -1169,8 +1160,8 @@ def draw_text(text, tam, color, x, y, topleft=False):
 
 
 def draw_button(left, top, width, height, text, font_size=20, color=(0, 0, 0)):
-    button_border = pygame.Rect(left - 2, top - 2, width + 4, height + 4)
-    button = pygame.Rect(left, top, width, height)
+    button_border = pygame.Rect(int(left - 2), int(top - 2), int(width + 4), int(height + 4))
+    button = pygame.Rect(int(left), int(top), int(width), int(height))
     pygame.draw.rect(screen, WHITE, button_border)
     pygame.draw.rect(screen, color, button)
     draw_text(text, font_size, WHITE, left + (width / 2), top + (height / 2))
@@ -1183,7 +1174,7 @@ def draw_loja_button(sprite, left, top, width, height, nome, price, lives, shiel
     pygame.draw.rect(screen, WHITE, button_border)
     pygame.draw.rect(screen, BLACK, button)
 
-    image = pygame.image.load(path.join(getcwd() + f"/assets/images/sprites/spaceships/{sprite}"))
+    image = pygame.image.load(path.join(f"{IMAGE_DIR}/sprites/spaceships/{sprite}"))
     image = pygame.transform.scale(image, (75, 75))
     image_rect = image.get_rect()
     image_rect.center = (left + 60, top + (height / 2))

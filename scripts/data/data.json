@@ -32,5 +32,8 @@
             "shoot_delay": 300
         }
     },
-    "music": "wyver9_Arcade Title.wav"
+    "game": {
+        "music": "wyver9_Arcade Title.wav",
+        "image": "default"
+    }
 }

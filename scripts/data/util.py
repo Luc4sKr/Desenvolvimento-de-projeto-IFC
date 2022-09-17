@@ -36,8 +36,14 @@ class Util:
         self.json_obj["player"]["purchased-ships"].append(spaceship)
         self.save_file()
 
+    def get_image(self):
+        return self.json_obj["game"]["image"]
+
+    def set_image(self, image):
+        self.json_obj["game"]["image"] = image
+
     def get_music(self):
-        return self.json_obj["music"]
+        return self.json_obj["game"]["music"]
 
     def spaceship_attributes(self):
         return self.json_obj["naves"][self.get_spaceship()]

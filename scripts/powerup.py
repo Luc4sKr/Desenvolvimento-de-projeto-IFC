@@ -7,13 +7,14 @@ class Powerup(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         powerup_images = {
-            "shield": pygame.image.load(path.join(getcwd() + "/assets/images/powerups/shield.png")).convert_alpha(),
-            "gun": pygame.image.load(path.join(getcwd() + "/assets/images/powerups/gun.png")).convert_alpha()
+            "shield": pygame.image.load(SHIELD_POWERUP_IMAGE).convert_alpha(),
+            "gun": pygame.image.load(GUN_POWERUP_IMAGE).convert_alpha()
         }
 
         # Imagem
         self.__type = choice(["shield", "gun"])
         self.__image = powerup_images[self.__type]
+        self.__image = pygame.transform.scale(self.__image, (POWERUP_WIDTH, POWERUP_HEIGHT))
         self.__rect = self.__image.get_rect()
         self.__rect.center = center
 
@@ -41,3 +42,11 @@ class Powerup(pygame.sprite.Sprite):
     @rect.setter
     def rect(self, rect):
         self.__rect = rect
+
+    @property
+    def type(self):
+        return self.__type
+    
+    @type.setter
+    def type(self, type):
+        self.__type = type
