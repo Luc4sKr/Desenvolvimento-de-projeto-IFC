@@ -39,7 +39,8 @@ class Menu:
         # Background
         self.menu_background_sprite = pygame.sprite.Sprite()
         self.menu_background_sprite.image = pygame.image.load(MENU_IMAGE_BACKGROUND)
-        self.menu_background_sprite.image = pygame.transform.scale(self.menu_background_sprite.image, (SCREEN_X, SCREEN_Y))
+        self.menu_background_sprite.image = pygame.transform.scale(self.menu_background_sprite.image,
+                                                                   (SCREEN_X, SCREEN_Y))
         self.menu_background_sprite.rect = self.menu_background_sprite.image.get_rect()
         self.menu_background = pygame.sprite.GroupSingle(self.menu_background_sprite)
 
@@ -318,7 +319,8 @@ class Menu:
             draw_text("OPÇÕES", TITLE_FONT, WHITE, SCREEN_X / 2, 80)
 
             sons_button = draw_button(SCREEN_X / 2 - 150, 250, SCREEN_X / 2 + 10, 50, "SONS")
-            acessibilidade_button = draw_button(SCREEN_X / 2 - 150, 320, SCREEN_X / 2 + 10, 50, "ACESSIBILIDADE PARA DALTÔNICOS", font_size=9)
+            acessibilidade_button = draw_button(SCREEN_X / 2 - 150, 320, SCREEN_X / 2 + 10, 50,
+                                                "ACESSIBILIDADE PARA DALTÔNICOS", font_size=9)
 
             back_to_menu_button = draw_button(30, 670, 100, 30, "Voltar", font_size=14)
 
@@ -400,12 +402,12 @@ class Menu:
             max_line_sound = (SCREEN_X - 150, 300)
 
             draw_text("SONS", TITLE_FONT, WHITE, SCREEN_X / 2, 80)
-            
+
             pygame.draw.line(screen, WHITE, min_line_sound, max_line_sound, 2)
-            
-            pygame.draw.line(screen, RED, (SCREEN_X/2, 0), (SCREEN_X/2, SCREEN_Y), 1)
-            pygame.draw.line(screen, GREEN, (SCREEN_X - 425, 315), (SCREEN_X/2, 315), 1)
-            pygame.draw.line(screen, GREEN, (SCREEN_X/2, 315), (SCREEN_X - 150, 315), 1)
+
+            pygame.draw.line(screen, RED, (SCREEN_X / 2, 0), (SCREEN_X / 2, SCREEN_Y), 1)
+            pygame.draw.line(screen, GREEN, (SCREEN_X - 425, 315), (SCREEN_X / 2, 315), 1)
+            pygame.draw.line(screen, GREEN, (SCREEN_X / 2, 315), (SCREEN_X - 150, 315), 1)
 
             screen_update()
 
@@ -418,7 +420,7 @@ class Menu:
         if button == pygame.K_DOWN:
             if button_list.index(cursor_point) < len(button_list) - 1:
                 return button_list[button_list.index(cursor_point) + 1]
-                
+
 
 class Game:
     def __init__(self):
@@ -543,9 +545,9 @@ class Game:
         #  Loop principal do jogo
         while not self.game_over:
             clock.tick(FPS)
-            self.events()            # Eventos do jogo
+            self.events()  # Eventos do jogo
             self.collision_checks()  # Verificação das colisões do jogo
-            self.powerups_collision_checks()   # Verifica a colissão com os powerups
+            self.powerups_collision_checks()  # Verifica a colissão com os powerups
 
             if self.ready:
                 self.asteroid_shower()
@@ -579,8 +581,6 @@ class Game:
 
         self.draw_ready()
 
-
-
         # Shield bar do enemy
         for enemy in self.enemy_group:
             self.enemy_shield_bar.draw_shield_bar(enemy.shield, enemy.rect)
@@ -604,7 +604,7 @@ class Game:
 
             if self.draw_body_boss_shield_bar:
                 self.boss_body_shield_bar.draw_shield_bar(self.boss.shield, self.boss.rect)
-    
+
     # Atualiza os grupos de sprites
     def update_sprites(self):
         self.background.update()
@@ -671,113 +671,140 @@ class Game:
 
     # Checa as colisões do jogo
     def collision_checks(self):
-        # Colissão dos tiros do Player com o Asteroid
-        bullet_asteroid_collide = pygame.sprite.groupcollide(self.asteroid_group, self.bullet_group, True, True,
-                                                             pygame.sprite.collide_mask)
-        for hit in bullet_asteroid_collide:
-            self.score.add_score()
-            explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
-            self.explosion_group.add(explosion)
-
-        # Colisão do Player com o Asteroid
-        player_asteroid_collide = pygame.sprite.spritecollide(self.player, self.asteroid_group, True,
-                                                              pygame.sprite.collide_mask)
-        for hit in player_asteroid_collide:
-            self.player.shield -= ASTEROID_DAMAGE  # Tira o shield do player
-
-        # Colisão do Enemy com o tiro do Player
-        player_shot_collide = pygame.sprite.groupcollide(self.enemy_group, self.bullet_group, False, True,
-                                                         pygame.sprite.collide_mask)
-        for hit in player_shot_collide:
-            hit.shield -= self.player.damage
-
-            if hit.shield <= 0:
-                # Chance de dropar um powerup
-                if randint(0, 10) >= 5:
-                    powerup = Powerup(hit.rect.center)
-                    self.powerup_group.add(powerup)
-
+        # Colissão do tiro do Player com o Asteroide
+        def asteroid_collision_with_player_shots():
+            collision = pygame.sprite.groupcollide(self.asteroid_group, self.bullet_group, True, True,
+                                                   pygame.sprite.collide_mask)
+            for hit in collision:
                 self.score.add_score()
-                hit.kill()
                 explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
                 self.explosion_group.add(explosion)
 
-                self.chance_to_drop_coins(hit.rect.centerx, hit.rect.centery)
-
-        # Colisão entre o Enemy e o Asteroid
-        enemy_asteroid_collide = pygame.sprite.groupcollide(self.enemy_group, self.asteroid_group, True, True,
-                                                            pygame.sprite.collide_mask)
-        for hit in enemy_asteroid_collide:
-            explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
-            self.explosion_group.add(explosion)
-
-        # Colisão dos tiros inimigos com o Player
-        enemy_shoot_collision = pygame.sprite.spritecollide(self.player, self.enemy_shoot_group, True)
-        for hit in enemy_shoot_collision:
-            self.player.shield -= hit.damage
-
-        # Colisão dos tiros com o Kamikaze
-        player_shoot_collide_kamikaze = pygame.sprite.groupcollide(self.kamikaze_group, self.bullet_group, False, True,
-                                                                   pygame.sprite.collide_mask)
-        for kamikaze_hit in player_shoot_collide_kamikaze:
-            kamikaze_hit.shield -= self.player.damage
-
-            if kamikaze_hit.shield <= 0:
-                explosion = Explosion(kamikaze_hit.rect.center, self.explosion_sprite_sheet)
+        # Colisão do Player com o Asteroide
+        def player_collision_with_asteroid():
+            collision = pygame.sprite.spritecollide(self.player, self.asteroid_group, True, pygame.sprite.collide_mask)
+            for hit in collision:
+                self.player.shield -= ASTEROID_DAMAGE
+                explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
                 self.explosion_group.add(explosion)
-                self.score.add_score()
-                kamikaze_hit.kill()
 
-        # Colisão quando o Kamikaze bate no Player
-        kamikaze_player_collide = pygame.sprite.spritecollide(self.player, self.kamikaze_group, False)
-        for hit in kamikaze_player_collide:
-            self.player.shield -= hit.damage
-            explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
-            self.explosion_group.add(explosion)
-            hit.kill()
+        # Colisão do Inimigo com o tiro do Player
+        def enemy_collision_with_player_shot():
+            collision = pygame.sprite.groupcollide(self.enemy_group, self.bullet_group, False, True,
+                                                   pygame.sprite.collide_mask)
+            for hit in collision:
+                hit.shield -= self.player.damage
 
-        # Colisão do Player com o Enemy
-        player_collide_enemy = pygame.sprite.spritecollide(self.player, self.enemy_group, False)
-        for hit in player_collide_enemy:
-            self.player.shield -= PLAYER_COLLIDE_DAMAGE
-            explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
-            self.explosion_group.add(explosion)
-            hit.kill()
+                if hit.shield <= 0:
+                    # Chance de dropar um powerup
+                    if randint(0, 10) >= 5:
+                        powerup = Powerup(hit.rect.center)
+                        self.powerup_group.add(powerup)
 
-        # -- BOSS -- #
-        # Colisão entre os tiros do Player com a Asa do Boss
-        shoot_collision_wing = pygame.sprite.groupcollide(self.boss_wings_group, self.bullet_group, False, True,
-                                                          pygame.sprite.collide_mask)
-        for wing_hit in shoot_collision_wing:
-            wing_hit.shield -= self.player.damage * 1
-            if wing_hit.shield <= 0:
-                self.score.add_score(20)
-                self.wing_explosion = True
-                wing_hit.kill()
+                    self.score.add_score()
+                    hit.kill()
+                    explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
+                    self.explosion_group.add(explosion)
 
-        # Colisão entre os tiros do Player com o Boss
-        shoot_collision_body = pygame.sprite.groupcollide(self.boss_group, self.bullet_group, False, True,
-                                                          pygame.sprite.collide_mask)
-        if self.draw_body_boss_shield_bar:
-            for body_hit in shoot_collision_body:
-                body_hit.shield -= self.player.damage * 1
-                if body_hit.shield <= 0:
-                    self.score.add_score(50)
-                    self.body_explosion = True
-                    body_hit.kill()
+                    self.chance_to_drop_coins(hit.rect.centerx, hit.rect.centery)
+
+        # Colisão entre o Asteroide e o Inimigo
+        def collision_between_the_asteroid_and_the_enemy():
+            collision = pygame.sprite.groupcollide(self.enemy_group, self.asteroid_group, True, True, pygame.sprite.collide_mask)
+            for hit in collision:
+                explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
+                self.explosion_group.add(explosion)
+
+        # Colisão do tiro do Inimigo com o Player
+        def enemy_shot_collision_with_player():
+            collision = pygame.sprite.spritecollide(self.player, self.enemy_shoot_group, True)
+            for hit in collision:
+                self.player.shield -= hit.damage
+
+        # Colisão do tiro do Player com o Kamikaze
+        def player_shoot_collision_with_kamikaze():
+            collision = pygame.sprite.groupcollide(self.kamikaze_group, self.bullet_group, False, True, pygame.sprite.collide_mask)
+            for kamikaze_hit in collision:
+                kamikaze_hit.shield -= self.player.damage
+                if kamikaze_hit.shield <= 0:
+                    explosion = Explosion(kamikaze_hit.rect.center, self.explosion_sprite_sheet)
+                    self.explosion_group.add(explosion)
+                    self.score.add_score()
+                    kamikaze_hit.kill()
+
+        # Colisão do Kamikaze com o Player
+        def kamikaze_collision_with_player():
+            collision = pygame.sprite.spritecollide(self.player, self.kamikaze_group, False)
+            for hit in collision:
+                self.player.shield -= hit.damage
+                explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
+                self.explosion_group.add(explosion)
+                hit.kill()
+
+        # Colisão entre o Player e o Inimigo
+        def collision_between_the_player_and_the_enemy():
+            collision = pygame.sprite.spritecollide(self.player, self.enemy_group, False)
+            for hit in collision:
+                self.player.shield -= PLAYER_COLLIDE_DAMAGE
+                explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
+                self.explosion_group.add(explosion)
+                hit.kill()
+
+        # ---------- Colisões com o Boss ---------- #
+
+        # Colisão do tiro do Player com a Asa do Boss
+        def player_bullet_collision_with_boss_wing():
+            collision = pygame.sprite.groupcollide(self.boss_wings_group, self.bullet_group, False, True, pygame.sprite.collide_mask)
+            for wing_hit in collision:
+                wing_hit.shield -= self.player.damage * 1
+                if wing_hit.shield <= 0:
+                    self.score.add_score(20)
+                    self.wing_explosion = True
+                    wing_hit.kill()
+
+        # Colisão do tiro do Player com o corpo do Boss
+        def collision_of_the_player_bullet_with_the_boss_body():
+            collision = pygame.sprite.groupcollide(self.boss_group, self.bullet_group, False, True, pygame.sprite.collide_mask)
+            if self.draw_body_boss_shield_bar:
+                for body_hit in collision:
+                    body_hit.shield -= self.player.damage * 1
+                    if body_hit.shield <= 0:
+                        self.score.add_score(50)
+                        self.body_explosion = True
+                        body_hit.kill()
 
         # Colisão do Player com o Boss
-        player_collision_boss = pygame.sprite.spritecollide(self.player, self.boss_group, False,
-                                                            pygame.sprite.collide_mask)
-        if player_collision_boss:
-            self.player.shield = 0
+        def player_collision_with_boss():
+            player_collision_boss = pygame.sprite.spritecollide(self.player, self.boss_group, False, pygame.sprite.collide_mask)
+            if player_collision_boss:
+                self.player.shield = 0
 
         # Colisão do Player com as asas do Boss
-        player_collision_boss_wings = pygame.sprite.spritecollide(self.player, self.boss_wings_group, False,
-                                                                  pygame.sprite.collide_mask)
-        if player_collision_boss_wings:
-            self.player.shield = 0
-        # -- /BOSS -- #
+        def player_collision_with_Boss_wings():
+            collision = pygame.sprite.spritecollide(self.player, self.boss_wings_group, False, pygame.sprite.collide_mask)
+            if collision:
+                self.player.shield = 0
+
+        # ----------------------------------------- #
+
+        def update():
+            asteroid_collision_with_player_shots()
+            player_collision_with_asteroid()
+            enemy_collision_with_player_shot()
+            collision_between_the_asteroid_and_the_enemy()
+            enemy_shot_collision_with_player()
+            player_shoot_collision_with_kamikaze()
+            kamikaze_collision_with_player()
+            collision_between_the_player_and_the_enemy()
+
+            # Boss
+            player_bullet_collision_with_boss_wing()
+            collision_of_the_player_bullet_with_the_boss_body()
+            player_collision_with_boss()
+            player_collision_with_Boss_wings()
+
+
+        update()
 
     # Colissão do Player com os Powerups
     def powerups_collision_checks(self):
@@ -1190,11 +1217,11 @@ def draw_loja_button(sprite, left, top, width, height, nome, price, lives, shiel
     image_rect.center = (left + 60, top + (height / 2))
     screen.blit(image, image_rect)
 
-    draw_text(nome, 16, YELLOW, left + 130, top + 10, topleft=True)                           # Nome
-    draw_text(f"Vidas: {lives}", 10, WHITE, left + 130, top + 35, topleft=True)               # Vidas
-    draw_text(f"Escudo: {shield}", 10, WHITE, left + 130, top + 55, topleft=True)             # Escudo
-    draw_text(f"Dano: {damage}", 10, WHITE, left + 270, top + 35, topleft=True)               # Dano
-    draw_text(f"Velocidade: {velocity}", 10, WHITE, left + 270, top + 55, topleft=True)       # Velocidade
+    draw_text(nome, 16, YELLOW, left + 130, top + 10, topleft=True)  # Nome
+    draw_text(f"Vidas: {lives}", 10, WHITE, left + 130, top + 35, topleft=True)  # Vidas
+    draw_text(f"Escudo: {shield}", 10, WHITE, left + 130, top + 55, topleft=True)  # Escudo
+    draw_text(f"Dano: {damage}", 10, WHITE, left + 270, top + 35, topleft=True)  # Dano
+    draw_text(f"Velocidade: {velocity}", 10, WHITE, left + 270, top + 55, topleft=True)  # Velocidade
     draw_text(f"Shoot delay: {shoot_dedaly}", 10, WHITE, left + 270, top + 75, topleft=True)  # Shoot delay
 
     if util.get_spaceship() == sprite[:11]:

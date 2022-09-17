@@ -129,7 +129,7 @@ SELECT_SOUND = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/select-3.
 
 SHOOT_SOUND_1.set_volume(0.15)
 SHOOT_SOUND_2.set_volume(0.1)
-EXPLOSION_SOUND.set_volume(0.8)
+EXPLOSION_SOUND.set_volume(0.6)
 SELECT_SOUND.set_volume(0.1)
 
 # Fonte
