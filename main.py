@@ -36,6 +36,9 @@ class Menu:
         self.show_opcoes_menu = False
         self.show_creditos_menu = False
 
+        self.show_options_sons_menu = False
+        self.show_options_acessibilidade_menu = False
+
         # Background
         self.menu_background_sprite = pygame.sprite.Sprite()
         self.menu_background_sprite.image = pygame.image.load(MENU_IMAGE_BACKGROUND)
@@ -93,46 +96,19 @@ class Menu:
 
             # Inputs do mouse com os botões do menu
             if jogar_button.collidepoint((mx, my)) or cursor_point == jogar_button:
-                if cursor_point != jogar_button:
-                    pygame.mixer.Sound.play(SELECT_SOUND)
-                cursor_point = jogar_button
-                if self.click:
-                    self.click = False
-                    self.show_menu = False
-                    self.difficulty_menu()
+                cursor_point = self.cursor_mouse_event(cursor_point, jogar_button, self.difficulty_menu)
 
             if loja_button.collidepoint((mx, my)) or cursor_point == loja_button:
-                if cursor_point != loja_button:
-                    pygame.mixer.Sound.play(SELECT_SOUND)
-                cursor_point = loja_button
-                if self.click:
-                    self.click = False
-                    self.loja_menu()
+                cursor_point = self.cursor_mouse_event(cursor_point, loja_button, self.loja_menu)
 
             if opcoes_button.collidepoint((mx, my)) or cursor_point == opcoes_button:
-                if cursor_point != opcoes_button:
-                    pygame.mixer.Sound.play(SELECT_SOUND)
-                cursor_point = opcoes_button
-                if self.click:
-                    self.click = False
-                    self.opcoes_menu()
+                cursor_point = self.cursor_mouse_event(cursor_point, opcoes_button, self.opcoes_menu)
 
             if creditos_button.collidepoint((mx, my)) or cursor_point == creditos_button:
-                if cursor_point != creditos_button:
-                    pygame.mixer.Sound.play(SELECT_SOUND)
-                cursor_point = creditos_button
-                if self.click:
-                    self.click = False
-                    self.credios_menu()
+                cursor_point = self.cursor_mouse_event(cursor_point, creditos_button, self.credios_menu)
 
             if sair_button.collidepoint((mx, my)) or cursor_point == sair_button:
-                if cursor_point != sair_button:
-                    pygame.mixer.Sound.play(SELECT_SOUND)
-                cursor_point = sair_button
-                if self.click:
-                    self.show_menu = False
-                    pygame.quit()
-                    exit()
+                cursor_point = self.cursor_mouse_event(cursor_point, sair_button, self.quit_game)
 
             # Depois de checar os inputs o click volta a ser falso
             self.click = False
@@ -183,28 +159,16 @@ class Menu:
 
             # Colisão com os botões
             if normal_button.collidepoint((mx, my)) or cursor_point == normal_button:
-                cursor_point = normal_button
-                if self.click:
-                    self.click = False
-
-                    self.show_difficulty_menu = False
-                    game.new_game(1)
+                game.difficulty = 1
+                cursor_point = self.cursor_mouse_event(cursor_point, normal_button, game.new_game)
 
             if dificil_button.collidepoint((mx, my)) or cursor_point == dificil_button:
-                cursor_point = dificil_button
-                if self.click:
-                    self.click = False
-
-                    self.show_difficulty_menu = False
-                    game.new_game(2)
+                game.difficulty = 2
+                cursor_point = self.cursor_mouse_event(cursor_point, dificil_button, game.new_game)
 
             if insano_button.collidepoint((mx, my)) or cursor_point == insano_button:
-                cursor_point = insano_button
-                if self.click:
-                    self.click = False
-
-                    self.show_difficulty_menu = False
-                    game.new_game(3)
+                game.difficulty = 3
+                cursor_point = self.cursor_mouse_event(cursor_point, insano_button, game.new_game)
 
             # Depois de checar os inputs o click volta a ser falso
             self.click = False
@@ -330,10 +294,16 @@ class Menu:
                 if self.click:
                     self.click = False
                     self.show_opcoes_menu = False
+
             if sons_button.collidepoint((mx, my)):
                 if self.click:
                     self.click = False
                     self.sons_options()
+
+            if acessibilidade_button.collidepoint((mx, my)):
+                if self.click:
+                    self.click = False
+                    self.acessibilidade_options()
 
             self.click = False
 
@@ -411,6 +381,30 @@ class Menu:
 
             screen_update()
 
+    def acessibilidade_options(self):
+        self.show_options_acessibilidade_menu = True
+        while self.show_options_acessibilidade_menu:
+            clock.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.show_options_acessibilidade_menu = False
+                    pygame.quit()
+                    exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.show_options_acessibilidade_menu = False
+
+            draw_text("ACESSIBILIDADE", TITLE_FONT - 10, WHITE, SCREEN_X / 2, 80)
+            draw_text("PARA DALTÔNICOS", TITLE_FONT - 10, WHITE, SCREEN_X / 2, 120)
+
+            padrao_buton = draw_button(SCREEN_X / 2 - 150, 250, SCREEN_X / 2 + 10, 50, "PADRÃO")
+            deutranopia_buton = draw_button(SCREEN_X / 2 - 150, 320, SCREEN_X / 2 + 10, 50, "DEUTRANOPIA")
+            protanopia_buton = draw_button(SCREEN_X / 2 - 150, 390, SCREEN_X / 2 + 10, 50, "PROTANOPIA")
+            tritanopia_buton = draw_button(SCREEN_X / 2 - 150, 460, SCREEN_X / 2 + 10, 50, "TRITANOPIA")
+
+            screen_update()
+
     @staticmethod
     def cursor_event(button_list, cursor_point, button):
         pygame.mixer.Sound.play(SELECT_SOUND)
@@ -420,6 +414,21 @@ class Menu:
         if button == pygame.K_DOWN:
             if button_list.index(cursor_point) < len(button_list) - 1:
                 return button_list[button_list.index(cursor_point) + 1]
+
+    def cursor_mouse_event(self, cursor_point, button, event):
+        if cursor_point != button:
+            pygame.mixer.Sound.play(SELECT_SOUND)
+        if self.click:
+            self.click = False
+
+            event()
+        return button
+
+    def quit_game(self):
+        self.show_menu = False
+        game.game_over = True
+        pygame.quit()
+        exit()
 
 
 class Game:
@@ -436,7 +445,9 @@ class Game:
         self.click = False
 
     # Cria um novo jogo
-    def new_game(self, difficulty):
+    def new_game(self):
+
+        menu.show_difficulty_menu = False
         # Sprite groups
         self.bullet_group = pygame.sprite.Group()
         self.asteroid_group = pygame.sprite.Group()
@@ -521,7 +532,6 @@ class Game:
         self.draw_boss = False
 
         # Dificuldade do jogo
-        self.difficulty = difficulty
         if self.difficulty == 1:
             self.create_enemy_delay_multiplier = 0
             self.enemy_shoot_delay_multiplier = 0
@@ -840,6 +850,8 @@ class Game:
             self.player.lives -= 1  # Tira uma vida do player
             self.player.shield = 100  # O shield do jogador volta a ser 100
 
+    # ------------ Screens ----------- #
+
     # Tela de pause
     def pause_screen(self):
         button_list = []
@@ -984,6 +996,9 @@ class Game:
                 cursor_point = voltar_ao_menu_buttom
 
             screen_update()
+
+    # -------------------------------- #
+
 
     # Chance de dropar moedas
     def chance_to_drop_coins(self, pos_x, pos_y):
@@ -1203,19 +1218,19 @@ def draw_text(text, tam, color, x, y, topleft=False):
     screen.blit(text_obj, text_rect)
 
 
-def draw_button(left, top, width, height, text, font_size=20, color=(0, 0, 0)):
+def draw_button(left, top, width, height, text, font_size=20, button_color=(0, 0, 0), font_color=WHITE, border_color=WHITE):
     button_border = pygame.Rect(int(left - 2), int(top - 2), int(width + 4), int(height + 4))
     button = pygame.Rect(int(left), int(top), int(width), int(height))
-    pygame.draw.rect(screen, WHITE, button_border)
-    pygame.draw.rect(screen, color, button)
-    draw_text(text, font_size, WHITE, left + (width / 2), top + (height / 2))
+    pygame.draw.rect(screen, border_color, button_border)
+    pygame.draw.rect(screen, button_color, button)
+    draw_text(text, font_size, font_color, left + (width / 2), top + (height / 2))
     return button
 
 
-def draw_loja_button(sprite, left, top, width, height, nome, price, lives, shield, damage, velocity, shoot_dedaly):
+def draw_loja_button(sprite, left, top, width, height, nome, price, lives, shield, damage, velocity, shoot_dedaly, border_color=WHITE):
     button_border = pygame.Rect(left - 2, top - 2, width + 4, height + 4)
     button = pygame.Rect(left, top, width, height)
-    pygame.draw.rect(screen, WHITE, button_border)
+    pygame.draw.rect(screen, border_color, button_border)
     pygame.draw.rect(screen, BLACK, button)
 
     image = pygame.image.load(path.join(f"{IMAGE_DIR}/sprites/spaceships/{sprite}"))
