@@ -1,6 +1,6 @@
 {
     "player": {
-        "coins": 26,
+        "coins": 53,
         "ship": "spaceship-1",
         "purchased-ships": [
             "spaceship-1"

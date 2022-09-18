@@ -131,9 +131,9 @@ COIN_SOUND = pygame.mixer.Sound(f"{SOUND_DIR}/coin-1.wav")
 
 SHOOT_SOUND_1.set_volume(0.15)
 SHOOT_SOUND_2.set_volume(0.1)
-EXPLOSION_SOUND.set_volume(0.6)
+EXPLOSION_SOUND.set_volume(0.4)
 SELECT_SOUND.set_volume(0.1)
-COIN_SOUND.set_volume(0.5)
+COIN_SOUND.set_volume(0.4)
 
 # Fonte
 FONT_STYLE = path.join(getcwd() + "/assets/font/8-bit_font.ttf")
@@ -141,5 +141,3 @@ LOGO_FONT = 60          # Fonte da logo principal
 TITLE_FONT = 44         # Fonte do título dos menus
 SUB_TITLE_FONT = 22     # Fonte do sub-título
 SMALL_FONT = 14         # Fonte pequena
-
-
