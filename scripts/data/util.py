@@ -16,7 +16,7 @@ class Util:
         return self.json_obj["player"]["coins"]
 
     def set_coins(self, coin):
-        self.json_obj["player"]["coins"] = coin
+        self.json_obj["player"]["coins"] += coin
         self.save_file()
 
     def get_spaceship(self):
@@ -27,7 +27,7 @@ class Util:
         self.save_file()
 
     def get_spaceships(self, spaceship_name):
-        return self.json_obj["naves"][spaceship_name]
+        return self.json_obj["spaceships"][spaceship_name]
 
     def get_purchased_ships(self):
         return self.json_obj["player"]["purchased-ships"]
@@ -46,7 +46,7 @@ class Util:
         return self.json_obj["game"]["music"]
 
     def spaceship_attributes(self):
-        return self.json_obj["naves"][self.get_spaceship()]
+        return self.json_obj["spaceships"][self.get_spaceship()]
 
     def save_file(self):
         with open(path.join(getcwd() + "/scripts/data/data.json"), "w") as save:

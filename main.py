@@ -671,7 +671,7 @@ class Game:
 
     # Checa as colisões do jogo
     def collision_checks(self):
-        # Colissão do tiro do Player com o Asteroide
+        # Colisão do tiro do Player com o Asteroide
         def asteroid_collision_with_player_shots():
             collision = pygame.sprite.groupcollide(self.asteroid_group, self.bullet_group, True, True,
                                                    pygame.sprite.collide_mask)
@@ -750,6 +750,12 @@ class Game:
                 self.explosion_group.add(explosion)
                 hit.kill()
 
+        # Colisão entre o Player e o Coin
+        def collision_between_the_player_and_the_coin():
+            collision = pygame.sprite.spritecollide(self.player, self.coin_group, True)
+            if collision:
+                Coin.collided_with_coin(1, util)
+
         # ---------- Colisões com o Boss ---------- #
 
         # Colisão do tiro do Player com a Asa do Boss
@@ -796,13 +802,13 @@ class Game:
             player_shoot_collision_with_kamikaze()
             kamikaze_collision_with_player()
             collision_between_the_player_and_the_enemy()
+            collision_between_the_player_and_the_coin()
 
             # Boss
             player_bullet_collision_with_boss_wing()
             collision_of_the_player_bullet_with_the_boss_body()
             player_collision_with_boss()
             player_collision_with_Boss_wings()
-
 
         update()
 
@@ -921,6 +927,7 @@ class Game:
         self.show_game_over_screen = True
         button_list = []
         cursor_point = None
+        pygame.mixer.music.stop()
 
         while self.show_game_over_screen:
             clock.tick(FPS)

@@ -6,6 +6,7 @@ util = Util()
 
 # Diretórios
 IMAGE_DIR = path.join(getcwd() + f"/assets/images/{util.get_image()}")
+SOUND_DIR = path.join(getcwd() + f"/assets/sounds")
 
 ASTEROID_IMAGE_DIR = f"{IMAGE_DIR}/sprites/asteroid"
 EXPLOSION_IMAGE_DIR = f"{IMAGE_DIR}/sprites/explosion"
@@ -122,15 +123,17 @@ RED = (255, 0, 0)
 # Sons
 pygame.mixer.init()
 
-SHOOT_SOUND_1 = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/shoot-1.wav"))
-SHOOT_SOUND_2 = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/shoot-2.wav"))
-EXPLOSION_SOUND = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/explosion-1.wav"))
-SELECT_SOUND = pygame.mixer.Sound(path.join(getcwd() + "/assets/sounds/select-3.wav"))
+SHOOT_SOUND_1 = pygame.mixer.Sound(f"{SOUND_DIR}/shoot-1.wav")
+SHOOT_SOUND_2 = pygame.mixer.Sound(f"{SOUND_DIR}/shoot-2.wav")
+EXPLOSION_SOUND = pygame.mixer.Sound(f"{SOUND_DIR}/explosion-1.wav")
+SELECT_SOUND = pygame.mixer.Sound(f"{SOUND_DIR}/select-3.wav")
+COIN_SOUND = pygame.mixer.Sound(f"{SOUND_DIR}/coin-1.wav")
 
 SHOOT_SOUND_1.set_volume(0.15)
 SHOOT_SOUND_2.set_volume(0.1)
 EXPLOSION_SOUND.set_volume(0.6)
 SELECT_SOUND.set_volume(0.1)
+COIN_SOUND.set_volume(0.5)
 
 # Fonte
 FONT_STYLE = path.join(getcwd() + "/assets/font/8-bit_font.ttf")

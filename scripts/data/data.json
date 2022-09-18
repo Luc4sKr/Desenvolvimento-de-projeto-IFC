@@ -1,12 +1,12 @@
 {
     "player": {
-        "coins": 0,
+        "coins": 26,
         "ship": "spaceship-1",
         "purchased-ships": [
             "spaceship-1"
         ]
     },
-    "naves": {
+    "spaceships": {
         "spaceship-1": {
             "price": null,
             "shield": 100,

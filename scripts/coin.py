@@ -16,6 +16,11 @@ class Coin(pygame.sprite.Sprite):
     def update(self):
         self.__rect.y += 2
 
+    @staticmethod
+    def collided_with_coin(value_of_coin, util):
+        COIN_SOUND.play()
+        util.set_coins(value_of_coin)
+
     # --- GETTERS AND SETTERS --- #
 
     # --Image
