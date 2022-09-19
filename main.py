@@ -1227,11 +1227,21 @@ def draw_button(left, top, width, height, text, font_size=20, button_color=(0, 0
     return button
 
 
-def draw_loja_button(sprite, left, top, width, height, nome, price, lives, shield, damage, velocity, shoot_dedaly, border_color=WHITE):
+def draw_loja_button(sprite, left, top, width, height, nome, price, lives, shield, damage, velocity, shoot_dedaly):
     button_border = pygame.Rect(left - 2, top - 2, width + 4, height + 4)
     button = pygame.Rect(left, top, width, height)
-    pygame.draw.rect(screen, border_color, button_border)
+    pygame.draw.rect(screen, WHITE, button_border)
     pygame.draw.rect(screen, BLACK, button)
+
+    if util.get_spaceship() == sprite[:11]:
+        pygame.draw.rect(screen, GREEN, button_border)
+        pygame.draw.rect(screen, BLACK, button)
+        draw_text("Equipado", 16, GREEN, left + 110, top + 100, topleft=True)
+    else:
+        if sprite[:11] in util.get_purchased_ships():
+            draw_text("Disponível", 16, WHITE, left + 110, top + 100, topleft=True)
+        else:
+            draw_text(f"{price} Coins", 16, WHITE, left + 110, top + 100, topleft=True)
 
     image = pygame.image.load(path.join(f"{IMAGE_DIR}/sprites/spaceships/{sprite}"))
     image = pygame.transform.scale(image, (75, 75))
@@ -1246,13 +1256,7 @@ def draw_loja_button(sprite, left, top, width, height, nome, price, lives, shiel
     draw_text(f"Velocidade: {velocity}", 10, WHITE, left + 270, top + 55, topleft=True)  # Velocidade
     draw_text(f"Shoot delay: {shoot_dedaly}", 10, WHITE, left + 270, top + 75, topleft=True)  # Shoot delay
 
-    if util.get_spaceship() == sprite[:11]:
-        draw_text("Equipado", 16, WHITE, left + 110, top + 100, topleft=True)
-    else:
-        if sprite[:11] in util.get_purchased_ships():
-            draw_text("Disponível", 16, WHITE, left + 110, top + 100, topleft=True)
-        else:
-            draw_text(f"{price} Coins", 16, WHITE, left + 110, top + 100, topleft=True)
+
 
     return button
 
