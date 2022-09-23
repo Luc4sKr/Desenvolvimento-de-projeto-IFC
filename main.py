@@ -181,7 +181,10 @@ class Menu:
             screen_update()
 
     def loja_menu(self):
+        button_list = []
+        cursor_point = None
         self.show_loja_menu = True
+
         while self.show_loja_menu:
             clock.tick(FPS)
             for event in pygame.event.get():
@@ -191,8 +194,11 @@ class Menu:
                     exit()
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        self.show_loja_menu = False
+                    if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                        cursor_point = self.cursor_event(button_list, cursor_point, event.key)
+
+                    if event.key == pygame.K_RETURN:
+                        self.click = True
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
@@ -231,14 +237,14 @@ class Menu:
 
             back_to_menu_button = draw_button(30, 670, 100, 30, "Voltar", font_size=14)
 
+            button_list = [ship_1_button, ship_2_button, ship_3_button]
+
             # Posição do mouse
             mx, my = pygame.mouse.get_pos()
 
             # Colisão com os botões
             if back_to_menu_button.collidepoint((mx, my)):
-                if self.click:
-                    self.click = False
-                    self.show_loja_menu = False
+                cursor_point = self.cursor_mouse_event(cursor_point, back_to_menu_button, self.back_button)
 
             if ship_1_button.collidepoint((mx, my)):
                 if self.click:
@@ -259,6 +265,11 @@ class Menu:
                         util.set_spaceship("spaceship-3")
 
             self.click = False
+
+            try:
+                draw_cursor(cursor_point)
+            except:
+                cursor_point = ship_1_button
 
             screen_update()
 
@@ -423,6 +434,10 @@ class Menu:
 
             event()
         return button
+
+    def back_button(self):
+        self.click = False
+        self.show_loja_menu = False
 
     def quit_game(self):
         self.show_menu = False
