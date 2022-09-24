@@ -42,8 +42,7 @@ class Menu:
         # Background
         self.menu_background_sprite = pygame.sprite.Sprite()
         self.menu_background_sprite.image = pygame.image.load(MENU_IMAGE_BACKGROUND)
-        self.menu_background_sprite.image = pygame.transform.scale(self.menu_background_sprite.image,
-                                                                   (SCREEN_X, SCREEN_Y))
+        self.menu_background_sprite.image = pygame.transform.scale(self.menu_background_sprite.image, (SCREEN_X, SCREEN_Y))
         self.menu_background_sprite.rect = self.menu_background_sprite.image.get_rect()
         self.menu_background = pygame.sprite.GroupSingle(self.menu_background_sprite)
 
@@ -88,6 +87,8 @@ class Menu:
             opcoes_button = draw_button(SCREEN_X / 2 - 120, 370, SCREEN_X / 2 - 50, 50, "OPÇÕES")
             creditos_button = draw_button(SCREEN_X / 2 - 120, 430, SCREEN_X / 2 - 50, 50, "CRÉDITOS")
             sair_button = draw_button(SCREEN_X / 2 - 120, 490, SCREEN_X / 2 - 50, 50, "SAIR")
+
+            draw_text("(EM DESENVOLVIMENTO)", 8, WHITE, SCREEN_X/2, 415)
 
             button_list = [jogar_button, loja_button, opcoes_button, creditos_button, sair_button]
 
@@ -181,6 +182,7 @@ class Menu:
             screen_update()
 
     def loja_menu(self):
+        print(util.get_spaceship())
         button_list = []
         cursor_point = None
         self.show_loja_menu = True
@@ -194,8 +196,8 @@ class Menu:
                     exit()
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                        cursor_point = self.cursor_event(button_list, cursor_point, event.key)
+                    '''if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                        cursor_point = self.cursor_event(button_list, cursor_point, event.key)'''
 
                     if event.key == pygame.K_RETURN:
                         self.click = True
@@ -219,7 +221,7 @@ class Menu:
                                              spaceship_1_attributes["velocity"],
                                              spaceship_1_attributes["shoot_delay"])
 
-            ship_2_button = draw_loja_button("spaceship-2.png", 70, 330, 440, 120, "Nave teste",
+            ship_2_button = draw_loja_button("spaceship-2.png", 70, 330, 440, 120, "Black Eagle",
                                              spaceship_2_attributes["price"],
                                              spaceship_2_attributes["lives"],
                                              spaceship_2_attributes["shield"],
@@ -244,7 +246,9 @@ class Menu:
 
             # Colisão com os botões
             if back_to_menu_button.collidepoint((mx, my)):
-                cursor_point = self.cursor_mouse_event(cursor_point, back_to_menu_button, self.back_button)
+                if self.click:
+                    self.click = False
+                    self.show_loja_menu = False
 
             if ship_1_button.collidepoint((mx, my)):
                 if self.click:
@@ -431,7 +435,6 @@ class Menu:
             pygame.mixer.Sound.play(SELECT_SOUND)
         if self.click:
             self.click = False
-
             event()
         return button
 
@@ -688,6 +691,9 @@ class Game:
                 if event.key == pygame.K_i:
                     self.score.add_score(100)
 
+                if event.key == pygame.K_l:
+                    self.game_over_screen()
+
                 if event.key == pygame.K_F3:
                     if not self.draw_dev_options:
                         self.draw_dev_options = True
@@ -816,6 +822,12 @@ class Game:
             if collision:
                 self.player.shield = 0
 
+        # Colisão do tiro do Boss com o Player
+        def boss_shooting_collision_with_player():
+            collision = pygame.sprite.spritecollide(self.player, self.boss_shoot_group, True, pygame.sprite.collide_mask)
+            for hit in collision:
+                self.player.shield -= hit.damage
+
         # ----------------------------------------- #
 
         def update():
@@ -834,6 +846,7 @@ class Game:
             collision_of_the_player_bullet_with_the_boss_body()
             player_collision_with_boss()
             player_collision_with_Boss_wings()
+            boss_shooting_collision_with_player()
 
         update()
 
@@ -912,12 +925,10 @@ class Game:
 
             # Inputs do mouse com os botões do menu
             if voltar_ao_jogo_button.collidepoint((mx, my)) or cursor_point == voltar_ao_jogo_button:
-                cursor_point = voltar_ao_jogo_button
-                if self.click:
-                    self.click = False
-
+                def unpause():
                     self.show_pause = False
                     pygame.mixer.music.unpause()
+                cursor_point = menu.cursor_mouse_event(cursor_point, voltar_ao_jogo_button, unpause)
 
             if voltar_ao_menu_button.collidepoint((mx, my)) or cursor_point == voltar_ao_menu_button:
                 cursor_point = voltar_ao_menu_button
@@ -963,11 +974,8 @@ class Game:
                     exit()
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_UP:
-                        cursor_point = menu.cursor_event(button_list, cursor_point, "UP")
-
-                    if event.key == pygame.K_DOWN:
-                        cursor_point = menu.cursor_event(button_list, cursor_point, "DOWN")
+                    if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                        cursor_point = menu.cursor_event(button_list, cursor_point, event.key)
 
                     if event.key == pygame.K_RETURN:
                         self.click = True
@@ -980,8 +988,7 @@ class Game:
             draw_text(f"SCORE: {self.score.get_score()}", 42, WHITE, SCREEN_X / 2, SCREEN_Y / 2 - 124)
 
             voltar_ao_menu_buttom = draw_button(SCREEN_X / 2 - 150, 300, SCREEN_X / 2 + 10, 50, "Voltar ao menu")
-            jogar_novamente_button = draw_button(SCREEN_X / 2 - 150, 360, SCREEN_X / 2 + 10, 50, "Jogar novamente",
-                                                 font_size=19)
+            jogar_novamente_button = draw_button(SCREEN_X / 2 - 150, 360, SCREEN_X / 2 + 10, 50, "Jogar novamente", font_size=19)
 
             button_list = [voltar_ao_menu_buttom, jogar_novamente_button]
 
@@ -1001,7 +1008,7 @@ class Game:
                     self.click = False
 
                     self.show_game_over_screen = False
-                    self.new_game(self.difficulty)
+                    self.new_game()
 
             self.click = False
 
@@ -1270,9 +1277,6 @@ def draw_loja_button(sprite, left, top, width, height, nome, price, lives, shiel
     draw_text(f"Dano: {damage}", 10, WHITE, left + 270, top + 35, topleft=True)  # Dano
     draw_text(f"Velocidade: {velocity}", 10, WHITE, left + 270, top + 55, topleft=True)  # Velocidade
     draw_text(f"Shoot delay: {shoot_dedaly}", 10, WHITE, left + 270, top + 75, topleft=True)  # Shoot delay
-
-
-
     return button
 
 

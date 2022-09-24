@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, spaceship, attributes, bullet_group):
         pygame.sprite.Sprite.__init__(self)
 
-        self.__image = pygame.image.load(PLAYER_IMAGE).convert_alpha()
+        self.__image = pygame.image.load(f"{PLAYER_IMAGE}/{spaceship}.png").convert_alpha()
         self.__image = pygame.transform.scale(self.__image, (PLAYER_SIZE_X, PLAYER_SIZE_Y))
         self.__rect = self.__image.get_rect()
 
@@ -92,7 +92,7 @@ class Player(pygame.sprite.Sprite):
             self.__hidden = False
             self.__rect.center = (SCREEN_X / 2, 600)
 
-            self.__image = pygame.image.load(PLAYER_IMAGE).convert_alpha()
+            self.__image = pygame.image.load(f"{PLAYER_IMAGE}/{self.spaceship}.png").convert_alpha()
             self.__image = pygame.transform.scale(self.__image, (PLAYER_SIZE_X, PLAYER_SIZE_Y))
 
     # Ativa o powerup

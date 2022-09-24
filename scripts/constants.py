@@ -1,11 +1,8 @@
 import pygame
 from os import path, getcwd
-from scripts.data.util import Util
-
-util = Util()
 
 # Diretórios
-IMAGE_DIR = path.join(getcwd() + f"/assets/images/{util.get_image()}")
+IMAGE_DIR = path.join(getcwd() + f"/assets/images/default")
 SOUND_DIR = path.join(getcwd() + f"/assets/sounds")
 
 ASTEROID_IMAGE_DIR = f"{IMAGE_DIR}/sprites/asteroid"
@@ -18,7 +15,7 @@ BOSS_WING_IMAGE_DIR = f"{IMAGE_DIR}/sprites/boss/wings"
 # Imagens
 MENU_IMAGE_BACKGROUND = f"{IMAGE_DIR}/backgrounds/menu-background.png"
 GAME_IMAGE_BACKGROUND = f"{IMAGE_DIR}/backgrounds/game-background.png"
-PLAYER_IMAGE = f"{IMAGE_DIR}/sprites/spaceships/{util.get_spaceship()}.png"
+PLAYER_IMAGE = f"{IMAGE_DIR}/sprites/spaceships/"
 SHIELD_POWERUP_IMAGE = f"{IMAGE_DIR}/powerups/shield.png"
 GUN_POWERUP_IMAGE = f"{IMAGE_DIR}/powerups/gun.png"
 BULLET_PLAYER_IMAGE = f"{IMAGE_DIR}/bullet/player-bullet.png"
