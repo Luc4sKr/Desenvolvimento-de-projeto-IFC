@@ -1,4 +1,6 @@
-from scripts.constants import *
+import pygame
+
+from scripts.constants import Constants as Const
 
 
 class Kamikaze(pygame.sprite.Sprite):
@@ -9,34 +11,34 @@ class Kamikaze(pygame.sprite.Sprite):
         self.__update_time = pygame.time.get_ticks()  # Ajuda no update de animação
         self.__animation_list = animation_list        # Lista de animação
         self.__shield = shield                        # Shield
-        self.__damage = KAMIKAZE_DAMAGE               # Dano
+        self.__damage = Const.KAMIKAZE_DAMAGE         # Dano
 
         # Imagem
         self.__image = self.__animation_list[self.__frame_index]
-        self.__image = pygame.transform.scale(self.__image, (ENEMY_SIZE_X, ENEMY_SIZE_Y))
+        self.__image = pygame.transform.scale(self.__image, (Const.ENEMY_SIZE_X, Const.ENEMY_SIZE_Y))
         self.__rect = self.__image.get_rect()
 
         self.__rect.center = (x, -20)  # Posição onde o inimigo vai surgir
 
         # Define a rotação do kamikaze dependendo de qual lado da tela ele está
-        if self.__rect.x > SCREEN_X / 2:
+        if self.__rect.x > Const.SCREEN_X / 2:
             self.__image = pygame.transform.rotate(self.__image, 340)
-        if self.__rect.x < SCREEN_X / 2:
+        if self.__rect.x < Const.SCREEN_X / 2:
             self.__image = pygame.transform.rotate(self.__image, 20)
 
         self.__image.convert_alpha()
 
     def collision_botton(self):
-        if self.__rect.top > SCREEN_Y:
+        if self.__rect.top > Const.SCREEN_Y:
             self.kill()
 
     def update(self):
         self.collision_botton()
 
         self.__rect.y += 4.8
-        if self.__rect.x > SCREEN_X / 2:
+        if self.__rect.x > Const.SCREEN_X / 2:
             self.__rect.x -= 0.9
-        if self.__rect.x < SCREEN_X / 2:
+        if self.__rect.x < Const.SCREEN_X / 2:
             self.__rect.x += 1.1
 
     # Image

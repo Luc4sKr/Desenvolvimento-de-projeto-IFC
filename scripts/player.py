@@ -1,5 +1,6 @@
-from scripts.constants import *
+import pygame
 
+from scripts.constants import Constants as Const
 from scripts.bullet import Bullet
 
 
@@ -7,11 +8,11 @@ class Player(pygame.sprite.Sprite):
     def __init__(self, spaceship, attributes, bullet_group):
         pygame.sprite.Sprite.__init__(self)
 
-        self.__image = pygame.image.load(f"{PLAYER_IMAGE}/{spaceship}.png").convert_alpha()
-        self.__image = pygame.transform.scale(self.__image, (PLAYER_SIZE_X, PLAYER_SIZE_Y))
+        self.__image = pygame.image.load(Const.PLAYER_IMAGE).convert_alpha()
+        self.__image = pygame.transform.scale(self.__image, (Const.PLAYER_SIZE_X, Const.PLAYER_SIZE_Y))
         self.__rect = self.__image.get_rect()
 
-        self.__rect.center = (SCREEN_X / 2,  600)
+        self.__rect.center = (Const.SCREEN_X / 2,  600)
         self.spaceship = spaceship
 
         # Grupos de sprites
@@ -54,13 +55,13 @@ class Player(pygame.sprite.Sprite):
     def collision(self):
         if self.__rect.left <= 0:
             self.__rect.left = 0
-        if self.__rect.right >= SCREEN_X:
-            self.__rect.right = SCREEN_X
+        if self.__rect.right >= Const.SCREEN_X:
+            self.__rect.right = Const.SCREEN_X
         
         if self.__rect.top <= 0:
             self.__rect.top = 0
-        if self.__rect.bottom >= SCREEN_Y:
-            self.__rect.bottom = SCREEN_Y
+        if self.__rect.bottom >= Const.SCREEN_Y:
+            self.__rect.bottom = Const.SCREEN_Y
 
     # Tiro da nave
     def shoot(self):
@@ -69,20 +70,20 @@ class Player(pygame.sprite.Sprite):
             if self.__key[pygame.K_SPACE]:
                 if pygame.time.get_ticks() - self.__last_shoot > self.__shoot_delay:
                     self.__last_shoot = pygame.time.get_ticks()
-                    bullet_1 = Bullet(self.__rect.centerx + 10, self.__rect.top, BULLET_PLAYER_IMAGE, self.__damage, SHOOT_SOUND_1, PLAYER_SHOOT_SPEED)
-                    bullet_2 = Bullet(self.__rect.centerx - 10, self.__rect.top, BULLET_PLAYER_IMAGE, self.__damage, SHOOT_SOUND_1, PLAYER_SHOOT_SPEED)
+                    bullet_1 = Bullet(self.__rect.centerx + 10, self.__rect.top, Const.BULLET_PLAYER_IMAGE, self.__damage, Const.SHOOT_SOUND_1, Const.PLAYER_SHOOT_SPEED)
+                    bullet_2 = Bullet(self.__rect.centerx - 10, self.__rect.top, Const.BULLET_PLAYER_IMAGE, self.__damage, Const.SHOOT_SOUND_1, Const.PLAYER_SHOOT_SPEED)
                     self.__bullet_group.add(bullet_1, bullet_2)
 
                     if self.__shoot_power:
-                        bullet_3 = Bullet(self.__rect.right, self.__rect.centery, BULLET_PLAYER_IMAGE, self.__damage, SHOOT_SOUND_1, PLAYER_SHOOT_SPEED)
-                        bullet_4 = Bullet(self.__rect.left, self.__rect.centery, BULLET_PLAYER_IMAGE, self.__damage, SHOOT_SOUND_1, PLAYER_SHOOT_SPEED)
+                        bullet_3 = Bullet(self.__rect.right, self.__rect.centery, Const.BULLET_PLAYER_IMAGE, self.__damage, Const.SHOOT_SOUND_1, Const.PLAYER_SHOOT_SPEED)
+                        bullet_4 = Bullet(self.__rect.left, self.__rect.centery, Const.BULLET_PLAYER_IMAGE, self.__damage, Const.SHOOT_SOUND_1, Const.PLAYER_SHOOT_SPEED)
                         self.__bullet_group.add(bullet_3, bullet_4)
 
     # Esconde o player temporariamente depois da sua barra de shiel chegar a 0
     def hide(self):
         self.__hidden = True
         self.__hide_timer = pygame.time.get_ticks()
-        self.__rect.center = (SCREEN_X / 2, 600)
+        self.__rect.center = (Const.SCREEN_X / 2, 600)
 
         self.__image = pygame.Surface((0, 0))
 
@@ -90,10 +91,10 @@ class Player(pygame.sprite.Sprite):
     def hide_timeout(self):
         if self.__hidden and pygame.time.get_ticks() - self.__hide_timer > 1000:
             self.__hidden = False
-            self.__rect.center = (SCREEN_X / 2, 600)
+            self.__rect.center = (Const.SCREEN_X / 2, 600)
 
-            self.__image = pygame.image.load(f"{PLAYER_IMAGE}/{self.spaceship}.png").convert_alpha()
-            self.__image = pygame.transform.scale(self.__image, (PLAYER_SIZE_X, PLAYER_SIZE_Y))
+            self.__image = pygame.image.load(Const.PLAYER_IMAGE).convert_alpha()
+            self.__image = pygame.transform.scale(self.__image, (Const.PLAYER_SIZE_X, Const.PLAYER_SIZE_Y))
 
     # Ativa o powerup
     def powerup(self):
@@ -103,7 +104,7 @@ class Player(pygame.sprite.Sprite):
     # Timeout do powerup
     def powerup_timeout(self):
         # Timeout para os powerups
-        if pygame.time.get_ticks() - self.__shoot_power_time > POWERUP_TIME:
+        if pygame.time.get_ticks() - self.__shoot_power_time > Const.POWERUP_TIME:
             self.__shoot_power_time = pygame.time.get_ticks()
             self.__shoot_power = False
 

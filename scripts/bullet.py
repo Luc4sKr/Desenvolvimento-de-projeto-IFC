@@ -1,4 +1,6 @@
-from scripts.constants import *
+import pygame
+
+from scripts.constants import Constants as Const
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -19,7 +21,7 @@ class Bullet(pygame.sprite.Sprite):
 
     def update(self):
         self.__rect.y += self.__speed_y
-        if self.__rect.bottom < 0 or self.__rect.top > SCREEN_Y:
+        if self.__rect.bottom < 0 or self.__rect.top > Const.SCREEN_Y:
             self.kill()
 
     # --- GETTERS AND SETTERS --- #

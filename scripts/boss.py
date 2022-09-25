@@ -1,4 +1,6 @@
-from scripts.constants import *
+import pygame
+
+from scripts.constants import Constants as Const
 from scripts.bullet import Bullet
 
 
@@ -18,7 +20,7 @@ class Boss(pygame.sprite.Sprite):
             # Imagem
             self.image = wing_animation_list[Boss.frame_index]
             self.rect = self.image.get_rect()
-            pygame.Surface.set_colorkey(self.image, BLACK)
+            pygame.Surface.set_colorkey(self.image, Const.BLACK)
 
             if self.direction == "left":
                 self.image = pygame.transform.flip(self.image, False, False)
@@ -26,8 +28,8 @@ class Boss(pygame.sprite.Sprite):
             if self.direction == "right":
                 self.image = pygame.transform.flip(self.image, True, False)
 
-            self.shield = WING_BOSS_SHIELD
-            self.damage = BOSS_SMALL_SHOOT_DAMAGE
+            self.shield = Const.WING_BOSS_SHIELD
+            self.damage = Const.BOSS_SMALL_SHOOT_DAMAGE
 
             self.last_big_shoot = pygame.time.get_ticks()
             self.last_small_shoot = pygame.time.get_ticks()
@@ -51,33 +53,37 @@ class Boss(pygame.sprite.Sprite):
             self.image = Boss.update_animation(self.wing_animatin_list, self.direction)
 
         def big_shoot(self):
-            if self.rect.x < SCREEN_X / 2:
+            if self.rect.x < Const.SCREEN_X / 2:
                 pos_x_add = -3
-            if self.rect.x > SCREEN_X / 2:
+            if self.rect.x > Const.SCREEN_X / 2:
                 pos_x_add = 3
 
-            if pygame.time.get_ticks() - self.last_big_shoot > BOSS_BIG_SHOOT_DELAY:
+            if pygame.time.get_ticks() - self.last_big_shoot > Const.BOSS_BIG_SHOOT_DELAY:
                 self.last_big_shoot = pygame.time.get_ticks()
-                big_shoot = Bullet(self.rect.centerx + pos_x_add, self.rect.bottom - 20, BULLET_BOSS_BLUE_IMAGE, BOSS_BIG_SHOOT_DAMAGE, SHOOT_SOUND_2, BOSS_BIG_SHOOT_SPEED_Y, scale_x=28, scale_y=28)
+                big_shoot = Bullet(self.rect.centerx + pos_x_add, self.rect.bottom - 20, Const.BULLET_BOSS_BLUE_IMAGE,
+                                   Const.BOSS_BIG_SHOOT_DAMAGE, Const.SHOOT_SOUND_2, Const.BOSS_BIG_SHOOT_SPEED_Y,
+                                   scale_x=28, scale_y=28)
                 self.shoot_group.add(big_shoot)
 
         def small_shoot(self):
-            if self.rect.x < SCREEN_X / 2:
+            if self.rect.x < Const.SCREEN_X / 2:
                 pos_x1_add = -38
                 pos_x2_add = 69
-            if self.rect.x > SCREEN_X / 2:
+            if self.rect.x > Const.SCREEN_X / 2:
                 pos_x1_add = 38
                 pos_x2_add = -69
 
-            if pygame.time.get_ticks() - self.last_small_shoot > BOSS_SMALL_SHOOT_DELAY or self.small_shoot_event:
+            if pygame.time.get_ticks() - self.last_small_shoot > Const.BOSS_SMALL_SHOOT_DELAY or self.small_shoot_event:
                 self.last_small_shoot = pygame.time.get_ticks()
                 self.small_shoot_event = True
-                if pygame.time.get_ticks() - self.small_shoot_temp > BOSS_SMALL_SHOOT_TEMP_DELAY:
+                if pygame.time.get_ticks() - self.small_shoot_temp > Const.BOSS_SMALL_SHOOT_TEMP_DELAY:
                     self.small_shoot_temp = pygame.time.get_ticks()
-                    small_shoot_1 = Bullet(self.rect.centerx + pos_x1_add, self.rect.bottom - 20, BULLET_BOSS_BLUE_IMAGE,
-                                           BOSS_SMALL_SHOOT_DAMAGE, SHOOT_SOUND_2, BOSS_SMALL_SHOOT_SPEED_Y, scale_x=16, scale_y=16)
-                    small_shoot_2 = Bullet(self.rect.centerx + pos_x2_add, self.rect.bottom - 30, BULLET_BOSS_BLUE_IMAGE,
-                                           BOSS_SMALL_SHOOT_DAMAGE, SHOOT_SOUND_2, BOSS_SMALL_SHOOT_SPEED_Y, scale_x=16, scale_y=16)
+                    small_shoot_1 = Bullet(self.rect.centerx + pos_x1_add, self.rect.bottom - 20, Const.BULLET_BOSS_BLUE_IMAGE,
+                                           Const.BOSS_SMALL_SHOOT_DAMAGE, Const.SHOOT_SOUND_2, Const.BOSS_SMALL_SHOOT_SPEED_Y,
+                                           scale_x=16, scale_y=16)
+                    small_shoot_2 = Bullet(self.rect.centerx + pos_x2_add, self.rect.bottom - 30, Const.BULLET_BOSS_BLUE_IMAGE,
+                                           Const.BOSS_SMALL_SHOOT_DAMAGE, Const.SHOOT_SOUND_2, Const.BOSS_SMALL_SHOOT_SPEED_Y,
+                                           scale_x=16, scale_y=16)
 
                     self.shoot_group.add(small_shoot_1, small_shoot_2)
 
@@ -102,7 +108,7 @@ class Boss(pygame.sprite.Sprite):
         image = animation_list[Boss.frame_index]
         if direction == "right":
             image = pygame.transform.flip(image, True, False)
-        if pygame.time.get_ticks() - Boss.update_time > ENEMIES_ANIMATION_COOLDOWN:
+        if pygame.time.get_ticks() - Boss.update_time > Const.ENEMIES_ANIMATION_COOLDOWN:
             Boss.update_time = pygame.time.get_ticks()
             Boss.frame_index += 1
         if Boss.frame_index >= len(animation_list):
@@ -119,13 +125,12 @@ class Boss(pygame.sprite.Sprite):
         self.image = self.body_animation_list[Boss.frame_index]
         self.rect = self.image.get_rect()
 
-        self.rect.center = (SCREEN_X / 2, -110)
+        self.rect.center = (Const.SCREEN_X / 2, -110)
 
         self.left_wing = Boss.Boss_wing(self.wing_animation_list, "left", self.shoot_group)
         self.right_wing = Boss.Boss_wing(self.wing_animation_list, "right", self.shoot_group)
 
-        self.shield = BODY_BOSS_SHIELD
-
+        self.shield = Const.BODY_BOSS_SHIELD
 
     def movement(self):
         if self.rect.y < 50:

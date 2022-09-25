@@ -1,5 +1,7 @@
+import pygame
+
 from random import choice
-from scripts.constants import *
+from scripts.constants import Constants as Const
 
 
 class Powerup(pygame.sprite.Sprite):
@@ -7,20 +9,20 @@ class Powerup(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         powerup_images = {
-            "shield": pygame.image.load(SHIELD_POWERUP_IMAGE).convert_alpha(),
-            "gun": pygame.image.load(GUN_POWERUP_IMAGE).convert_alpha()
+            "shield": pygame.image.load(Const.SHIELD_POWERUP_IMAGE).convert_alpha(),
+            "gun": pygame.image.load(Const.GUN_POWERUP_IMAGE).convert_alpha()
         }
 
         # Imagem
         self.__type = choice(["shield", "gun"])
         self.__image = powerup_images[self.__type]
-        self.__image = pygame.transform.scale(self.__image, (POWERUP_WIDTH, POWERUP_HEIGHT))
+        self.__image = pygame.transform.scale(self.__image, (Const.POWERUP_WIDTH, Const.POWERUP_HEIGHT))
         self.__rect = self.__image.get_rect()
         self.__rect.center = center
 
     def update(self):
-        self.__rect.y += POWERUP_SPEED_Y
-        if self.__rect.top > SCREEN_Y:
+        self.__rect.y += Const.POWERUP_SPEED_Y
+        if self.__rect.top > Const.SCREEN_Y:
             self.kill()
 
     # --- GETTERS AND SETTERS --- #
@@ -46,7 +48,7 @@ class Powerup(pygame.sprite.Sprite):
     @property
     def type(self):
         return self.__type
-    
+
     @type.setter
     def type(self, type):
         self.__type = type

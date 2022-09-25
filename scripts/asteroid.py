@@ -1,6 +1,7 @@
-from random import randrange
+import pygame
 
-from scripts.constants import *
+from random import randrange
+from scripts.constants import Constants as Const
 
 
 class Asteroid(pygame.sprite.Sprite):
@@ -15,7 +16,7 @@ class Asteroid(pygame.sprite.Sprite):
 
         self.__rect = self.__image.get_rect()
 
-        self.__rect.x = randrange(SCREEN_X - self.__rect.width)
+        self.__rect.x = randrange(Const.SCREEN_X - self.__rect.width)
         self.__rect.y = randrange(-150, -100)
         self.__speedx = randrange(-1, 1)
         self.__speedy = randrange(5, 7)
@@ -23,7 +24,7 @@ class Asteroid(pygame.sprite.Sprite):
     def update_animation(self):
         self.__image = self.__animation_list[self.__frame_index]
 
-        if pygame.time.get_ticks() - self.__update_time > ASTEROID_ANIMATION_COOLDOWN:
+        if pygame.time.get_ticks() - self.__update_time > Const.ASTEROID_ANIMATION_COOLDOWN:
             self.__update_time = pygame.time.get_ticks()
             self.__frame_index += 1
         if self.__frame_index >= len(self.__animation_list):
@@ -34,13 +35,13 @@ class Asteroid(pygame.sprite.Sprite):
         self.__rect.y += self.__speedy
 
     def check_inside_on_screen(self):
-        if self.__rect.top > SCREEN_Y:
+        if self.__rect.top > Const.SCREEN_Y:
             self.kill()
 
         if self.__rect.right < 0:
             self.kill()
 
-        if self.__rect.left > SCREEN_X:
+        if self.__rect.left > Const.SCREEN_X:
             self.kill()
 
     def update(self):

@@ -1,11 +1,11 @@
 import pygame
 
-from os import listdir
+from os import listdir, path, getcwd
 from random import randint
 from sys import exit
 from math import sin
 
-from scripts.constants import *
+from scripts.constants import Constants as Const
 from scripts.asteroid import Asteroid
 from scripts.background import Background
 from scripts.enemy import Enemy
@@ -18,7 +18,8 @@ from scripts.coin import Coin
 from scripts.powerup import Powerup
 from scripts.shield_bar import Enemy_shield_bar, Player_shield_bar
 
-from scripts.data.util import Util
+from scripts.data.data_utils import Util
+from scripts.utils.loja_util import Loja_util
 
 from scripts.utils.music_engine import Music_framework
 
@@ -41,8 +42,9 @@ class Menu:
 
         # Background
         self.menu_background_sprite = pygame.sprite.Sprite()
-        self.menu_background_sprite.image = pygame.image.load(MENU_IMAGE_BACKGROUND)
-        self.menu_background_sprite.image = pygame.transform.scale(self.menu_background_sprite.image, (SCREEN_X, SCREEN_Y))
+        self.menu_background_sprite.image = pygame.image.load(Const.MENU_IMAGE_BACKGROUND)
+        self.menu_background_sprite.image = pygame.transform.scale(self.menu_background_sprite.image,
+                                                                   (Const.SCREEN_X, Const.SCREEN_Y))
         self.menu_background_sprite.rect = self.menu_background_sprite.image.get_rect()
         self.menu_background = pygame.sprite.GroupSingle(self.menu_background_sprite)
 
@@ -52,7 +54,7 @@ class Menu:
         self.show_menu = True
 
         while self.show_menu:
-            clock.tick(FPS)
+            clock.tick(Const.FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.show_menu = False
@@ -78,17 +80,18 @@ class Menu:
             self.menu_background.draw(screen)
 
             # Título do jogo
-            draw_text("SPACE", LOGO_FONT, YELLOW, SCREEN_X / 2, 100)
-            draw_text("BATTLE", LOGO_FONT, YELLOW, SCREEN_X / 2, 160)
+            draw_text("SPACE", Const.LOGO_FONT, Const.YELLOW, Const.SCREEN_X / 2, 100)
+            draw_text("BATTLE", Const.LOGO_FONT, Const.YELLOW, Const.SCREEN_X / 2, 160)
 
             # Botões do menu
-            jogar_button = draw_button(SCREEN_X / 2 - 120, 250, SCREEN_X / 2 - 50, 50, "JOGAR")
-            loja_button = draw_button(SCREEN_X / 2 - 120, 310, SCREEN_X / 2 - 50, 50, "LOJA")
-            opcoes_button = draw_button(SCREEN_X / 2 - 120, 370, SCREEN_X / 2 - 50, 50, "OPÇÕES")
-            creditos_button = draw_button(SCREEN_X / 2 - 120, 430, SCREEN_X / 2 - 50, 50, "CRÉDITOS")
-            sair_button = draw_button(SCREEN_X / 2 - 120, 490, SCREEN_X / 2 - 50, 50, "SAIR")
+            jogar_button = draw_button(Const.SCREEN_X / 2 - 120, 250, Const.SCREEN_X / 2 - 50, 50, "JOGAR")
+            loja_button = draw_button(Const.SCREEN_X / 2 - 120, 310, Const.SCREEN_X / 2 - 50, 50, "LOJA")
+            opcoes_button = draw_button(Const.SCREEN_X / 2 - 120, 370, Const.SCREEN_X / 2 - 50, 50, "OPÇÕES")
+            creditos_button = draw_button(Const.SCREEN_X / 2 - 120, 430, Const.SCREEN_X / 2 - 50, 50, "CRÉDITOS")
+            sair_button = draw_button(Const.SCREEN_X / 2 - 120, 490, Const.SCREEN_X / 2 - 50, 50, "SAIR")
 
-            draw_text("(EM DESENVOLVIMENTO)", 8, WHITE, SCREEN_X/2, 415)
+            draw_text("(EM DESENVOLVIMENTO)", 8, Const.WHITE, Const.SCREEN_X / 2, 355)
+            draw_text("(EM DESENVOLVIMENTO)", 8, Const.WHITE, Const.SCREEN_X/2, 415)
 
             button_list = [jogar_button, loja_button, opcoes_button, creditos_button, sair_button]
 
@@ -127,7 +130,7 @@ class Menu:
         self.show_difficulty_menu = True
 
         while self.show_difficulty_menu:
-            clock.tick(FPS)
+            clock.tick(Const.FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.show_menu = False
@@ -146,12 +149,12 @@ class Menu:
                         self.click = True
 
             # Título
-            draw_text("Dificuldade", TITLE_FONT, WHITE, SCREEN_X / 2, 80)
+            draw_text("Dificuldade", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
 
             # Botões
-            normal_button = draw_button(SCREEN_X / 2 - 120, 250, SCREEN_X / 2 - 50, 50, "Normal")
-            dificil_button = draw_button(SCREEN_X / 2 - 120, 310, SCREEN_X / 2 - 50, 50, "Difícil")
-            insano_button = draw_button(SCREEN_X / 2 - 120, 370, SCREEN_X / 2 - 50, 50, "Insano")
+            normal_button = draw_button(Const.SCREEN_X / 2 - 120, 250, Const.SCREEN_X / 2 - 50, 50, "Normal")
+            dificil_button = draw_button(Const.SCREEN_X / 2 - 120, 310, Const.SCREEN_X / 2 - 50, 50, "Difícil")
+            insano_button = draw_button(Const.SCREEN_X / 2 - 120, 370, Const.SCREEN_X / 2 - 50, 50, "Insano")
 
             button_list = [normal_button, dificil_button, insano_button]
 
@@ -182,13 +185,13 @@ class Menu:
             screen_update()
 
     def loja_menu(self):
-        print(util.get_spaceship())
+        print(Util.get_player_spaceship())
         button_list = []
         cursor_point = None
         self.show_loja_menu = True
 
         while self.show_loja_menu:
-            clock.tick(FPS)
+            clock.tick(Const.FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.show_loja_menu = False
@@ -196,8 +199,8 @@ class Menu:
                     exit()
 
                 if event.type == pygame.KEYDOWN:
-                    '''if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                        cursor_point = self.cursor_event(button_list, cursor_point, event.key)'''
+                    if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                        cursor_point = self.cursor_event(button_list, cursor_point, event.key)
 
                     if event.key == pygame.K_RETURN:
                         self.click = True
@@ -206,12 +209,12 @@ class Menu:
                     if event.button == 1:
                         self.click = True
 
-            draw_text("LOJA", TITLE_FONT, WHITE, SCREEN_X / 2, 80)
-            draw_text(f"Coins: {util.get_coins()}", 14, WHITE, 70, 150, topleft=True)
+            draw_text("LOJA", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
+            draw_text(f"Coins: {Util.get_coins()}", 14, Const.WHITE, 70, 150, topleft=True)
 
-            spaceship_1_attributes = util.get_spaceships("spaceship-1")
-            spaceship_2_attributes = util.get_spaceships("spaceship-2")
-            spaceship_3_attributes = util.get_spaceships("spaceship-3")
+            spaceship_1_attributes = Util.get_spaceships("spaceship-1")
+            spaceship_2_attributes = Util.get_spaceships("spaceship-2")
+            spaceship_3_attributes = Util.get_spaceships("spaceship-3")
 
             ship_1_button = draw_loja_button("spaceship-1.png", 70, 180, 440, 120, "Violet Rocket",
                                              spaceship_1_attributes["price"],
@@ -252,21 +255,19 @@ class Menu:
 
             if ship_1_button.collidepoint((mx, my)):
                 if self.click:
-                    if "spaceship-1" in util.get_purchased_ships():
-                        util.set_spaceship("spaceship-1")
+                    Loja_util.equip_spaceship(Util, "spaceship-1")
 
             if ship_2_button.collidepoint((mx, my)):
                 if self.click:
-                    if "spaceship-2" in util.get_purchased_ships():
-                        util.set_spaceship("spaceship-2")
-                    elif util.get_coins() >= spaceship_2_attributes["price"]:
-                        util.set_coins(util.get_coins() - spaceship_2_attributes["price"])
-                        util.set_purchased_ships("spaceship-2")
+                    if "spaceship-2" not in Util.get_purchased_ships():
+                        Loja_util.buy_spaceship(Util, "spaceship-2")
+                        return
+                    Loja_util.equip_spaceship(Util, "spaceship-2")
 
             if ship_3_button.collidepoint((mx, my)):
                 if self.click:
-                    if "spaceship-3" in util.get_purchased_ships():
-                        util.set_spaceship("spaceship-3")
+                    if "spaceship-3" in Util.get_purchased_ships():
+                        Util.set_player_spaceship("spaceship-3")
 
             self.click = False
 
@@ -280,7 +281,7 @@ class Menu:
     def opcoes_menu(self):
         self.show_opcoes_menu = True
         while self.show_opcoes_menu:
-            clock.tick(FPS)
+            clock.tick(Const.FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.show_opcoes_menu = False
@@ -295,10 +296,10 @@ class Menu:
                     if event.button == 1:
                         self.click = True
 
-            draw_text("OPÇÕES", TITLE_FONT, WHITE, SCREEN_X / 2, 80)
+            draw_text("OPÇÕES", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
 
-            sons_button = draw_button(SCREEN_X / 2 - 150, 250, SCREEN_X / 2 + 10, 50, "SONS")
-            acessibilidade_button = draw_button(SCREEN_X / 2 - 150, 320, SCREEN_X / 2 + 10, 50,
+            sons_button = draw_button(Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50, "SONS")
+            acessibilidade_button = draw_button(Const.SCREEN_X / 2 - 150, 320, Const.SCREEN_X / 2 + 10, 50,
                                                 "ACESSIBILIDADE PARA DALTÔNICOS", font_size=9)
 
             back_to_menu_button = draw_button(30, 670, 100, 30, "Voltar", font_size=14)
@@ -327,7 +328,7 @@ class Menu:
     def credios_menu(self):
         self.show_creditos_menu = True
         while self.show_creditos_menu:
-            clock.tick(FPS)
+            clock.tick(Const.FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.show_creditos_menu = False
@@ -342,17 +343,17 @@ class Menu:
                     if event.button == 1:
                         self.click = True
 
-            draw_text("CRÉDITOS", TITLE_FONT, WHITE, SCREEN_X / 2, 80)
+            draw_text("CRÉDITOS", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
 
-            draw_text("DESENVOLVEDORES:", SUB_TITLE_FONT, WHITE, 40, 170, topleft=True)
-            draw_text("LUCAS EDUARDO KREUCH", SMALL_FONT, WHITE, 100, 220, topleft=True)
-            draw_text("MARIA CLARA DE SOUZA", SMALL_FONT, WHITE, 100, 240, topleft=True)
-            draw_text("ALINE AMARAL DE SOUZA", SMALL_FONT, WHITE, 100, 260, topleft=True)
-            draw_text("HAIDY JANDRE", SMALL_FONT, WHITE, 100, 280, topleft=True)
+            draw_text("DESENVOLVEDORES:", Const.SUB_TITLE_FONT, Const.WHITE, 40, 170, topleft=True)
+            draw_text("LUCAS EDUARDO KREUCH", Const.SMALL_FONT, Const.WHITE, 100, 220, topleft=True)
+            draw_text("MARIA CLARA DE SOUZA", Const.SMALL_FONT, Const.WHITE, 100, 240, topleft=True)
+            draw_text("ALINE AMARAL DE SOUZA", Const.SMALL_FONT, Const.WHITE, 100, 260, topleft=True)
+            draw_text("HAIDY JANDRE", Const.SMALL_FONT, Const.WHITE, 100, 280, topleft=True)
 
-            draw_text("PROFESSORES:", SUB_TITLE_FONT, WHITE, 40, 370, topleft=True)
-            draw_text("RICARDO DE LA ROCHA LADEIRA", SMALL_FONT, WHITE, 100, 420, topleft=True)
-            draw_text("LUIZ RICARDO URIARTE", SMALL_FONT, WHITE, 100, 440, topleft=True)
+            draw_text("PROFESSORES:", Const.SUB_TITLE_FONT, Const.WHITE, 40, 370, topleft=True)
+            draw_text("RICARDO DE LA ROCHA LADEIRA", Const.SMALL_FONT, Const.WHITE, 100, 420, topleft=True)
+            draw_text("LUIZ RICARDO URIARTE", Const.SMALL_FONT, Const.WHITE, 100, 440, topleft=True)
 
             back_to_menu_button = draw_button(30, 670, 100, 30, "Voltar", font_size=14)
 
@@ -372,7 +373,7 @@ class Menu:
     def sons_options(self):
         self.show_options_sons_menu = True
         while self.show_options_sons_menu:
-            clock.tick(FPS)
+            clock.tick(Const.FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.show_options_sons_menu = False
@@ -422,7 +423,7 @@ class Menu:
 
     @staticmethod
     def cursor_event(button_list, cursor_point, button):
-        pygame.mixer.Sound.play(SELECT_SOUND)
+        pygame.mixer.Sound.play(Const.SELECT_SOUND)
         if button == pygame.K_UP:
             if button_list.index(cursor_point) >= 0:
                 return button_list[button_list.index(cursor_point) - 1]
@@ -432,7 +433,7 @@ class Menu:
 
     def cursor_mouse_event(self, cursor_point, button, event):
         if cursor_point != button:
-            pygame.mixer.Sound.play(SELECT_SOUND)
+            pygame.mixer.Sound.play(Const.SELECT_SOUND)
         if self.click:
             self.click = False
             event()
@@ -480,33 +481,33 @@ class Game:
         self.coin_group = pygame.sprite.Group()
 
         # Música tema do jogo
-        pygame.mixer.music.load(path.join(getcwd() + f"/assets/music/{util.get_music()}"))
+        pygame.mixer.music.load(path.join(getcwd() + f"/assets/music/{Util.get_music()}"))
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.3)
 
         # Background do jogo - A SPRITE COM MOVIMENTO PRECISA TER 580x2722 !!!!
-        self.game_background_rect = Background(GAME_IMAGE_BACKGROUND)
+        self.game_background_rect = Background(Const.GAME_IMAGE_BACKGROUND)
         self.background = pygame.sprite.GroupSingle(self.game_background_rect)
 
         # Player
-        self.player = Player(util.get_spaceship(), util.spaceship_attributes(), self.bullet_group)
+        self.player = Player(Util.get_player_spaceship(), Util.spaceship_attributes(), self.bullet_group)
         self.player_group_single = pygame.sprite.GroupSingle(self.player)
         # Imagem do player que serve como contador de vidas
-        self.player_mini_image = pygame.transform.scale(self.player.image, (MINI_PLAYER_IMG, MINI_PLAYER_IMG))
+        self.player_mini_image = pygame.transform.scale(self.player.image, (Const.MINI_PLAYER_IMG, Const.MINI_PLAYER_IMG))
 
         # Asteroid
-        self.asteroid_sprite_sheet = self.create_sprite_sheet(ASTEROID_IMAGE_DIR, ASTEROID_SIZE_X, ASTEROID_SIZE_Y)
+        self.asteroid_sprite_sheet = self.create_sprite_sheet(Const.ASTEROID_IMAGE_DIR, Const.ASTEROID_SIZE_X, Const.ASTEROID_SIZE_Y)
 
         # Explosion
-        self.explosion_sprite_sheet = self.create_sprite_sheet(EXPLOSION_IMAGE_DIR, EXPLOSION_WIDTH, EXPLOSION_HEIGHT)
+        self.explosion_sprite_sheet = self.create_sprite_sheet(Const.EXPLOSION_IMAGE_DIR, Const.EXPLOSION_WIDTH, Const.EXPLOSION_HEIGHT)
 
         # Enemy
-        self.enemy_1_sprite_sheet = self.create_sprite_sheet(ENEMY_IMAGE_DIR, ENEMY_SIZE_X, ENEMY_SIZE_Y)
+        self.enemy_1_sprite_sheet = self.create_sprite_sheet(Const.ENEMY_IMAGE_DIR, Const.ENEMY_SIZE_X, Const.ENEMY_SIZE_Y)
         self.create_enemy_delay = 2500
         self.last_enemy = pygame.time.get_ticks()
 
         # Kamikaze
-        self.kamikaze_sprite_sheet = self.create_sprite_sheet(KAMIKADE_IMAGE_DIR, ENEMY_SIZE_X, ENEMY_SIZE_Y)
+        self.kamikaze_sprite_sheet = self.create_sprite_sheet(Const.KAMIKADE_IMAGE_DIR, Const.ENEMY_SIZE_X, Const.ENEMY_SIZE_Y)
         self.create_kamikaze_delay = 7000
         self.last_kemikaze = pygame.time.get_ticks()
 
@@ -518,8 +519,8 @@ class Game:
         self.boss_body_shield_bar = Enemy_shield_bar(screen)
 
         # Boss
-        self.boss_body_sprite_sheet = self.create_sprite_sheet(BOSS_BODY_IMAGE_DIR, BODY_BOSS_SIZE_X, BODY_BOSS_SIZE_Y)
-        self.boss_wing_sprite_sheet = self.create_sprite_sheet(BOSS_WING_IMAGE_DIR, WING_BOSS_SIZE_X, WING_BOSS_SIZE_Y)
+        self.boss_body_sprite_sheet = self.create_sprite_sheet(Const.BOSS_BODY_IMAGE_DIR, Const.BODY_BOSS_SIZE_X, Const.BODY_BOSS_SIZE_Y)
+        self.boss_wing_sprite_sheet = self.create_sprite_sheet(Const.BOSS_WING_IMAGE_DIR, Const.WING_BOSS_SIZE_X, Const.WING_BOSS_SIZE_Y)
         self.boss_event = False
         self.boss_created = False
         self.wing_explosion = False
@@ -556,11 +557,11 @@ class Game:
 
         if self.difficulty == 2:
             self.create_enemy_delay_multiplier = self.create_enemy_delay / 2
-            self.enemy_shoot_delay_multiplier = ENEMY_SHOOT_DELAY / 8
+            self.enemy_shoot_delay_multiplier = Const.ENEMY_SHOOT_DELAY / 8
 
         if self.difficulty == 3:
             self.create_enemy_delay_multiplier = self.create_enemy_delay / 1.8
-            self.enemy_shoot_delay_multiplier = ENEMY_SHOOT_DELAY / 6
+            self.enemy_shoot_delay_multiplier = Const.ENEMY_SHOOT_DELAY / 6
 
             self.player.lives = 1
 
@@ -572,7 +573,7 @@ class Game:
     def running(self):
         #  Loop principal do jogo
         while not self.game_over:
-            clock.tick(FPS)
+            clock.tick(Const.FPS)
             self.events()  # Eventos do jogo
             self.collision_checks()  # Verificação das colisões do jogo
             self.powerups_collision_checks()  # Verifica a colissão com os powerups
@@ -598,11 +599,11 @@ class Game:
 
     # Função principal de renderização
     def draw(self):
-        screen.fill(BLACK)
+        screen.fill(Const.BLACK)
 
         self.draw_groups()
 
-        draw_text(f"Score: {self.score.get_score()}", 18, WHITE, SCREEN_X / 2, 16)  # Texto do score
+        draw_text(f"Score: {self.score.get_score()}", 18, Const.WHITE, Const.SCREEN_X / 2, 16)  # Texto do score
 
         self.draw_lives(self.player_mini_image)  # Vidas do Player
         self.player_shield_bar.draw_shield_bar(self.player.shield)  # Shield do Player
@@ -619,10 +620,10 @@ class Game:
 
         if self.boss_event:
             for wing in self.boss_wings_group:
-                if wing.rect.x < SCREEN_X / 2:
+                if wing.rect.x < Const.SCREEN_X / 2:
                     margin = -40
                     pos_x_add = 25
-                if wing.rect.x > SCREEN_X / 2:
+                if wing.rect.x > Const.SCREEN_X / 2:
                     margin = -40
                     pos_x_add = -25 + (margin * -1)
                 pos_y_add = 40
@@ -715,7 +716,7 @@ class Game:
         def player_collision_with_asteroid():
             collision = pygame.sprite.spritecollide(self.player, self.asteroid_group, True, pygame.sprite.collide_mask)
             for hit in collision:
-                self.player.shield -= ASTEROID_DAMAGE
+                self.player.shield -= Const.ASTEROID_DAMAGE
                 explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
                 self.explosion_group.add(explosion)
 
@@ -776,7 +777,7 @@ class Game:
         def collision_between_the_player_and_the_enemy():
             collision = pygame.sprite.spritecollide(self.player, self.enemy_group, False)
             for hit in collision:
-                self.player.shield -= PLAYER_COLLIDE_DAMAGE
+                self.player.shield -= Const.PLAYER_COLLIDE_DAMAGE
                 explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
                 self.explosion_group.add(explosion)
                 hit.kill()
@@ -785,7 +786,7 @@ class Game:
         def collision_between_the_player_and_the_coin():
             collision = pygame.sprite.spritecollide(self.player, self.coin_group, True)
             if collision:
-                Coin.collided_with_coin(1, util)
+                Coin.collided_with_coin(1, Util)
 
         # ---------- Colisões com o Boss ---------- #
 
@@ -887,7 +888,7 @@ class Game:
         self.show_pause = True
 
         while self.show_pause:
-            clock.tick(FPS)
+            clock.tick(Const.FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.show_pause = False
@@ -912,12 +913,12 @@ class Game:
                         self.click = True
 
             # Título
-            draw_text("PAUSE", TITLE_FONT, WHITE, SCREEN_X / 2, 100)
+            draw_text("PAUSE", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 100)
 
             # Botões
-            voltar_ao_jogo_button = draw_button(SCREEN_X / 2 - 150, 250, SCREEN_X / 2 + 10, 50, "VOLTAR AO JOGO")
-            voltar_ao_menu_button = draw_button(SCREEN_X / 2 - 150, 310, SCREEN_X / 2 + 10, 50, "VOLTAR AO MENU")
-            sair_do_jogo_button = draw_button(SCREEN_X / 2 - 150, 370, SCREEN_X / 2 + 10, 50, "SAIR DO JOGO")
+            voltar_ao_jogo_button = draw_button(Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50, "VOLTAR AO JOGO")
+            voltar_ao_menu_button = draw_button(Const.SCREEN_X / 2 - 150, 310, Const.SCREEN_X / 2 + 10, 50, "VOLTAR AO MENU")
+            sair_do_jogo_button = draw_button(Const.SCREEN_X / 2 - 150, 370, Const.SCREEN_X / 2 + 10, 50, "SAIR DO JOGO")
 
             button_list = [voltar_ao_jogo_button, voltar_ao_menu_button, sair_do_jogo_button]
             # Posição do mouse
@@ -925,10 +926,10 @@ class Game:
 
             # Inputs do mouse com os botões do menu
             if voltar_ao_jogo_button.collidepoint((mx, my)) or cursor_point == voltar_ao_jogo_button:
-                def unpause():
+                cursor_point = voltar_ao_jogo_button
+                if self.click:
                     self.show_pause = False
                     pygame.mixer.music.unpause()
-                cursor_point = menu.cursor_mouse_event(cursor_point, voltar_ao_jogo_button, unpause)
 
             if voltar_ao_menu_button.collidepoint((mx, my)) or cursor_point == voltar_ao_menu_button:
                 cursor_point = voltar_ao_menu_button
@@ -968,7 +969,7 @@ class Game:
         pygame.mixer.music.stop()
 
         while self.show_game_over_screen:
-            clock.tick(FPS)
+            clock.tick(Const.FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     exit()
@@ -984,11 +985,11 @@ class Game:
                     if event.button == 1:
                         self.click = True
 
-            draw_text("GAME OVER", 42, RED, SCREEN_X / 2, 60)
-            draw_text(f"SCORE: {self.score.get_score()}", 42, WHITE, SCREEN_X / 2, SCREEN_Y / 2 - 124)
+            draw_text("GAME OVER", 42, Const.RED, Const.SCREEN_X / 2, 60)
+            draw_text(f"SCORE: {self.score.get_score()}", 42, Const.WHITE, Const.SCREEN_X / 2, Const.SCREEN_Y / 2 - 124)
 
-            voltar_ao_menu_buttom = draw_button(SCREEN_X / 2 - 150, 300, SCREEN_X / 2 + 10, 50, "Voltar ao menu")
-            jogar_novamente_button = draw_button(SCREEN_X / 2 - 150, 360, SCREEN_X / 2 + 10, 50, "Jogar novamente", font_size=19)
+            voltar_ao_menu_buttom = draw_button(Const.SCREEN_X / 2 - 150, 300, Const.SCREEN_X / 2 + 10, 50, "Voltar ao menu")
+            jogar_novamente_button = draw_button(Const.SCREEN_X / 2 - 150, 360, Const.SCREEN_X / 2 + 10, 50, "Jogar novamente", font_size=19)
 
             button_list = [voltar_ao_menu_buttom, jogar_novamente_button]
 
@@ -1034,7 +1035,7 @@ class Game:
 
     # Evento de chuva de asteroides
     def asteroid_shower(self):
-        if pygame.time.get_ticks() - self.asteroid_shower_time > ASTEROID_SHOWER_COOLDOWN_TIME or self.asteroid_shower_event:
+        if pygame.time.get_ticks() - self.asteroid_shower_time > Const.ASTEROID_SHOWER_COOLDOWN_TIME or self.asteroid_shower_event:
             self.asteroid_shower_time = pygame.time.get_ticks()
 
             if randint(0, 100) >= 80 and not self.asteroid_shower_event:
@@ -1044,11 +1045,11 @@ class Game:
                 self.asteroid_shower_event = True
 
             if self.asteroid_shower_event:
-                if pygame.time.get_ticks() - self.asteroid_cooldown > ASTEROID_COOLDOWN:
+                if pygame.time.get_ticks() - self.asteroid_cooldown > Const.ASTEROID_COOLDOWN:
                     self.asteroid_cooldown = pygame.time.get_ticks()
                     self.new_asteroid()
 
-                if pygame.time.get_ticks() - self.asteroid_event_cooldown > ASTEROID_EVENT_COOLDOWN:
+                if pygame.time.get_ticks() - self.asteroid_event_cooldown > Const.ASTEROID_EVENT_COOLDOWN:
                     self.asteroid_event_cooldown = pygame.time.get_ticks()
                     self.asteroid_shower_event = False
 
@@ -1064,30 +1065,30 @@ class Game:
 
     # Função para criar inimigos
     def new_tripe_enemy(self):
-        pos_x = randint(0 + ENEMY_SIZE_X / 2, SCREEN_X - (ENEMY_SIZE_X * 3) + ENEMY_SIZE_X / 2)
+        pos_x = randint(0 + Const.ENEMY_SIZE_X / 2, Const.SCREEN_X - (Const.ENEMY_SIZE_X * 3) + Const.ENEMY_SIZE_X / 2)
         pos_y = -20
-        distance_x = ENEMY_SIZE_X
+        distance_x = Const.ENEMY_SIZE_X
         distance_y = 20
         for i in range(3):
             if i == 0:
                 enemy = self.create_enemy(pos_x, pos_y)
             else:
                 enemy = self.create_enemy(pos_x + distance_x, pos_y - distance_y)
-                distance_x += ENEMY_SIZE_X
+                distance_x += Const.ENEMY_SIZE_X
                 distance_y -= 20
             self.enemy_group.add(enemy)
 
     # Novo inimigo solo
     def new_solo_enemy(self):
-        pos_x = randint(ENEMY_SIZE_X / 2, SCREEN_X - (ENEMY_SIZE_X / 2))
+        pos_x = randint(Const.ENEMY_SIZE_X / 2, Const.SCREEN_X - (Const.ENEMY_SIZE_X / 2))
         pos_y = -20
         enemy = self.create_enemy(pos_x, pos_y)
         self.enemy_group.add(enemy)
 
     # Novo kamikaze
     def new_kamikaze(self):
-        kamikaze_1 = self.create_kemikaze(KAMIKAZE_X_POS_1, KAMIKAZE_SHIELD)
-        kamikaze_2 = self.create_kemikaze(KAMIKAZE_X_POS_2, KAMIKAZE_SHIELD)
+        kamikaze_1 = self.create_kemikaze(Const.KAMIKAZE_X_POS_1, Const.KAMIKAZE_SHIELD)
+        kamikaze_2 = self.create_kemikaze(Const.KAMIKAZE_X_POS_2, Const.KAMIKAZE_SHIELD)
         self.kamikaze_group.add(kamikaze_1, kamikaze_2)
 
     # Gera o kamikaze
@@ -1098,7 +1099,7 @@ class Game:
 
     # Cria o inimigo
     def create_enemy(self, x, y):
-        enemy = Enemy(x, y, ENEMY_SHIELD, ENEMY_DAMGE, self.enemy_1_sprite_sheet, self.enemy_shoot_group,
+        enemy = Enemy(x, y, Const.ENEMY_SHIELD, Const.ENEMY_DAMGE, self.enemy_1_sprite_sheet, self.enemy_shoot_group,
                       self.enemy_shoot_delay_multiplier)
         return enemy
 
@@ -1191,23 +1192,23 @@ class Game:
     def draw_lives(self, image):
         for i in range(self.player.lives):
             image_rect = image.get_rect()
-            image_rect.x = (SCREEN_X - 50) + (MINI_PLAYER_IMG + 10) * -i
+            image_rect.x = (Const.SCREEN_X - 50) + (Const.MINI_PLAYER_IMG + 10) * -i
             image_rect.y = 10
             screen.blit(image, image_rect)
 
     # Denha o texto de READY no início do jogo
     def draw_ready(self):
-        if READY_DELAY < pygame.time.get_ticks() - self.ready_time < 3000:
-            draw_text("READY?", 42, YELLOW, SCREEN_X / 2, 100)
-        if GO_DELAY < pygame.time.get_ticks() - self.ready_time < 3000:
-            draw_text("GO", 42, YELLOW, SCREEN_X / 2, 150)
+        if Const.READY_DELAY < pygame.time.get_ticks() - self.ready_time < 3000:
+            draw_text("READY?", 42, Const.YELLOW, Const.SCREEN_X / 2, 100)
+        if Const.GO_DELAY < pygame.time.get_ticks() - self.ready_time < 3000:
+            draw_text("GO", 42, Const.YELLOW, Const.SCREEN_X / 2, 150)
         if pygame.time.get_ticks() - self.ready_time > 3000:
             self.ready = True
 
     # Opções de desenvolvedor
     @staticmethod
     def dev_options():
-        draw_text(f"FPS: {clock.get_fps():.2f}", 12, RED, 20, 100, topleft=True)
+        draw_text(f"FPS: {clock.get_fps():.2f}", 12, Const.RED, 20, 100, topleft=True)
 
     # Cria as sprite sheets de naves
     @staticmethod
@@ -1226,11 +1227,11 @@ class Game:
 
 def screen_update():
     pygame.display.update()
-    screen.fill(BLACK)
+    screen.fill(Const.BLACK)
 
 
 def draw_text(text, tam, color, x, y, topleft=False):
-    fonte = pygame.font.Font(FONT_STYLE, tam)
+    fonte = pygame.font.Font(Const.FONT_STYLE, tam)
     text_obj = fonte.render(text, False, color)
     text_rect = text_obj.get_rect()
     if topleft:
@@ -1240,7 +1241,7 @@ def draw_text(text, tam, color, x, y, topleft=False):
     screen.blit(text_obj, text_rect)
 
 
-def draw_button(left, top, width, height, text, font_size=20, button_color=(0, 0, 0), font_color=WHITE, border_color=WHITE):
+def draw_button(left, top, width, height, text, font_size=20, button_color=(0, 0, 0), font_color=Const.WHITE, border_color=Const.WHITE):
     button_border = pygame.Rect(int(left - 2), int(top - 2), int(width + 4), int(height + 4))
     button = pygame.Rect(int(left), int(top), int(width), int(height))
     pygame.draw.rect(screen, border_color, button_border)
@@ -1252,35 +1253,35 @@ def draw_button(left, top, width, height, text, font_size=20, button_color=(0, 0
 def draw_loja_button(sprite, left, top, width, height, nome, price, lives, shield, damage, velocity, shoot_dedaly):
     button_border = pygame.Rect(left - 2, top - 2, width + 4, height + 4)
     button = pygame.Rect(left, top, width, height)
-    pygame.draw.rect(screen, WHITE, button_border)
-    pygame.draw.rect(screen, BLACK, button)
+    pygame.draw.rect(screen, Const.WHITE, button_border)
+    pygame.draw.rect(screen, Const.BLACK, button)
 
-    if util.get_spaceship() == sprite[:11]:
-        pygame.draw.rect(screen, GREEN, button_border)
-        pygame.draw.rect(screen, BLACK, button)
-        draw_text("Equipado", 16, GREEN, left + 110, top + 100, topleft=True)
+    if Util.get_player_spaceship() == sprite[:11]:
+        pygame.draw.rect(screen, Const.GREEN, button_border)
+        pygame.draw.rect(screen, Const.BLACK, button)
+        draw_text("Equipado", 16, Const.GREEN, left + 110, top + 100, topleft=True)
     else:
-        if sprite[:11] in util.get_purchased_ships():
-            draw_text("Disponível", 16, WHITE, left + 110, top + 100, topleft=True)
+        if sprite[:11] in Util.get_purchased_ships():
+            draw_text("Disponível", 16, Const.WHITE, left + 110, top + 100, topleft=True)
         else:
-            draw_text(f"{price} Coins", 16, WHITE, left + 110, top + 100, topleft=True)
+            draw_text(f"{price} Coins", 16, Const.WHITE, left + 110, top + 100, topleft=True)
 
-    image = pygame.image.load(path.join(f"{IMAGE_DIR}/sprites/spaceships/{sprite}"))
+    image = pygame.image.load(path.join(f"{Const.IMAGE_DIR}/sprites/spaceships/{sprite}"))
     image = pygame.transform.scale(image, (75, 75))
     image_rect = image.get_rect()
     image_rect.center = (left + 60, top + (height / 2))
     screen.blit(image, image_rect)
 
-    draw_text(nome, 16, YELLOW, left + 130, top + 10, topleft=True)  # Nome
-    draw_text(f"Vidas: {lives}", 10, WHITE, left + 130, top + 35, topleft=True)  # Vidas
-    draw_text(f"Escudo: {shield}", 10, WHITE, left + 130, top + 55, topleft=True)  # Escudo
-    draw_text(f"Dano: {damage}", 10, WHITE, left + 270, top + 35, topleft=True)  # Dano
-    draw_text(f"Velocidade: {velocity}", 10, WHITE, left + 270, top + 55, topleft=True)  # Velocidade
-    draw_text(f"Shoot delay: {shoot_dedaly}", 10, WHITE, left + 270, top + 75, topleft=True)  # Shoot delay
+    draw_text(nome, 16, Const.YELLOW, left + 130, top + 10, topleft=True)  # Nome
+    draw_text(f"Vidas: {lives}", 10, Const.WHITE, left + 130, top + 35, topleft=True)  # Vidas
+    draw_text(f"Escudo: {shield}", 10, Const.WHITE, left + 130, top + 55, topleft=True)  # Escudo
+    draw_text(f"Dano: {damage}", 10, Const.WHITE, left + 270, top + 35, topleft=True)  # Dano
+    draw_text(f"Velocidade: {velocity}", 10, Const.WHITE, left + 270, top + 55, topleft=True)  # Velocidade
+    draw_text(f"Shoot delay: {shoot_dedaly}", 10, Const.WHITE, left + 270, top + 75, topleft=True)  # Shoot delay
     return button
 
 
-def draw_cursor(button, color=WHITE):
+def draw_cursor(button, color=Const.WHITE):
     draw_text("->", 16, color, button.left - 30, button.centery)
     draw_text("<-", 16, color, button.right + 30, button.centery)
 
@@ -1292,12 +1293,11 @@ if __name__ == '__main__':
     pygame.init()  # Inicializa o pygame
     pygame.mixer.init()  # Inicializa o modulo de mixer
 
-    util = Util()
     menu = Menu()
     game = Game()
 
     # Tela do jogo
-    screen = pygame.display.set_mode((SCREEN_X, SCREEN_Y))
+    screen = pygame.display.set_mode((Const.SCREEN_X, Const.SCREEN_Y))
     pygame.display.set_caption("Space Battle")
 
     # Ajuda a controlar a taxa de atualização do jogo — FPS

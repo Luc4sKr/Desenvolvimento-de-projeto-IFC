@@ -1,4 +1,6 @@
-from scripts.constants import *
+import pygame
+
+from scripts.constants import Constants as Const
 
 
 class Explosion(pygame.sprite.Sprite):
@@ -13,10 +15,10 @@ class Explosion(pygame.sprite.Sprite):
         self.__rect = self.__image.get_rect()
         self.__rect.center = center
 
-        pygame.mixer.Sound.play(EXPLOSION_SOUND)
+        pygame.mixer.Sound.play(Const.EXPLOSION_SOUND)
 
     def update_animation(self):
-        if pygame.time.get_ticks() - self.__update_time > EXPLOSION_ANIMATION_COOLDOWN:
+        if pygame.time.get_ticks() - self.__update_time > Const.EXPLOSION_ANIMATION_COOLDOWN:
             self.__update_time = pygame.time.get_ticks()
             self.__frame_index += 1
             if self.__frame_index == len(self.__animation_list):

@@ -1,4 +1,6 @@
-from scripts.constants import *
+import pygame
+
+from scripts.constants import Constants as Const
 from scripts.bullet import Bullet
 
 
@@ -17,7 +19,7 @@ class Enemy(pygame.sprite.Sprite):
 
         # Imagem
         self.__image = self.__animation_list[self.__frame_index]
-        self.__image = pygame.transform.scale(self.__image, (ENEMY_SIZE_X, ENEMY_SIZE_Y))
+        self.__image = pygame.transform.scale(self.__image, (Const.ENEMY_SIZE_X, Const.ENEMY_SIZE_Y))
         self.__rect = self.__image.get_rect()
 
         self.__rect.center = (x, y)  # Posição onde o inimigo vai surgir
@@ -25,24 +27,25 @@ class Enemy(pygame.sprite.Sprite):
     # Update de animação
     def update_animation(self):
         self.__image = self.__animation_list[self.__frame_index]
-        if pygame.time.get_ticks() - self.__update_time > ENEMIES_ANIMATION_COOLDOWN:
+        if pygame.time.get_ticks() - self.__update_time > Const.ENEMIES_ANIMATION_COOLDOWN:
             self.__update_time = pygame.time.get_ticks()
             self.__frame_index += 1
         if self.__frame_index >= len(self.__animation_list):
             self.__frame_index = 0
 
     def shoot(self):
-        if pygame.time.get_ticks() - self.__last_shoot > ENEMY_SHOOT_DELAY - self.__shoot_delay_multiplier:
+        if pygame.time.get_ticks() - self.__last_shoot > Const.ENEMY_SHOOT_DELAY - self.__shoot_delay_multiplier:
             self.__last_shoot = pygame.time.get_ticks()
-            bullet = Bullet(self.__rect.centerx, self.__rect.bottom, BULLET_ENEMY_IMAGE, self.__damage, SHOOT_SOUND_2, ENEMY_SHOOT_SPEED_Y)
+            bullet = Bullet(self.__rect.centerx, self.__rect.bottom, Const.BULLET_ENEMY_IMAGE, self.__damage,
+                            Const.SHOOT_SOUND_2, Const.ENEMY_SHOOT_SPEED_Y)
             self.__enemy_shot_group.add(bullet)
 
     def movement(self):
-        self.__rect.y += ENEMY_SPEED_Y
+        self.__rect.y += Const.ENEMY_SPEED_Y
 
     # Verifica se o Enemy saiu da tela, e se saiu exclui o mesmo
     def collision_botton(self):
-        if self.__rect.top > SCREEN_Y:
+        if self.__rect.top > Const.SCREEN_Y:
             self.kill()
 
     def update(self):

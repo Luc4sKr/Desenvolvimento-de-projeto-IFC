@@ -1,21 +1,23 @@
-from scripts.constants import *
+import pygame
+
+from scripts.constants import Constants as Const
 
 
 class Background(pygame.sprite.Sprite):
     def __init__(self, background):
         pygame.sprite.Sprite.__init__(self)
 
-        self.__image = pygame.image.load(GAME_IMAGE_BACKGROUND).convert()
+        self.__image = pygame.image.load(Const.GAME_IMAGE_BACKGROUND).convert()
         self.__rect = self.__image.get_rect()
         self.reset()
 
     def update(self):
-        self.__rect.top += BACKGROUND_MOVEMENT_SPEED_Y
+        self.__rect.top += Const.BACKGROUND_MOVEMENT_SPEED_Y
         if self.__rect.top >= 0:
             self.reset()
 
     def reset(self):
-        self.__rect.bottom = SCREEN_Y
+        self.__rect.bottom = Const.SCREEN_Y
 
     # --- GETTERS AND SETTERS --- #
 

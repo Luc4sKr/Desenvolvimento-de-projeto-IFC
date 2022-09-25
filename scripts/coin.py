@@ -1,12 +1,14 @@
-from scripts.constants import *
+import pygame
+
+from scripts.constants import Constants as Const
 
 
 class Coin(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, coin_group):
         pygame.sprite.Sprite.__init__(self)
 
-        self.__image = pygame.image.load(COIN_IMAGE).convert_alpha()
-        self.__image = pygame.transform.scale(self.__image, (COIN_WIDTH, COIN_HEIGHT))
+        self.__image = pygame.image.load(Const.COIN_IMAGE).convert_alpha()
+        self.__image = pygame.transform.scale(self.__image, (Const.COIN_WIDTH, Const.COIN_HEIGHT))
         self.__rect = self.__image.get_rect()
 
         self.__rect.center = (pos_x, pos_y)
@@ -18,7 +20,7 @@ class Coin(pygame.sprite.Sprite):
 
     @staticmethod
     def collided_with_coin(value_of_coin, util):
-        COIN_SOUND.play()
+        Const.COIN_SOUND.play()
         util.set_coins(value_of_coin)
 
     # --- GETTERS AND SETTERS --- #
