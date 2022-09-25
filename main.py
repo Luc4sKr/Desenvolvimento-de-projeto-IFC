@@ -18,9 +18,8 @@ from scripts.coin import Coin
 from scripts.powerup import Powerup
 from scripts.shield_bar import Enemy_shield_bar, Player_shield_bar
 
-from scripts.data.data_utils import Util
+from scripts.data.data_utils import Data_util
 from scripts.utils.loja_util import Loja_util
-
 from scripts.utils.music_engine import Music_framework
 
 
@@ -185,7 +184,7 @@ class Menu:
             screen_update()
 
     def loja_menu(self):
-        print(Util.get_player_spaceship())
+        print(Data_util.get_player_spaceship())
         button_list = []
         cursor_point = None
         self.show_loja_menu = True
@@ -210,11 +209,11 @@ class Menu:
                         self.click = True
 
             draw_text("LOJA", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
-            draw_text(f"Coins: {Util.get_coins()}", 14, Const.WHITE, 70, 150, topleft=True)
+            draw_text(f"Coins: {Data_util.get_coins()}", 14, Const.WHITE, 70, 150, topleft=True)
 
-            spaceship_1_attributes = Util.get_spaceships("spaceship-1")
-            spaceship_2_attributes = Util.get_spaceships("spaceship-2")
-            spaceship_3_attributes = Util.get_spaceships("spaceship-3")
+            spaceship_1_attributes = Data_util.get_spaceships("spaceship-1")
+            spaceship_2_attributes = Data_util.get_spaceships("spaceship-2")
+            spaceship_3_attributes = Data_util.get_spaceships("spaceship-3")
 
             ship_1_button = draw_loja_button("spaceship-1.png", 70, 180, 440, 120, "Violet Rocket",
                                              spaceship_1_attributes["price"],
@@ -255,19 +254,19 @@ class Menu:
 
             if ship_1_button.collidepoint((mx, my)):
                 if self.click:
-                    Loja_util.equip_spaceship(Util, "spaceship-1")
+                    Loja_util.equip_spaceship(Data_util, "spaceship-1")
 
             if ship_2_button.collidepoint((mx, my)):
                 if self.click:
-                    if "spaceship-2" not in Util.get_purchased_ships():
-                        Loja_util.buy_spaceship(Util, "spaceship-2")
+                    if "spaceship-2" not in Data_util.get_purchased_ships():
+                        Loja_util.buy_spaceship(Data_util, "spaceship-2")
                         return
-                    Loja_util.equip_spaceship(Util, "spaceship-2")
+                    Loja_util.equip_spaceship(Data_util, "spaceship-2")
 
             if ship_3_button.collidepoint((mx, my)):
                 if self.click:
-                    if "spaceship-3" in Util.get_purchased_ships():
-                        Util.set_player_spaceship("spaceship-3")
+                    if "spaceship-3" in Data_util.get_purchased_ships():
+                        Data_util.set_player_spaceship("spaceship-3")
 
             self.click = False
 
@@ -481,7 +480,7 @@ class Game:
         self.coin_group = pygame.sprite.Group()
 
         # Música tema do jogo
-        pygame.mixer.music.load(path.join(getcwd() + f"/assets/music/{Util.get_music()}"))
+        pygame.mixer.music.load(path.join(getcwd() + f"/assets/music/{Data_util.get_music()}"))
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.3)
 
@@ -490,7 +489,7 @@ class Game:
         self.background = pygame.sprite.GroupSingle(self.game_background_rect)
 
         # Player
-        self.player = Player(Util.get_player_spaceship(), Util.spaceship_attributes(), self.bullet_group)
+        self.player = Player(Data_util.get_player_spaceship(), Data_util.spaceship_attributes(), self.bullet_group)
         self.player_group_single = pygame.sprite.GroupSingle(self.player)
         # Imagem do player que serve como contador de vidas
         self.player_mini_image = pygame.transform.scale(self.player.image, (Const.MINI_PLAYER_IMG, Const.MINI_PLAYER_IMG))
@@ -786,7 +785,7 @@ class Game:
         def collision_between_the_player_and_the_coin():
             collision = pygame.sprite.spritecollide(self.player, self.coin_group, True)
             if collision:
-                Coin.collided_with_coin(1, Util)
+                Coin.collided_with_coin(1, Data_util)
 
         # ---------- Colisões com o Boss ---------- #
 
@@ -1256,12 +1255,12 @@ def draw_loja_button(sprite, left, top, width, height, nome, price, lives, shiel
     pygame.draw.rect(screen, Const.WHITE, button_border)
     pygame.draw.rect(screen, Const.BLACK, button)
 
-    if Util.get_player_spaceship() == sprite[:11]:
+    if Data_util.get_player_spaceship() == sprite[:11]:
         pygame.draw.rect(screen, Const.GREEN, button_border)
         pygame.draw.rect(screen, Const.BLACK, button)
         draw_text("Equipado", 16, Const.GREEN, left + 110, top + 100, topleft=True)
     else:
-        if sprite[:11] in Util.get_purchased_ships():
+        if sprite[:11] in Data_util.get_purchased_ships():
             draw_text("Disponível", 16, Const.WHITE, left + 110, top + 100, topleft=True)
         else:
             draw_text(f"{price} Coins", 16, Const.WHITE, left + 110, top + 100, topleft=True)
