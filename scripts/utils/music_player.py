@@ -6,7 +6,7 @@ from os import listdir, getcwd, path
 from scripts.constants import *
 
 
-class Music_framework:
+class Music_player:
     def __init__(self, screen, clock):
         self.running = True
         self.click = False

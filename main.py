@@ -19,8 +19,10 @@ from scripts.powerup import Powerup
 from scripts.shield_bar import Enemy_shield_bar, Player_shield_bar
 
 from scripts.data.data_utils import Data_util
-from scripts.utils.loja_util import Loja_util
-from scripts.utils.music_engine import Music_framework
+from scripts.utils.loja_utils import Loja_util
+from scripts.utils.menu_utils import Menu_util
+
+from scripts.utils.music_player import Music_player
 
 
 class Menu:
@@ -68,7 +70,7 @@ class Menu:
                         self.click = True
 
                     if event.key == pygame.K_F1:
-                        music_framework = Music_framework(screen, clock)
+                        music_framework = Music_player(screen, clock)
                         music_framework.run()
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -99,19 +101,19 @@ class Menu:
 
             # Inputs do mouse com os botões do menu
             if jogar_button.collidepoint((mx, my)) or cursor_point == jogar_button:
-                cursor_point = self.cursor_mouse_event(cursor_point, jogar_button, self.difficulty_menu)
+                cursor_point = self.cursor_mouse_event(cursor_point, jogar_button, self.difficulty_menu, mx, my)
 
             if loja_button.collidepoint((mx, my)) or cursor_point == loja_button:
-                cursor_point = self.cursor_mouse_event(cursor_point, loja_button, self.loja_menu)
+                cursor_point = self.cursor_mouse_event(cursor_point, loja_button, self.loja_menu, mx, my)
 
             if opcoes_button.collidepoint((mx, my)) or cursor_point == opcoes_button:
-                cursor_point = self.cursor_mouse_event(cursor_point, opcoes_button, self.opcoes_menu)
+                cursor_point = self.cursor_mouse_event(cursor_point, opcoes_button, self.opcoes_menu, mx, my)
 
             if creditos_button.collidepoint((mx, my)) or cursor_point == creditos_button:
-                cursor_point = self.cursor_mouse_event(cursor_point, creditos_button, self.credios_menu)
+                cursor_point = self.cursor_mouse_event(cursor_point, creditos_button, self.credios_menu, mx, my)
 
             if sair_button.collidepoint((mx, my)) or cursor_point == sair_button:
-                cursor_point = self.cursor_mouse_event(cursor_point, sair_button, self.quit_game)
+                cursor_point = self.cursor_mouse_event(cursor_point, sair_button, Menu_util.quit_game, mx, my)
 
             # Depois de checar os inputs o click volta a ser falso
             self.click = False
@@ -163,15 +165,15 @@ class Menu:
             # Colisão com os botões
             if normal_button.collidepoint((mx, my)) or cursor_point == normal_button:
                 game.difficulty = 1
-                cursor_point = self.cursor_mouse_event(cursor_point, normal_button, game.new_game)
+                cursor_point = self.cursor_mouse_event(cursor_point, normal_button, game.new_game, mx, my)
 
             if dificil_button.collidepoint((mx, my)) or cursor_point == dificil_button:
                 game.difficulty = 2
-                cursor_point = self.cursor_mouse_event(cursor_point, dificil_button, game.new_game)
+                cursor_point = self.cursor_mouse_event(cursor_point, dificil_button, game.new_game, mx, my)
 
             if insano_button.collidepoint((mx, my)) or cursor_point == insano_button:
                 game.difficulty = 3
-                cursor_point = self.cursor_mouse_event(cursor_point, insano_button, game.new_game)
+                cursor_point = self.cursor_mouse_event(cursor_point, insano_button, game.new_game, mx, my)
 
             # Depois de checar os inputs o click volta a ser falso
             self.click = False
@@ -184,7 +186,6 @@ class Menu:
             screen_update()
 
     def loja_menu(self):
-        print(Data_util.get_player_spaceship())
         button_list = []
         cursor_point = None
         self.show_loja_menu = True
@@ -249,8 +250,7 @@ class Menu:
             # Colisão com os botões
             if back_to_menu_button.collidepoint((mx, my)):
                 if self.click:
-                    self.click = False
-                    self.show_loja_menu = False
+                    self.click, self.show_loja_menu = Menu_util.back_button(self.click, self.show_loja_menu)
 
             if ship_1_button.collidepoint((mx, my)):
                 if self.click:
@@ -383,23 +383,23 @@ class Menu:
                     if event.key == pygame.K_ESCAPE:
                         self.show_options_sons_menu = False
 
-            min_line_sound = (SCREEN_X - 425, 300)
-            max_line_sound = (SCREEN_X - 150, 300)
+            min_line_sound = (Const.SCREEN_X - 425, 300)
+            max_line_sound = (Const.SCREEN_X - 150, 300)
 
-            draw_text("SONS", TITLE_FONT, WHITE, SCREEN_X / 2, 80)
+            draw_text("SONS", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
 
-            pygame.draw.line(screen, WHITE, min_line_sound, max_line_sound, 2)
+            pygame.draw.line(screen, Const.WHITE, min_line_sound, max_line_sound, 2)
 
-            pygame.draw.line(screen, RED, (SCREEN_X / 2, 0), (SCREEN_X / 2, SCREEN_Y), 1)
-            pygame.draw.line(screen, GREEN, (SCREEN_X - 425, 315), (SCREEN_X / 2, 315), 1)
-            pygame.draw.line(screen, GREEN, (SCREEN_X / 2, 315), (SCREEN_X - 150, 315), 1)
+            pygame.draw.line(screen, Const.RED, (Const.SCREEN_X / 2, 0), (Const.SCREEN_X / 2, Const.SCREEN_Y), 1)
+            pygame.draw.line(screen, Const.GREEN, (Const.SCREEN_X - 425, 315), (Const.SCREEN_X / 2, 315), 1)
+            pygame.draw.line(screen, Const.GREEN, (Const.SCREEN_X / 2, 315), (Const.SCREEN_X - 150, 315), 1)
 
             screen_update()
 
     def acessibilidade_options(self):
         self.show_options_acessibilidade_menu = True
         while self.show_options_acessibilidade_menu:
-            clock.tick(FPS)
+            clock.tick(Const.FPS)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.show_options_acessibilidade_menu = False
@@ -410,13 +410,13 @@ class Menu:
                     if event.key == pygame.K_ESCAPE:
                         self.show_options_acessibilidade_menu = False
 
-            draw_text("ACESSIBILIDADE", TITLE_FONT - 10, WHITE, SCREEN_X / 2, 80)
-            draw_text("PARA DALTÔNICOS", TITLE_FONT - 10, WHITE, SCREEN_X / 2, 120)
+            draw_text("ACESSIBILIDADE", Const.TITLE_FONT - 10, Const.WHITE, Const.SCREEN_X / 2, 80)
+            draw_text("PARA DALTÔNICOS", Const.TITLE_FONT - 10, Const.WHITE, Const.SCREEN_X / 2, 120)
 
-            padrao_buton = draw_button(SCREEN_X / 2 - 150, 250, SCREEN_X / 2 + 10, 50, "PADRÃO")
-            deutranopia_buton = draw_button(SCREEN_X / 2 - 150, 320, SCREEN_X / 2 + 10, 50, "DEUTRANOPIA")
-            protanopia_buton = draw_button(SCREEN_X / 2 - 150, 390, SCREEN_X / 2 + 10, 50, "PROTANOPIA")
-            tritanopia_buton = draw_button(SCREEN_X / 2 - 150, 460, SCREEN_X / 2 + 10, 50, "TRITANOPIA")
+            padrao_buton = draw_button(Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50, "PADRÃO")
+            deutranopia_buton = draw_button(Const.SCREEN_X / 2 - 150, 320, Const.SCREEN_X / 2 + 10, 50, "DEUTRANOPIA")
+            protanopia_buton = draw_button(Const.SCREEN_X / 2 - 150, 390, Const.SCREEN_X / 2 + 10, 50, "PROTANOPIA")
+            tritanopia_buton = draw_button(Const.SCREEN_X / 2 - 150, 460, Const.SCREEN_X / 2 + 10, 50, "TRITANOPIA")
 
             screen_update()
 
@@ -430,23 +430,17 @@ class Menu:
             if button_list.index(cursor_point) < len(button_list) - 1:
                 return button_list[button_list.index(cursor_point) + 1]
 
-    def cursor_mouse_event(self, cursor_point, button, event):
+    def cursor_mouse_event(self, cursor_point, button, event, mx, my):
         if cursor_point != button:
             pygame.mixer.Sound.play(Const.SELECT_SOUND)
-        if self.click:
-            self.click = False
-            event()
+        if button.collidepoint((mx, my)):
+            if self.click:
+                self.click = False
+                event()
         return button
 
-    def back_button(self):
-        self.click = False
-        self.show_loja_menu = False
 
-    def quit_game(self):
-        self.show_menu = False
-        game.game_over = True
-        pygame.quit()
-        exit()
+
 
 
 class Game:
@@ -464,7 +458,6 @@ class Game:
 
     # Cria um novo jogo
     def new_game(self):
-
         menu.show_difficulty_menu = False
         # Sprite groups
         self.bullet_group = pygame.sprite.Group()
@@ -1020,7 +1013,6 @@ class Game:
             screen_update()
 
     # -------------------------------- #
-
 
     # Chance de dropar moedas
     def chance_to_drop_coins(self, pos_x, pos_y):
