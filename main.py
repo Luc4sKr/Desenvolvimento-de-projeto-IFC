@@ -19,8 +19,10 @@ from scripts.powerup import Powerup
 from scripts.shield_bar import Enemy_shield_bar, Player_shield_bar
 
 from scripts.data.data_utils import Data_util
+from scripts.utils.game_utils import Game_utils
 from scripts.utils.loja_utils import Loja_util
 from scripts.utils.menu_utils import Menu_util
+from scripts.utils.draw_utils import Draw_util
 
 from scripts.utils.music_player import Music_player
 
@@ -81,18 +83,18 @@ class Menu:
             self.menu_background.draw(screen)
 
             # Título do jogo
-            draw_text("SPACE", Const.LOGO_FONT, Const.YELLOW, Const.SCREEN_X / 2, 100)
-            draw_text("BATTLE", Const.LOGO_FONT, Const.YELLOW, Const.SCREEN_X / 2, 160)
+            Draw_util.draw_text(screen, "SPACE", Const.LOGO_FONT, Const.YELLOW, Const.SCREEN_X / 2, 100)
+            Draw_util.draw_text(screen, "BATTLE", Const.LOGO_FONT, Const.YELLOW, Const.SCREEN_X / 2, 160)
 
             # Botões do menu
-            jogar_button = draw_button(Const.SCREEN_X / 2 - 120, 250, Const.SCREEN_X / 2 - 50, 50, "JOGAR")
-            loja_button = draw_button(Const.SCREEN_X / 2 - 120, 310, Const.SCREEN_X / 2 - 50, 50, "LOJA")
-            opcoes_button = draw_button(Const.SCREEN_X / 2 - 120, 370, Const.SCREEN_X / 2 - 50, 50, "OPÇÕES")
-            creditos_button = draw_button(Const.SCREEN_X / 2 - 120, 430, Const.SCREEN_X / 2 - 50, 50, "CRÉDITOS")
-            sair_button = draw_button(Const.SCREEN_X / 2 - 120, 490, Const.SCREEN_X / 2 - 50, 50, "SAIR")
+            jogar_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 250, Const.SCREEN_X / 2 - 50, 50, "JOGAR")
+            loja_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 310, Const.SCREEN_X / 2 - 50, 50, "LOJA")
+            opcoes_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 370, Const.SCREEN_X / 2 - 50, 50, "OPÇÕES")
+            creditos_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 430, Const.SCREEN_X / 2 - 50, 50, "CRÉDITOS")
+            sair_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 490, Const.SCREEN_X / 2 - 50, 50, "SAIR")
 
-            draw_text("(EM DESENVOLVIMENTO)", 8, Const.WHITE, Const.SCREEN_X / 2, 355)
-            draw_text("(EM DESENVOLVIMENTO)", 8, Const.WHITE, Const.SCREEN_X/2, 415)
+            Draw_util.draw_text(screen, "(EM DESENVOLVIMENTO)", 8, Const.WHITE, Const.SCREEN_X / 2, 355)
+            Draw_util.draw_text(screen, "(EM DESENVOLVIMENTO)", 8, Const.WHITE, Const.SCREEN_X/2, 415)
 
             button_list = [jogar_button, loja_button, opcoes_button, creditos_button, sair_button]
 
@@ -119,7 +121,7 @@ class Menu:
             self.click = False
 
             try:
-                draw_cursor(cursor_point)
+                Draw_util.draw_cursor(screen, cursor_point)
             except:
                 cursor_point = jogar_button
 
@@ -150,12 +152,12 @@ class Menu:
                         self.click = True
 
             # Título
-            draw_text("Dificuldade", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
+            Draw_util.draw_text(screen, "Dificuldade", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
 
             # Botões
-            normal_button = draw_button(Const.SCREEN_X / 2 - 120, 250, Const.SCREEN_X / 2 - 50, 50, "Normal")
-            dificil_button = draw_button(Const.SCREEN_X / 2 - 120, 310, Const.SCREEN_X / 2 - 50, 50, "Difícil")
-            insano_button = draw_button(Const.SCREEN_X / 2 - 120, 370, Const.SCREEN_X / 2 - 50, 50, "Insano")
+            normal_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 250, Const.SCREEN_X / 2 - 50, 50, "Normal")
+            dificil_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 310, Const.SCREEN_X / 2 - 50, 50, "Difícil")
+            insano_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 370, Const.SCREEN_X / 2 - 50, 50, "Insano")
 
             button_list = [normal_button, dificil_button, insano_button]
 
@@ -179,7 +181,7 @@ class Menu:
             self.click = False
 
             try:
-                draw_cursor(cursor_point)
+                Draw_util.draw_cursor(screen, cursor_point)
             except:
                 cursor_point = normal_button
 
@@ -205,18 +207,21 @@ class Menu:
                     if event.key == pygame.K_RETURN:
                         self.click = True
 
+                    if event.key == pygame.K_ESCAPE:
+                        self.show_loja_menu = False
+
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         self.click = True
 
-            draw_text("LOJA", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
-            draw_text(f"Coins: {Data_util.get_coins()}", 14, Const.WHITE, 70, 150, topleft=True)
+            Draw_util.draw_text(screen, "LOJA", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
+            Draw_util.draw_text(screen, f"Coins: {Data_util.get_coins()}", 14, Const.WHITE, 70, 150, topleft=True)
 
             spaceship_1_attributes = Data_util.get_spaceships("spaceship-1")
             spaceship_2_attributes = Data_util.get_spaceships("spaceship-2")
             spaceship_3_attributes = Data_util.get_spaceships("spaceship-3")
 
-            ship_1_button = draw_loja_button("spaceship-1.png", 70, 180, 440, 120, "Violet Rocket",
+            ship_1_button = Draw_util.draw_loja_button(screen, "spaceship-1.png", 70, 180, 440, 120, "Violet Rocket",
                                              spaceship_1_attributes["price"],
                                              spaceship_1_attributes["lives"],
                                              spaceship_1_attributes["shield"],
@@ -224,7 +229,7 @@ class Menu:
                                              spaceship_1_attributes["velocity"],
                                              spaceship_1_attributes["shoot_delay"])
 
-            ship_2_button = draw_loja_button("spaceship-2.png", 70, 330, 440, 120, "Black Eagle",
+            ship_2_button = Draw_util.draw_loja_button(screen, "spaceship-2.png", 70, 330, 440, 120, "Black Eagle",
                                              spaceship_2_attributes["price"],
                                              spaceship_2_attributes["lives"],
                                              spaceship_2_attributes["shield"],
@@ -232,7 +237,7 @@ class Menu:
                                              spaceship_2_attributes["velocity"],
                                              spaceship_2_attributes["shoot_delay"])
 
-            ship_3_button = draw_loja_button("nave_teste.png", 70, 480, 440, 120, "Nave teste",
+            ship_3_button = Draw_util.draw_loja_button(screen, "nave_teste.png", 70, 480, 440, 120, "Nave teste",
                                              spaceship_3_attributes["price"],
                                              spaceship_3_attributes["lives"],
                                              spaceship_3_attributes["shield"],
@@ -240,7 +245,7 @@ class Menu:
                                              spaceship_3_attributes["velocity"],
                                              spaceship_3_attributes["shoot_delay"])
 
-            back_to_menu_button = draw_button(30, 670, 100, 30, "Voltar", font_size=14)
+            back_to_menu_button = Draw_util.draw_button(screen, 30, 670, 100, 30, "Voltar", font_size=14)
 
             button_list = [ship_1_button, ship_2_button, ship_3_button]
 
@@ -260,7 +265,6 @@ class Menu:
                 if self.click:
                     if "spaceship-2" not in Data_util.get_purchased_ships():
                         Loja_util.buy_spaceship(Data_util, "spaceship-2")
-                        return
                     Loja_util.equip_spaceship(Data_util, "spaceship-2")
 
             if ship_3_button.collidepoint((mx, my)):
@@ -271,7 +275,7 @@ class Menu:
             self.click = False
 
             try:
-                draw_cursor(cursor_point)
+                Draw_util.draw_cursor(cursor_point)
             except:
                 cursor_point = ship_1_button
 
@@ -295,13 +299,13 @@ class Menu:
                     if event.button == 1:
                         self.click = True
 
-            draw_text("OPÇÕES", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
+            Draw_util.draw_text("OPÇÕES", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
 
-            sons_button = draw_button(Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50, "SONS")
-            acessibilidade_button = draw_button(Const.SCREEN_X / 2 - 150, 320, Const.SCREEN_X / 2 + 10, 50,
+            sons_button = Draw_util.draw_button(Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50, "SONS")
+            acessibilidade_button = Draw_util.draw_button(Const.SCREEN_X / 2 - 150, 320, Const.SCREEN_X / 2 + 10, 50,
                                                 "ACESSIBILIDADE PARA DALTÔNICOS", font_size=9)
 
-            back_to_menu_button = draw_button(30, 670, 100, 30, "Voltar", font_size=14)
+            back_to_menu_button = Draw_util.draw_button(30, 670, 100, 30, "Voltar", font_size=14)
 
             mx, my = pygame.mouse.get_pos()
 
@@ -342,19 +346,19 @@ class Menu:
                     if event.button == 1:
                         self.click = True
 
-            draw_text("CRÉDITOS", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
+            Draw_util.draw_text(screen, "CRÉDITOS", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
 
-            draw_text("DESENVOLVEDORES:", Const.SUB_TITLE_FONT, Const.WHITE, 40, 170, topleft=True)
-            draw_text("LUCAS EDUARDO KREUCH", Const.SMALL_FONT, Const.WHITE, 100, 220, topleft=True)
-            draw_text("MARIA CLARA DE SOUZA", Const.SMALL_FONT, Const.WHITE, 100, 240, topleft=True)
-            draw_text("ALINE AMARAL DE SOUZA", Const.SMALL_FONT, Const.WHITE, 100, 260, topleft=True)
-            draw_text("HAIDY JANDRE", Const.SMALL_FONT, Const.WHITE, 100, 280, topleft=True)
+            Draw_util.draw_text(screen, "DESENVOLVEDORES:", Const.SUB_TITLE_FONT, Const.WHITE, 40, 170, topleft=True)
+            Draw_util.draw_text(screen, "LUCAS EDUARDO KREUCH", Const.SMALL_FONT, Const.WHITE, 100, 220, topleft=True)
+            Draw_util.draw_text(screen, "MARIA CLARA DE SOUZA", Const.SMALL_FONT, Const.WHITE, 100, 240, topleft=True)
+            Draw_util.draw_text(screen, "ALINE AMARAL DE SOUZA", Const.SMALL_FONT, Const.WHITE, 100, 260, topleft=True)
+            Draw_util.draw_text(screen, "HAIDY JANDRE", Const.SMALL_FONT, Const.WHITE, 100, 280, topleft=True)
 
-            draw_text("PROFESSORES:", Const.SUB_TITLE_FONT, Const.WHITE, 40, 370, topleft=True)
-            draw_text("RICARDO DE LA ROCHA LADEIRA", Const.SMALL_FONT, Const.WHITE, 100, 420, topleft=True)
-            draw_text("LUIZ RICARDO URIARTE", Const.SMALL_FONT, Const.WHITE, 100, 440, topleft=True)
+            Draw_util.draw_text(screen, "PROFESSORES:", Const.SUB_TITLE_FONT, Const.WHITE, 40, 370, topleft=True)
+            Draw_util.draw_text(screen, "RICARDO DE LA ROCHA LADEIRA", Const.SMALL_FONT, Const.WHITE, 100, 420, topleft=True)
+            Draw_util.draw_text(screen, "LUIZ RICARDO URIARTE", Const.SMALL_FONT, Const.WHITE, 100, 440, topleft=True)
 
-            back_to_menu_button = draw_button(30, 670, 100, 30, "Voltar", font_size=14)
+            back_to_menu_button = Draw_util.draw_button(screen, 30, 670, 100, 30, "Voltar", font_size=14)
 
             # Posição do mouse
             mx, my = pygame.mouse.get_pos()
@@ -386,7 +390,7 @@ class Menu:
             min_line_sound = (Const.SCREEN_X - 425, 300)
             max_line_sound = (Const.SCREEN_X - 150, 300)
 
-            draw_text("SONS", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
+            Draw_util.draw_text(screen, "SONS", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
 
             pygame.draw.line(screen, Const.WHITE, min_line_sound, max_line_sound, 2)
 
@@ -410,13 +414,13 @@ class Menu:
                     if event.key == pygame.K_ESCAPE:
                         self.show_options_acessibilidade_menu = False
 
-            draw_text("ACESSIBILIDADE", Const.TITLE_FONT - 10, Const.WHITE, Const.SCREEN_X / 2, 80)
-            draw_text("PARA DALTÔNICOS", Const.TITLE_FONT - 10, Const.WHITE, Const.SCREEN_X / 2, 120)
+            Draw_util.draw_text(screen, "ACESSIBILIDADE", Const.TITLE_FONT - 10, Const.WHITE, Const.SCREEN_X / 2, 80)
+            Draw_util.draw_text(screen, "PARA DALTÔNICOS", Const.TITLE_FONT - 10, Const.WHITE, Const.SCREEN_X / 2, 120)
 
-            padrao_buton = draw_button(Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50, "PADRÃO")
-            deutranopia_buton = draw_button(Const.SCREEN_X / 2 - 150, 320, Const.SCREEN_X / 2 + 10, 50, "DEUTRANOPIA")
-            protanopia_buton = draw_button(Const.SCREEN_X / 2 - 150, 390, Const.SCREEN_X / 2 + 10, 50, "PROTANOPIA")
-            tritanopia_buton = draw_button(Const.SCREEN_X / 2 - 150, 460, Const.SCREEN_X / 2 + 10, 50, "TRITANOPIA")
+            padrao_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50, "PADRÃO")
+            deutranopia_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 320, Const.SCREEN_X / 2 + 10, 50, "DEUTRANOPIA")
+            protanopia_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 390, Const.SCREEN_X / 2 + 10, 50, "PROTANOPIA")
+            tritanopia_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 460, Const.SCREEN_X / 2 + 10, 50, "TRITANOPIA")
 
             screen_update()
 
@@ -584,7 +588,7 @@ class Game:
             self.check_shield()
 
             if self.draw_dev_options:
-                self.dev_options()
+                Game_utils.dev_options(clock)
 
             self.update_sprites()
             self.draw()
@@ -595,7 +599,7 @@ class Game:
 
         self.draw_groups()
 
-        draw_text(f"Score: {self.score.get_score()}", 18, Const.WHITE, Const.SCREEN_X / 2, 16)  # Texto do score
+        Draw_util.draw_text(screen, f"Score: {self.score.get_score()}", 18, Const.WHITE, Const.SCREEN_X / 2, 16)  # Texto do score
 
         self.draw_lives(self.player_mini_image)  # Vidas do Player
         self.player_shield_bar.draw_shield_bar(self.player.shield)  # Shield do Player
@@ -905,12 +909,12 @@ class Game:
                         self.click = True
 
             # Título
-            draw_text("PAUSE", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 100)
+            Draw_util.draw_text(screen, "PAUSE", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 100)
 
             # Botões
-            voltar_ao_jogo_button = draw_button(Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50, "VOLTAR AO JOGO")
-            voltar_ao_menu_button = draw_button(Const.SCREEN_X / 2 - 150, 310, Const.SCREEN_X / 2 + 10, 50, "VOLTAR AO MENU")
-            sair_do_jogo_button = draw_button(Const.SCREEN_X / 2 - 150, 370, Const.SCREEN_X / 2 + 10, 50, "SAIR DO JOGO")
+            voltar_ao_jogo_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50, "VOLTAR AO JOGO")
+            voltar_ao_menu_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 310, Const.SCREEN_X / 2 + 10, 50, "VOLTAR AO MENU")
+            sair_do_jogo_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 370, Const.SCREEN_X / 2 + 10, 50, "SAIR DO JOGO")
 
             button_list = [voltar_ao_jogo_button, voltar_ao_menu_button, sair_do_jogo_button]
             # Posição do mouse
@@ -944,7 +948,7 @@ class Game:
                     exit()
 
             try:
-                draw_cursor(cursor_point)
+                Draw_util.draw_cursor(screen, cursor_point)
             except:
                 cursor_point = voltar_ao_jogo_button
 
@@ -977,11 +981,11 @@ class Game:
                     if event.button == 1:
                         self.click = True
 
-            draw_text("GAME OVER", 42, Const.RED, Const.SCREEN_X / 2, 60)
-            draw_text(f"SCORE: {self.score.get_score()}", 42, Const.WHITE, Const.SCREEN_X / 2, Const.SCREEN_Y / 2 - 124)
+            Draw_util.draw_text(screen, "GAME OVER", 42, Const.RED, Const.SCREEN_X / 2, 60)
+            Draw_util.draw_text(f"SCORE: {screen, self.score.get_score()}", 42, Const.WHITE, Const.SCREEN_X / 2, Const.SCREEN_Y / 2 - 124)
 
-            voltar_ao_menu_buttom = draw_button(Const.SCREEN_X / 2 - 150, 300, Const.SCREEN_X / 2 + 10, 50, "Voltar ao menu")
-            jogar_novamente_button = draw_button(Const.SCREEN_X / 2 - 150, 360, Const.SCREEN_X / 2 + 10, 50, "Jogar novamente", font_size=19)
+            voltar_ao_menu_buttom = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 300, Const.SCREEN_X / 2 + 10, 50, "Voltar ao menu")
+            jogar_novamente_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 360, Const.SCREEN_X / 2 + 10, 50, "Jogar novamente", font_size=19)
 
             button_list = [voltar_ao_menu_buttom, jogar_novamente_button]
 
@@ -1006,7 +1010,7 @@ class Game:
             self.click = False
 
             try:
-                draw_cursor(cursor_point)
+                Draw_util.draw_cursor(screen, cursor_point)
             except:
                 cursor_point = voltar_ao_menu_buttom
 
@@ -1190,16 +1194,11 @@ class Game:
     # Denha o texto de READY no início do jogo
     def draw_ready(self):
         if Const.READY_DELAY < pygame.time.get_ticks() - self.ready_time < 3000:
-            draw_text("READY?", 42, Const.YELLOW, Const.SCREEN_X / 2, 100)
+            Draw_util.draw_text(screen, "READY?", 42, Const.YELLOW, Const.SCREEN_X / 2, 100)
         if Const.GO_DELAY < pygame.time.get_ticks() - self.ready_time < 3000:
-            draw_text("GO", 42, Const.YELLOW, Const.SCREEN_X / 2, 150)
+            Draw_util.draw_text(screen, "GO", 42, Const.YELLOW, Const.SCREEN_X / 2, 150)
         if pygame.time.get_ticks() - self.ready_time > 3000:
             self.ready = True
-
-    # Opções de desenvolvedor
-    @staticmethod
-    def dev_options():
-        draw_text(f"FPS: {clock.get_fps():.2f}", 12, Const.RED, 20, 100, topleft=True)
 
     # Cria as sprite sheets de naves
     @staticmethod
@@ -1219,62 +1218,6 @@ class Game:
 def screen_update():
     pygame.display.update()
     screen.fill(Const.BLACK)
-
-
-def draw_text(text, tam, color, x, y, topleft=False):
-    fonte = pygame.font.Font(Const.FONT_STYLE, tam)
-    text_obj = fonte.render(text, False, color)
-    text_rect = text_obj.get_rect()
-    if topleft:
-        text_rect.topleft = (x, y)
-    else:
-        text_rect.center = (x, y)
-    screen.blit(text_obj, text_rect)
-
-
-def draw_button(left, top, width, height, text, font_size=20, button_color=(0, 0, 0), font_color=Const.WHITE, border_color=Const.WHITE):
-    button_border = pygame.Rect(int(left - 2), int(top - 2), int(width + 4), int(height + 4))
-    button = pygame.Rect(int(left), int(top), int(width), int(height))
-    pygame.draw.rect(screen, border_color, button_border)
-    pygame.draw.rect(screen, button_color, button)
-    draw_text(text, font_size, font_color, left + (width / 2), top + (height / 2))
-    return button
-
-
-def draw_loja_button(sprite, left, top, width, height, nome, price, lives, shield, damage, velocity, shoot_dedaly):
-    button_border = pygame.Rect(left - 2, top - 2, width + 4, height + 4)
-    button = pygame.Rect(left, top, width, height)
-    pygame.draw.rect(screen, Const.WHITE, button_border)
-    pygame.draw.rect(screen, Const.BLACK, button)
-
-    if Data_util.get_player_spaceship() == sprite[:11]:
-        pygame.draw.rect(screen, Const.GREEN, button_border)
-        pygame.draw.rect(screen, Const.BLACK, button)
-        draw_text("Equipado", 16, Const.GREEN, left + 110, top + 100, topleft=True)
-    else:
-        if sprite[:11] in Data_util.get_purchased_ships():
-            draw_text("Disponível", 16, Const.WHITE, left + 110, top + 100, topleft=True)
-        else:
-            draw_text(f"{price} Coins", 16, Const.WHITE, left + 110, top + 100, topleft=True)
-
-    image = pygame.image.load(path.join(f"{Const.IMAGE_DIR}/sprites/spaceships/{sprite}"))
-    image = pygame.transform.scale(image, (75, 75))
-    image_rect = image.get_rect()
-    image_rect.center = (left + 60, top + (height / 2))
-    screen.blit(image, image_rect)
-
-    draw_text(nome, 16, Const.YELLOW, left + 130, top + 10, topleft=True)  # Nome
-    draw_text(f"Vidas: {lives}", 10, Const.WHITE, left + 130, top + 35, topleft=True)  # Vidas
-    draw_text(f"Escudo: {shield}", 10, Const.WHITE, left + 130, top + 55, topleft=True)  # Escudo
-    draw_text(f"Dano: {damage}", 10, Const.WHITE, left + 270, top + 35, topleft=True)  # Dano
-    draw_text(f"Velocidade: {velocity}", 10, Const.WHITE, left + 270, top + 55, topleft=True)  # Velocidade
-    draw_text(f"Shoot delay: {shoot_dedaly}", 10, Const.WHITE, left + 270, top + 75, topleft=True)  # Shoot delay
-    return button
-
-
-def draw_cursor(button, color=Const.WHITE):
-    draw_text("->", 16, color, button.left - 30, button.centery)
-    draw_text("<-", 16, color, button.right + 30, button.centery)
 
 
 # -------------------------------------------------------- // -------------------------------------------------------- #

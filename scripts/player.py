@@ -5,7 +5,7 @@ from scripts.bullet import Bullet
 
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, spaceship, attributes, bullet_group):
+    def __init__(self,  spaceship, attributes, bullet_group):
         pygame.sprite.Sprite.__init__(self)
 
         self.__image = pygame.image.load(Const.PLAYER_IMAGE).convert_alpha()

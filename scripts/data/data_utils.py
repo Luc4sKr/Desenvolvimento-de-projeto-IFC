@@ -33,7 +33,6 @@ class Data_util:
 
     @staticmethod
     def set_player_spaceship(spaceship):
-        print(spaceship)
         Data_util.json_obj["player"]["ship"] = str(spaceship)
         Data_util.save_file()
 

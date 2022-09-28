@@ -2,6 +2,7 @@ from scripts.constants import Constants as Const
 from scripts.data.data_utils import Data_util
 
 
+
 class Loja_util:
 
     @staticmethod
@@ -17,3 +18,4 @@ class Loja_util:
         if util.get_coins() >= util.get_spaceships(spaceship)["price"]:
             util.set_coins(-util.get_spaceships(spaceship)["price"])
             util.set_purchased_ships(spaceship)
+     
