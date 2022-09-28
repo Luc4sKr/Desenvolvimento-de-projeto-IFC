@@ -66,7 +66,7 @@ class Menu:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                        cursor_point = self.cursor_event(button_list, cursor_point, event.key)
+                        cursor_point = Menu_util.cursor_event(button_list, cursor_point, event.key)
 
                     if event.key == pygame.K_RETURN:
                         self.click = True
@@ -87,14 +87,19 @@ class Menu:
             Draw_util.draw_text(screen, "BATTLE", Const.LOGO_FONT, Const.YELLOW, Const.SCREEN_X / 2, 160)
 
             # Botões do menu
-            jogar_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 250, Const.SCREEN_X / 2 - 50, 50, "JOGAR")
-            loja_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 310, Const.SCREEN_X / 2 - 50, 50, "LOJA")
-            opcoes_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 370, Const.SCREEN_X / 2 - 50, 50, "OPÇÕES")
-            creditos_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 430, Const.SCREEN_X / 2 - 50, 50, "CRÉDITOS")
-            sair_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 490, Const.SCREEN_X / 2 - 50, 50, "SAIR")
+            jogar_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 250, Const.SCREEN_X / 2 - 50, 50,
+                                                 "JOGAR")
+            loja_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 310, Const.SCREEN_X / 2 - 50, 50,
+                                                "LOJA")
+            opcoes_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 370, Const.SCREEN_X / 2 - 50, 50,
+                                                  "OPÇÕES")
+            creditos_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 430, Const.SCREEN_X / 2 - 50, 50,
+                                                    "CRÉDITOS")
+            sair_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 490, Const.SCREEN_X / 2 - 50, 50,
+                                                "SAIR")
 
             Draw_util.draw_text(screen, "(EM DESENVOLVIMENTO)", 8, Const.WHITE, Const.SCREEN_X / 2, 355)
-            Draw_util.draw_text(screen, "(EM DESENVOLVIMENTO)", 8, Const.WHITE, Const.SCREEN_X/2, 415)
+            Draw_util.draw_text(screen, "(EM DESENVOLVIMENTO)", 8, Const.WHITE, Const.SCREEN_X / 2, 415)
 
             button_list = [jogar_button, loja_button, opcoes_button, creditos_button, sair_button]
 
@@ -142,7 +147,7 @@ class Menu:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                        cursor_point = self.cursor_event(button_list, cursor_point, event.key)
+                        cursor_point = Menu_util.cursor_event(button_list, cursor_point, event.key)
 
                     if event.key == pygame.K_RETURN:
                         self.click = True
@@ -155,9 +160,12 @@ class Menu:
             Draw_util.draw_text(screen, "Dificuldade", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
 
             # Botões
-            normal_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 250, Const.SCREEN_X / 2 - 50, 50, "Normal")
-            dificil_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 310, Const.SCREEN_X / 2 - 50, 50, "Difícil")
-            insano_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 370, Const.SCREEN_X / 2 - 50, 50, "Insano")
+            normal_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 250, Const.SCREEN_X / 2 - 50, 50,
+                                                  "Normal")
+            dificil_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 310, Const.SCREEN_X / 2 - 50, 50,
+                                                   "Difícil")
+            insano_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 370, Const.SCREEN_X / 2 - 50, 50,
+                                                  "Insano")
 
             button_list = [normal_button, dificil_button, insano_button]
 
@@ -202,7 +210,7 @@ class Menu:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                        cursor_point = self.cursor_event(button_list, cursor_point, event.key)
+                        cursor_point = Menu_util.cursor_event(button_list, cursor_point, event.key)
 
                     if event.key == pygame.K_RETURN:
                         self.click = True
@@ -222,28 +230,28 @@ class Menu:
             spaceship_3_attributes = Data_util.get_spaceships("spaceship-3")
 
             ship_1_button = Draw_util.draw_loja_button(screen, "spaceship-1.png", 70, 180, 440, 120, "Violet Rocket",
-                                             spaceship_1_attributes["price"],
-                                             spaceship_1_attributes["lives"],
-                                             spaceship_1_attributes["shield"],
-                                             spaceship_1_attributes["damage"],
-                                             spaceship_1_attributes["velocity"],
-                                             spaceship_1_attributes["shoot_delay"])
+                                                       spaceship_1_attributes["price"],
+                                                       spaceship_1_attributes["lives"],
+                                                       spaceship_1_attributes["shield"],
+                                                       spaceship_1_attributes["damage"],
+                                                       spaceship_1_attributes["velocity"],
+                                                       spaceship_1_attributes["shoot_delay"])
 
             ship_2_button = Draw_util.draw_loja_button(screen, "spaceship-2.png", 70, 330, 440, 120, "Black Eagle",
-                                             spaceship_2_attributes["price"],
-                                             spaceship_2_attributes["lives"],
-                                             spaceship_2_attributes["shield"],
-                                             spaceship_2_attributes["damage"],
-                                             spaceship_2_attributes["velocity"],
-                                             spaceship_2_attributes["shoot_delay"])
+                                                       spaceship_2_attributes["price"],
+                                                       spaceship_2_attributes["lives"],
+                                                       spaceship_2_attributes["shield"],
+                                                       spaceship_2_attributes["damage"],
+                                                       spaceship_2_attributes["velocity"],
+                                                       spaceship_2_attributes["shoot_delay"])
 
             ship_3_button = Draw_util.draw_loja_button(screen, "nave_teste.png", 70, 480, 440, 120, "Nave teste",
-                                             spaceship_3_attributes["price"],
-                                             spaceship_3_attributes["lives"],
-                                             spaceship_3_attributes["shield"],
-                                             spaceship_3_attributes["damage"],
-                                             spaceship_3_attributes["velocity"],
-                                             spaceship_3_attributes["shoot_delay"])
+                                                       spaceship_3_attributes["price"],
+                                                       spaceship_3_attributes["lives"],
+                                                       spaceship_3_attributes["shield"],
+                                                       spaceship_3_attributes["damage"],
+                                                       spaceship_3_attributes["velocity"],
+                                                       spaceship_3_attributes["shoot_delay"])
 
             back_to_menu_button = Draw_util.draw_button(screen, 30, 670, 100, 30, "Voltar", font_size=14)
 
@@ -275,7 +283,7 @@ class Menu:
             self.click = False
 
             try:
-                Draw_util.draw_cursor(cursor_point)
+                Draw_util.draw_cursor(screen, cursor_point)
             except:
                 cursor_point = ship_1_button
 
@@ -299,13 +307,13 @@ class Menu:
                     if event.button == 1:
                         self.click = True
 
-            Draw_util.draw_text("OPÇÕES", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
+            Draw_util.draw_text(screen, "OPÇÕES", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
 
-            sons_button = Draw_util.draw_button(Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50, "SONS")
-            acessibilidade_button = Draw_util.draw_button(Const.SCREEN_X / 2 - 150, 320, Const.SCREEN_X / 2 + 10, 50,
-                                                "ACESSIBILIDADE PARA DALTÔNICOS", font_size=9)
+            sons_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50, "SONS")
+            acessibilidade_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 320, Const.SCREEN_X / 2 + 10, 50,
+                                                          "ACESSIBILIDADE PARA DALTÔNICOS", font_size=9)
 
-            back_to_menu_button = Draw_util.draw_button(30, 670, 100, 30, "Voltar", font_size=14)
+            back_to_menu_button = Draw_util.draw_button(screen, 30, 670, 100, 30, "Voltar", font_size=14)
 
             mx, my = pygame.mouse.get_pos()
 
@@ -355,7 +363,8 @@ class Menu:
             Draw_util.draw_text(screen, "HAIDY JANDRE", Const.SMALL_FONT, Const.WHITE, 100, 280, topleft=True)
 
             Draw_util.draw_text(screen, "PROFESSORES:", Const.SUB_TITLE_FONT, Const.WHITE, 40, 370, topleft=True)
-            Draw_util.draw_text(screen, "RICARDO DE LA ROCHA LADEIRA", Const.SMALL_FONT, Const.WHITE, 100, 420, topleft=True)
+            Draw_util.draw_text(screen, "RICARDO DE LA ROCHA LADEIRA", Const.SMALL_FONT, Const.WHITE, 100, 420,
+                                topleft=True)
             Draw_util.draw_text(screen, "LUIZ RICARDO URIARTE", Const.SMALL_FONT, Const.WHITE, 100, 440, topleft=True)
 
             back_to_menu_button = Draw_util.draw_button(screen, 30, 670, 100, 30, "Voltar", font_size=14)
@@ -417,34 +426,25 @@ class Menu:
             Draw_util.draw_text(screen, "ACESSIBILIDADE", Const.TITLE_FONT - 10, Const.WHITE, Const.SCREEN_X / 2, 80)
             Draw_util.draw_text(screen, "PARA DALTÔNICOS", Const.TITLE_FONT - 10, Const.WHITE, Const.SCREEN_X / 2, 120)
 
-            padrao_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50, "PADRÃO")
-            deutranopia_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 320, Const.SCREEN_X / 2 + 10, 50, "DEUTRANOPIA")
-            protanopia_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 390, Const.SCREEN_X / 2 + 10, 50, "PROTANOPIA")
-            tritanopia_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 460, Const.SCREEN_X / 2 + 10, 50, "TRITANOPIA")
+            padrao_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50,
+                                                 "PADRÃO")
+            deutranopia_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 320, Const.SCREEN_X / 2 + 10,
+                                                      50, "DEUTRANOPIA")
+            protanopia_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 390, Const.SCREEN_X / 2 + 10, 50,
+                                                     "PROTANOPIA")
+            tritanopia_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 460, Const.SCREEN_X / 2 + 10, 50,
+                                                     "TRITANOPIA")
 
             screen_update()
-
-    @staticmethod
-    def cursor_event(button_list, cursor_point, button):
-        pygame.mixer.Sound.play(Const.SELECT_SOUND)
-        if button == pygame.K_UP:
-            if button_list.index(cursor_point) >= 0:
-                return button_list[button_list.index(cursor_point) - 1]
-        if button == pygame.K_DOWN:
-            if button_list.index(cursor_point) < len(button_list) - 1:
-                return button_list[button_list.index(cursor_point) + 1]
 
     def cursor_mouse_event(self, cursor_point, button, event, mx, my):
         if cursor_point != button:
             pygame.mixer.Sound.play(Const.SELECT_SOUND)
-        if button.collidepoint((mx, my)):
+        if button.collidepoint((mx, my)) or cursor_point == button:
             if self.click:
                 self.click = False
                 event()
         return button
-
-
-
 
 
 class Game:
@@ -457,8 +457,7 @@ class Game:
         self.draw_dev_options = False
         self.ready = False
 
-        # Click do mouse
-        self.click = False
+        self.difficulty = None
 
     # Cria um novo jogo
     def new_game(self):
@@ -489,21 +488,26 @@ class Game:
         self.player = Player(Data_util.get_player_spaceship(), Data_util.spaceship_attributes(), self.bullet_group)
         self.player_group_single = pygame.sprite.GroupSingle(self.player)
         # Imagem do player que serve como contador de vidas
-        self.player_mini_image = pygame.transform.scale(self.player.image, (Const.MINI_PLAYER_IMG, Const.MINI_PLAYER_IMG))
+        self.player_mini_image = pygame.transform.scale(self.player.image,
+                                                        (Const.MINI_PLAYER_IMG, Const.MINI_PLAYER_IMG))
 
         # Asteroid
-        self.asteroid_sprite_sheet = self.create_sprite_sheet(Const.ASTEROID_IMAGE_DIR, Const.ASTEROID_SIZE_X, Const.ASTEROID_SIZE_Y)
+        self.asteroid_sprite_sheet = self.create_sprite_sheet(Const.ASTEROID_IMAGE_DIR, Const.ASTEROID_SIZE_X,
+                                                              Const.ASTEROID_SIZE_Y)
 
         # Explosion
-        self.explosion_sprite_sheet = self.create_sprite_sheet(Const.EXPLOSION_IMAGE_DIR, Const.EXPLOSION_WIDTH, Const.EXPLOSION_HEIGHT)
+        self.explosion_sprite_sheet = self.create_sprite_sheet(Const.EXPLOSION_IMAGE_DIR, Const.EXPLOSION_WIDTH,
+                                                               Const.EXPLOSION_HEIGHT)
 
         # Enemy
-        self.enemy_1_sprite_sheet = self.create_sprite_sheet(Const.ENEMY_IMAGE_DIR, Const.ENEMY_SIZE_X, Const.ENEMY_SIZE_Y)
+        self.enemy_1_sprite_sheet = self.create_sprite_sheet(Const.ENEMY_IMAGE_DIR, Const.ENEMY_SIZE_X,
+                                                             Const.ENEMY_SIZE_Y)
         self.create_enemy_delay = 2500
         self.last_enemy = pygame.time.get_ticks()
 
         # Kamikaze
-        self.kamikaze_sprite_sheet = self.create_sprite_sheet(Const.KAMIKADE_IMAGE_DIR, Const.ENEMY_SIZE_X, Const.ENEMY_SIZE_Y)
+        self.kamikaze_sprite_sheet = self.create_sprite_sheet(Const.KAMIKADE_IMAGE_DIR, Const.ENEMY_SIZE_X,
+                                                              Const.ENEMY_SIZE_Y)
         self.create_kamikaze_delay = 7000
         self.last_kemikaze = pygame.time.get_ticks()
 
@@ -515,8 +519,10 @@ class Game:
         self.boss_body_shield_bar = Enemy_shield_bar(screen)
 
         # Boss
-        self.boss_body_sprite_sheet = self.create_sprite_sheet(Const.BOSS_BODY_IMAGE_DIR, Const.BODY_BOSS_SIZE_X, Const.BODY_BOSS_SIZE_Y)
-        self.boss_wing_sprite_sheet = self.create_sprite_sheet(Const.BOSS_WING_IMAGE_DIR, Const.WING_BOSS_SIZE_X, Const.WING_BOSS_SIZE_Y)
+        self.boss_body_sprite_sheet = self.create_sprite_sheet(Const.BOSS_BODY_IMAGE_DIR, Const.BODY_BOSS_SIZE_X,
+                                                               Const.BODY_BOSS_SIZE_Y)
+        self.boss_wing_sprite_sheet = self.create_sprite_sheet(Const.BOSS_WING_IMAGE_DIR, Const.WING_BOSS_SIZE_X,
+                                                               Const.WING_BOSS_SIZE_Y)
         self.boss_event = False
         self.boss_created = False
         self.wing_explosion = False
@@ -599,7 +605,8 @@ class Game:
 
         self.draw_groups()
 
-        Draw_util.draw_text(screen, f"Score: {self.score.get_score()}", 18, Const.WHITE, Const.SCREEN_X / 2, 16)  # Texto do score
+        Draw_util.draw_text(screen, f"Score: {self.score.get_score()}", 18, Const.WHITE, Const.SCREEN_X / 2,
+                            16)  # Texto do score
 
         self.draw_lives(self.player_mini_image)  # Vidas do Player
         self.player_shield_bar.draw_shield_bar(self.player.shield)  # Shield do Player
@@ -738,7 +745,8 @@ class Game:
 
         # Colisão entre o Asteroide e o Inimigo
         def collision_between_the_asteroid_and_the_enemy():
-            collision = pygame.sprite.groupcollide(self.enemy_group, self.asteroid_group, True, True, pygame.sprite.collide_mask)
+            collision = pygame.sprite.groupcollide(self.enemy_group, self.asteroid_group, True, True,
+                                                   pygame.sprite.collide_mask)
             for hit in collision:
                 explosion = Explosion(hit.rect.center, self.explosion_sprite_sheet)
                 self.explosion_group.add(explosion)
@@ -751,7 +759,8 @@ class Game:
 
         # Colisão do tiro do Player com o Kamikaze
         def player_shoot_collision_with_kamikaze():
-            collision = pygame.sprite.groupcollide(self.kamikaze_group, self.bullet_group, False, True, pygame.sprite.collide_mask)
+            collision = pygame.sprite.groupcollide(self.kamikaze_group, self.bullet_group, False, True,
+                                                   pygame.sprite.collide_mask)
             for kamikaze_hit in collision:
                 kamikaze_hit.shield -= self.player.damage
                 if kamikaze_hit.shield <= 0:
@@ -788,7 +797,8 @@ class Game:
 
         # Colisão do tiro do Player com a Asa do Boss
         def player_bullet_collision_with_boss_wing():
-            collision = pygame.sprite.groupcollide(self.boss_wings_group, self.bullet_group, False, True, pygame.sprite.collide_mask)
+            collision = pygame.sprite.groupcollide(self.boss_wings_group, self.bullet_group, False, True,
+                                                   pygame.sprite.collide_mask)
             for wing_hit in collision:
                 wing_hit.shield -= self.player.damage * 1
                 if wing_hit.shield <= 0:
@@ -798,7 +808,8 @@ class Game:
 
         # Colisão do tiro do Player com o corpo do Boss
         def collision_of_the_player_bullet_with_the_boss_body():
-            collision = pygame.sprite.groupcollide(self.boss_group, self.bullet_group, False, True, pygame.sprite.collide_mask)
+            collision = pygame.sprite.groupcollide(self.boss_group, self.bullet_group, False, True,
+                                                   pygame.sprite.collide_mask)
             if self.draw_body_boss_shield_bar:
                 for body_hit in collision:
                     body_hit.shield -= self.player.damage * 1
@@ -809,19 +820,22 @@ class Game:
 
         # Colisão do Player com o Boss
         def player_collision_with_boss():
-            player_collision_boss = pygame.sprite.spritecollide(self.player, self.boss_group, False, pygame.sprite.collide_mask)
+            player_collision_boss = pygame.sprite.spritecollide(self.player, self.boss_group, False,
+                                                                pygame.sprite.collide_mask)
             if player_collision_boss:
                 self.player.shield = 0
 
         # Colisão do Player com as asas do Boss
         def player_collision_with_Boss_wings():
-            collision = pygame.sprite.spritecollide(self.player, self.boss_wings_group, False, pygame.sprite.collide_mask)
+            collision = pygame.sprite.spritecollide(self.player, self.boss_wings_group, False,
+                                                    pygame.sprite.collide_mask)
             if collision:
                 self.player.shield = 0
 
         # Colisão do tiro do Boss com o Player
         def boss_shooting_collision_with_player():
-            collision = pygame.sprite.spritecollide(self.player, self.boss_shoot_group, True, pygame.sprite.collide_mask)
+            collision = pygame.sprite.spritecollide(self.player, self.boss_shoot_group, True,
+                                                    pygame.sprite.collide_mask)
             for hit in collision:
                 self.player.shield -= hit.damage
 
@@ -899,22 +913,25 @@ class Game:
 
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                            cursor_point = menu.cursor_event(button_list, cursor_point, event.key)
+                            cursor_point = Menu_util.cursor_event(button_list, cursor_point, event.key)
 
                     if event.key == pygame.K_RETURN:
-                        self.click = True
+                        menu.click = True
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
-                        self.click = True
+                        menu.click = True
 
             # Título
             Draw_util.draw_text(screen, "PAUSE", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 100)
 
             # Botões
-            voltar_ao_jogo_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50, "VOLTAR AO JOGO")
-            voltar_ao_menu_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 310, Const.SCREEN_X / 2 + 10, 50, "VOLTAR AO MENU")
-            sair_do_jogo_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 370, Const.SCREEN_X / 2 + 10, 50, "SAIR DO JOGO")
+            voltar_ao_jogo_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 250,
+                                                          Const.SCREEN_X / 2 + 10, 50, "VOLTAR AO JOGO")
+            voltar_ao_menu_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 310,
+                                                          Const.SCREEN_X / 2 + 10, 50, "VOLTAR AO MENU")
+            sair_do_jogo_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 370, Const.SCREEN_X / 2 + 10,
+                                                        50, "SAIR DO JOGO")
 
             button_list = [voltar_ao_jogo_button, voltar_ao_menu_button, sair_do_jogo_button]
             # Posição do mouse
@@ -923,14 +940,14 @@ class Game:
             # Inputs do mouse com os botões do menu
             if voltar_ao_jogo_button.collidepoint((mx, my)) or cursor_point == voltar_ao_jogo_button:
                 cursor_point = voltar_ao_jogo_button
-                if self.click:
+                if menu.click:
                     self.show_pause = False
                     pygame.mixer.music.unpause()
 
             if voltar_ao_menu_button.collidepoint((mx, my)) or cursor_point == voltar_ao_menu_button:
                 cursor_point = voltar_ao_menu_button
-                if self.click:
-                    self.click = False
+                if menu.click:
+                    menu.click = False
 
                     self.show_pause = False
                     self.game_over = True
@@ -939,8 +956,8 @@ class Game:
 
             if sair_do_jogo_button.collidepoint((mx, my)) or cursor_point == sair_do_jogo_button:
                 cursor_point = sair_do_jogo_button
-                if self.click:
-                    self.click = False
+                if menu.click:
+                    menu.click = False
 
                     self.show_pause = False
                     self.game_over = True
@@ -953,7 +970,7 @@ class Game:
                 cursor_point = voltar_ao_jogo_button
 
             # Depois de checar os inputs o click fica falso
-            self.click = False
+            menu.click = False
 
             screen_update()
 
@@ -972,42 +989,41 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                        cursor_point = menu.cursor_event(button_list, cursor_point, event.key)
+                        cursor_point = Menu_util.cursor_event(button_list, cursor_point, event.key)
 
                     if event.key == pygame.K_RETURN:
-                        self.click = True
+                        menu.click = True
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
-                        self.click = True
+                        menu.click = True
 
             Draw_util.draw_text(screen, "GAME OVER", 42, Const.RED, Const.SCREEN_X / 2, 60)
-            Draw_util.draw_text(f"SCORE: {screen, self.score.get_score()}", 42, Const.WHITE, Const.SCREEN_X / 2, Const.SCREEN_Y / 2 - 124)
+            Draw_util.draw_text(screen, f"SCORE: {self.score.get_score()}", 42, Const.WHITE, Const.SCREEN_X / 2,
+                                Const.SCREEN_Y / 2 - 124)
 
-            voltar_ao_menu_buttom = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 300, Const.SCREEN_X / 2 + 10, 50, "Voltar ao menu")
-            jogar_novamente_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 360, Const.SCREEN_X / 2 + 10, 50, "Jogar novamente", font_size=19)
+            voltar_ao_menu_buttom = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 300,
+                                                          Const.SCREEN_X / 2 + 10, 50, "Voltar ao menu")
+            jogar_novamente_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 360,
+                                                           Const.SCREEN_X / 2 + 10, 50, "Jogar novamente", font_size=19)
 
             button_list = [voltar_ao_menu_buttom, jogar_novamente_button]
 
             mx, my = pygame.mouse.get_pos()
 
             if voltar_ao_menu_buttom.collidepoint((mx, my)) or cursor_point == voltar_ao_menu_buttom:
-                cursor_point = voltar_ao_menu_buttom
-                if self.click:
-                    self.click = False
-
+                def voltar_ao_menu():
                     self.show_game_over_screen = False
                     menu.menu()
+                cursor_point = menu.cursor_mouse_event(cursor_point, voltar_ao_menu_buttom, voltar_ao_menu, mx, my)
 
             if jogar_novamente_button.collidepoint((mx, my)) or cursor_point == jogar_novamente_button:
-                cursor_point = jogar_novamente_button
-                if self.click:
-                    self.click = False
-
+                def jogar_novamente():
                     self.show_game_over_screen = False
                     self.new_game()
+                cursor_point = menu.cursor_mouse_event(cursor_point, jogar_novamente_button, jogar_novamente, mx, my)
 
-            self.click = False
+            menu.click = False
 
             try:
                 Draw_util.draw_cursor(screen, cursor_point)
