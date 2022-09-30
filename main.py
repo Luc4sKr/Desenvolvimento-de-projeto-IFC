@@ -290,7 +290,10 @@ class Menu:
             screen_update()
 
     def opcoes_menu(self):
+        button_list = []
+        cursor_point = None
         self.show_opcoes_menu = True
+
         while self.show_opcoes_menu:
             clock.tick(Const.FPS)
             for event in pygame.event.get():
@@ -300,12 +303,18 @@ class Menu:
                     exit()
 
                 if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                        cursor_point = Menu_util.cursor_event(button_list, cursor_point, event.key)
+
+                    if event.key == pygame.K_RETURN:
+                        menu.click = True
+
                     if event.key == pygame.K_ESCAPE:
                         self.show_opcoes_menu = False
 
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
-                        self.click = True
+                        menu.click = True
 
             Draw_util.draw_text(screen, "OPÇÕES", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
 
@@ -313,26 +322,29 @@ class Menu:
             acessibilidade_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 320, Const.SCREEN_X / 2 + 10, 50,
                                                           "ACESSIBILIDADE PARA DALTÔNICOS", font_size=9)
 
-            back_to_menu_button = Draw_util.draw_button(screen, 30, 670, 100, 30, "Voltar", font_size=14)
+            voltar_button = Draw_util.voltar_button(screen)
+
+            button_list = [sons_button, acessibilidade_button]
 
             mx, my = pygame.mouse.get_pos()
 
-            if back_to_menu_button.collidepoint((mx, my)):
+            if voltar_button.collidepoint((mx, my)):
                 if self.click:
                     self.click = False
                     self.show_opcoes_menu = False
 
             if sons_button.collidepoint((mx, my)):
-                if self.click:
-                    self.click = False
-                    self.sons_options()
+                cursor_point = self.cursor_mouse_event(cursor_point, sons_button, self.sons_options, mx,my)
 
             if acessibilidade_button.collidepoint((mx, my)):
-                if self.click:
-                    self.click = False
-                    self.acessibilidade_options()
+                cursor_point = self.cursor_mouse_event(cursor_point, acessibilidade_button, self.acessibilidade_options, mx, my)
 
             self.click = False
+
+            try:
+                Draw_util.draw_cursor(screen, cursor_point)
+            except:
+                cursor_point = sons_button
 
             screen_update()
 
@@ -410,7 +422,10 @@ class Menu:
             screen_update()
 
     def acessibilidade_options(self):
+        button_list = []
+        cursor_point = None
         self.show_options_acessibilidade_menu = True
+
         while self.show_options_acessibilidade_menu:
             clock.tick(Const.FPS)
             for event in pygame.event.get():
@@ -420,20 +435,64 @@ class Menu:
                     exit()
 
                 if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                        cursor_point = Menu_util.cursor_event(button_list, cursor_point, event.key)
+
+                    if event.key == pygame.K_RETURN:
+                        self.click = True
+
                     if event.key == pygame.K_ESCAPE:
                         self.show_options_acessibilidade_menu = False
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        self.click = True
 
             Draw_util.draw_text(screen, "ACESSIBILIDADE", Const.TITLE_FONT - 10, Const.WHITE, Const.SCREEN_X / 2, 80)
             Draw_util.draw_text(screen, "PARA DALTÔNICOS", Const.TITLE_FONT - 10, Const.WHITE, Const.SCREEN_X / 2, 120)
 
-            padrao_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50,
-                                                 "PADRÃO")
-            deutranopia_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 320, Const.SCREEN_X / 2 + 10,
-                                                      50, "DEUTRANOPIA")
-            protanopia_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 390, Const.SCREEN_X / 2 + 10, 50,
-                                                     "PROTANOPIA")
-            tritanopia_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 460, Const.SCREEN_X / 2 + 10, 50,
-                                                     "TRITANOPIA")
+            padrao_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50, "PADRÃO")
+            deutranopia_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 320, Const.SCREEN_X / 2 + 10, 50, "DEUTRANOPIA")
+            protanopia_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 390, Const.SCREEN_X / 2 + 10, 50, "PROTANOPIA")
+            tritanopia_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 460, Const.SCREEN_X / 2 + 10, 50, "TRITANOPIA")
+
+            voltar_button = Draw_util.voltar_button(screen)
+
+            button_list = [padrao_buton, deutranopia_buton, protanopia_buton, tritanopia_buton]
+            mx, my = pygame.mouse.get_pos()
+
+            if voltar_button.collidepoint((mx, my)):
+                if self.click:
+                    self.click = False
+                    self.show_options_acessibilidade_menu = False
+
+            if padrao_buton.collidepoint((mx, my)) or cursor_point == padrao_buton:
+                def change_image():
+                    print("AAAA")
+                    Data_util.set_image("default")
+                cursor_point = self.cursor_mouse_event(cursor_point, padrao_buton, change_image, mx, my)
+
+            if deutranopia_buton.collidepoint((mx, my)) or cursor_point == deutranopia_buton:
+                def change_image():
+                    Data_util.set_image("deutranopia")
+                cursor_point = self.cursor_mouse_event(cursor_point, deutranopia_buton, change_image, mx, my)
+
+            if protanopia_buton.collidepoint((mx, my)) or cursor_point == protanopia_buton:
+                def change_image():
+                    Data_util.set_image("protanopia")
+                cursor_point = self.cursor_mouse_event(cursor_point, protanopia_buton, change_image, mx, my)
+
+            if tritanopia_buton.collidepoint((mx, my)) or cursor_point == tritanopia_buton:
+                def change_image():
+                    Data_util.set_image("protanopia")
+                cursor_point = self.cursor_mouse_event(cursor_point, tritanopia_buton, change_image, mx, my)
+
+            try:
+                Draw_util.draw_cursor(screen, cursor_point)
+            except:
+                cursor_point = padrao_buton
+
+            self.click = False
 
             screen_update()
 

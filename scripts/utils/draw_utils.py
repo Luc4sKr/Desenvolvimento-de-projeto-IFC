@@ -29,6 +29,10 @@ class Draw_util:
         return button
 
     @staticmethod
+    def voltar_button(screen):
+        return Draw_util.draw_button(screen, 30, 670, 100, 30, "Voltar", font_size=14)
+
+    @staticmethod
     def draw_loja_button(screen, sprite, left, top, width, height, nome, price, lives, shield, damage, velocity, shoot_dedaly):
         button_border = pygame.Rect(left - 2, top - 2, width + 4, height + 4)
         button = pygame.Rect(left, top, width, height)
