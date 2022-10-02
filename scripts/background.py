@@ -1,13 +1,14 @@
 import pygame
 
 from scripts.constants import Constants as Const
+from scripts.utils.images import Images
 
 
 class Background(pygame.sprite.Sprite):
     def __init__(self, background):
         pygame.sprite.Sprite.__init__(self)
 
-        self.__image = pygame.image.load(Const.GAME_IMAGE_BACKGROUND).convert()
+        self.__image = pygame.image.load(Images.game_image_background).convert()
         self.__rect = self.__image.get_rect()
         self.reset()
 

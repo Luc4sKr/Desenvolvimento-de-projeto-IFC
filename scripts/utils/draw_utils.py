@@ -1,9 +1,10 @@
 import pygame
 
-from os import path, getcwd
+from os import path
 
 from scripts.constants import Constants as Const
 from scripts.data.data_utils import Data_util
+from scripts.utils.images import Images
 
 
 class Draw_util:
@@ -49,7 +50,7 @@ class Draw_util:
             else:
                 Draw_util.draw_text(screen, f"{price} Coins", 16, Const.WHITE, left + 110, top + 100, topleft=True)
 
-        image = pygame.image.load(path.join(f"{Const.IMAGE_DIR}/sprites/spaceships/{sprite}"))
+        image = pygame.image.load(path.join(f"{Images.image_dir}/sprites/spaceships/{sprite}"))
         image = pygame.transform.scale(image, (75, 75))
         image_rect = image.get_rect()
         image_rect.center = (left + 60, top + (height / 2))
@@ -64,6 +65,6 @@ class Draw_util:
         return button
 
     @staticmethod
-    def draw_cursor(screen, button, color=Const.WHITE):
+    def cursor(screen, button, color=Const.WHITE):
         Draw_util.draw_text(screen, "->", 16, color, button.left - 30, button.centery)
         Draw_util.draw_text(screen, "<-", 16, color, button.right + 30, button.centery)

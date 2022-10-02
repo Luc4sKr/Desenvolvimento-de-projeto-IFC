@@ -1,6 +1,8 @@
 import pygame
 
 from scripts.constants import Constants as Const
+from scripts.utils.images import Images
+
 from scripts.bullet import Bullet
 
 
@@ -8,7 +10,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self,  spaceship, attributes, bullet_group):
         pygame.sprite.Sprite.__init__(self)
 
-        self.__image = pygame.image.load(Const.PLAYER_IMAGE).convert_alpha()
+        self.__image = pygame.image.load(Images.player_image).convert_alpha()
         self.__image = pygame.transform.scale(self.__image, (Const.PLAYER_SIZE_X, Const.PLAYER_SIZE_Y))
         self.__rect = self.__image.get_rect()
 
@@ -70,13 +72,13 @@ class Player(pygame.sprite.Sprite):
             if self.__key[pygame.K_SPACE]:
                 if pygame.time.get_ticks() - self.__last_shoot > self.__shoot_delay:
                     self.__last_shoot = pygame.time.get_ticks()
-                    bullet_1 = Bullet(self.__rect.centerx + 10, self.__rect.top, Const.BULLET_PLAYER_IMAGE, self.__damage, Const.SHOOT_SOUND_1, Const.PLAYER_SHOOT_SPEED)
-                    bullet_2 = Bullet(self.__rect.centerx - 10, self.__rect.top, Const.BULLET_PLAYER_IMAGE, self.__damage, Const.SHOOT_SOUND_1, Const.PLAYER_SHOOT_SPEED)
+                    bullet_1 = Bullet(self.__rect.centerx + 10, self.__rect.top, Images.bullet_player_image, self.__damage, Const.SHOOT_SOUND_1, Const.PLAYER_SHOOT_SPEED)
+                    bullet_2 = Bullet(self.__rect.centerx - 10, self.__rect.top, Images.bullet_player_image, self.__damage, Const.SHOOT_SOUND_1, Const.PLAYER_SHOOT_SPEED)
                     self.__bullet_group.add(bullet_1, bullet_2)
 
                     if self.__shoot_power:
-                        bullet_3 = Bullet(self.__rect.right, self.__rect.centery, Const.BULLET_PLAYER_IMAGE, self.__damage, Const.SHOOT_SOUND_1, Const.PLAYER_SHOOT_SPEED)
-                        bullet_4 = Bullet(self.__rect.left, self.__rect.centery, Const.BULLET_PLAYER_IMAGE, self.__damage, Const.SHOOT_SOUND_1, Const.PLAYER_SHOOT_SPEED)
+                        bullet_3 = Bullet(self.__rect.right, self.__rect.centery, Images.bullet_player_image, self.__damage, Const.SHOOT_SOUND_1, Const.PLAYER_SHOOT_SPEED)
+                        bullet_4 = Bullet(self.__rect.left, self.__rect.centery, Images.bullet_player_image, self.__damage, Const.SHOOT_SOUND_1, Const.PLAYER_SHOOT_SPEED)
                         self.__bullet_group.add(bullet_3, bullet_4)
 
     # Esconde o player temporariamente depois da sua barra de shiel chegar a 0
@@ -93,7 +95,7 @@ class Player(pygame.sprite.Sprite):
             self.__hidden = False
             self.__rect.center = (Const.SCREEN_X / 2, 600)
 
-            self.__image = pygame.image.load(Const.PLAYER_IMAGE).convert_alpha()
+            self.__image = pygame.image.load(Images.player_image).convert_alpha()
             self.__image = pygame.transform.scale(self.__image, (Const.PLAYER_SIZE_X, Const.PLAYER_SIZE_Y))
 
     # Ativa o powerup

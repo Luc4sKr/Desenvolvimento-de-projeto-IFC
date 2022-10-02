@@ -7,26 +7,7 @@ from scripts.data.data_utils import Data_util
 class Constants:
 
     # Diretórios
-    IMAGE_DIR = path.join(getcwd() + f"/assets/images/{Data_util.get_image()}")
     SOUND_DIR = path.join(getcwd() + f"/assets/sounds")
-
-    ASTEROID_IMAGE_DIR = f"{IMAGE_DIR}/sprites/asteroid"
-    EXPLOSION_IMAGE_DIR = f"{IMAGE_DIR}/sprites/explosion"
-    ENEMY_IMAGE_DIR = f"{IMAGE_DIR}/sprites/enemy"
-    KAMIKADE_IMAGE_DIR = f"{IMAGE_DIR}/sprites/kamikaze"
-    BOSS_BODY_IMAGE_DIR = f"{IMAGE_DIR}/sprites/boss/body"
-    BOSS_WING_IMAGE_DIR = f"{IMAGE_DIR}/sprites/boss/wings"
-
-    # Imagens
-    MENU_IMAGE_BACKGROUND = f"{IMAGE_DIR}/backgrounds/menu-background.png"
-    GAME_IMAGE_BACKGROUND = f"{IMAGE_DIR}/backgrounds/game-background.png"
-    PLAYER_IMAGE = f"{IMAGE_DIR}/sprites/spaceships/{Data_util.get_player_spaceship()}.png"
-    SHIELD_POWERUP_IMAGE = f"{IMAGE_DIR}/powerups/shield.png"
-    GUN_POWERUP_IMAGE = f"{IMAGE_DIR}/powerups/gun.png"
-    BULLET_PLAYER_IMAGE = f"{IMAGE_DIR}/bullet/player-bullet.png"
-    BULLET_ENEMY_IMAGE = f"{IMAGE_DIR}/bullet/enemy-bullet.png"
-    BULLET_BOSS_BLUE_IMAGE = f"{IMAGE_DIR}/bullet/boss-bullet-blue.png"
-    COIN_IMAGE = f"{IMAGE_DIR}/coins/coin-1.png"
 
     # Screen
     SCREEN_X = 580

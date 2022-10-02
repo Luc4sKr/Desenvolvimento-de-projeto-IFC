@@ -1,6 +1,8 @@
 import pygame
 
 from scripts.constants import Constants as Const
+from scripts.utils.images import Images
+
 from scripts.bullet import Bullet
 
 
@@ -36,7 +38,7 @@ class Enemy(pygame.sprite.Sprite):
     def shoot(self):
         if pygame.time.get_ticks() - self.__last_shoot > Const.ENEMY_SHOOT_DELAY - self.__shoot_delay_multiplier:
             self.__last_shoot = pygame.time.get_ticks()
-            bullet = Bullet(self.__rect.centerx, self.__rect.bottom, Const.BULLET_ENEMY_IMAGE, self.__damage,
+            bullet = Bullet(self.__rect.centerx, self.__rect.bottom, Images.bullet_enemy_image, self.__damage,
                             Const.SHOOT_SOUND_2, Const.ENEMY_SHOOT_SPEED_Y)
             self.__enemy_shot_group.add(bullet)
 

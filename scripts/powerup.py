@@ -1,7 +1,9 @@
 import pygame
 
 from random import choice
+
 from scripts.constants import Constants as Const
+from scripts.utils.images import Images
 
 
 class Powerup(pygame.sprite.Sprite):
@@ -9,8 +11,8 @@ class Powerup(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         powerup_images = {
-            "shield": pygame.image.load(Const.SHIELD_POWERUP_IMAGE).convert_alpha(),
-            "gun": pygame.image.load(Const.GUN_POWERUP_IMAGE).convert_alpha()
+            "shield": pygame.image.load(Images.gun_powerup_image).convert_alpha(),
+            "gun": pygame.image.load(Images.shield_powerup_image).convert_alpha()
         }
 
         # Imagem

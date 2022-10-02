@@ -1,6 +1,8 @@
 import pygame
 
 from scripts.constants import Constants as Const
+from scripts.utils.images import Images
+
 from scripts.bullet import Bullet
 
 
@@ -60,7 +62,7 @@ class Boss(pygame.sprite.Sprite):
 
             if pygame.time.get_ticks() - self.last_big_shoot > Const.BOSS_BIG_SHOOT_DELAY:
                 self.last_big_shoot = pygame.time.get_ticks()
-                big_shoot = Bullet(self.rect.centerx + pos_x_add, self.rect.bottom - 20, Const.BULLET_BOSS_BLUE_IMAGE,
+                big_shoot = Bullet(self.rect.centerx + pos_x_add, self.rect.bottom - 20, Images.bullet_boss_image,
                                    Const.BOSS_BIG_SHOOT_DAMAGE, Const.SHOOT_SOUND_2, Const.BOSS_BIG_SHOOT_SPEED_Y,
                                    scale_x=28, scale_y=28)
                 self.shoot_group.add(big_shoot)
@@ -78,10 +80,10 @@ class Boss(pygame.sprite.Sprite):
                 self.small_shoot_event = True
                 if pygame.time.get_ticks() - self.small_shoot_temp > Const.BOSS_SMALL_SHOOT_TEMP_DELAY:
                     self.small_shoot_temp = pygame.time.get_ticks()
-                    small_shoot_1 = Bullet(self.rect.centerx + pos_x1_add, self.rect.bottom - 20, Const.BULLET_BOSS_BLUE_IMAGE,
+                    small_shoot_1 = Bullet(self.rect.centerx + pos_x1_add, self.rect.bottom - 20, Images.bullet_boss_image,
                                            Const.BOSS_SMALL_SHOOT_DAMAGE, Const.SHOOT_SOUND_2, Const.BOSS_SMALL_SHOOT_SPEED_Y,
                                            scale_x=16, scale_y=16)
-                    small_shoot_2 = Bullet(self.rect.centerx + pos_x2_add, self.rect.bottom - 30, Const.BULLET_BOSS_BLUE_IMAGE,
+                    small_shoot_2 = Bullet(self.rect.centerx + pos_x2_add, self.rect.bottom - 30, Images.bullet_boss_image,
                                            Const.BOSS_SMALL_SHOOT_DAMAGE, Const.SHOOT_SOUND_2, Const.BOSS_SMALL_SHOOT_SPEED_Y,
                                            scale_x=16, scale_y=16)
 
