@@ -688,6 +688,9 @@ class Game:
             self.kamikaze_shield_bar.draw_shield_bar(kamikaze.shield, kamikaze.rect)
 
         if self.boss_event:
+            margin = 0
+            pos_x_add = 0
+
             for wing in self.boss_wings_group:
                 if wing.rect.x < Const.SCREEN_X / 2:
                     margin = -40
@@ -960,9 +963,9 @@ class Game:
     # Tela de pause
     def pause_screen(self):
         button_list = []
-        cursor_point = None
-        self.show_pause = True
+        menu.cursor_point = None
 
+        self.show_pause = True
         while self.show_pause:
             clock.tick(Const.FPS)
             for event in pygame.event.get():
@@ -979,7 +982,7 @@ class Game:
 
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                            cursor_point = Menu_util.cursor_event(button_list, cursor_point, event.key)
+                            menu.cursor_point = Menu_util.cursor_event(button_list, menu.cursor_point, event.key)
 
                     if event.key == pygame.K_RETURN:
                         menu.enter = True
@@ -1004,49 +1007,39 @@ class Game:
             mx, my = pygame.mouse.get_pos()
 
             # Inputs do mouse com os botões do menu
-            if voltar_ao_jogo_button.collidepoint((mx, my)) or cursor_point == voltar_ao_jogo_button:
-                cursor_point = voltar_ao_jogo_button
-                if menu.enter:
+            if voltar_ao_jogo_button.collidepoint((mx, my)) or menu.cursor_point == voltar_ao_jogo_button:
+                def event():
                     self.show_pause = False
                     pygame.mixer.music.unpause()
+                menu.cursor_point = menu.cursor_event(voltar_ao_jogo_button, event, mx, my)
 
-            if voltar_ao_menu_button.collidepoint((mx, my)) or cursor_point == voltar_ao_menu_button:
-                cursor_point = voltar_ao_menu_button
-                if menu.enter:
-                    menu.enter = False
-
+            if voltar_ao_menu_button.collidepoint((mx, my)) or menu.cursor_point == voltar_ao_menu_button:
+                def event():
                     self.show_pause = False
                     self.game_over = True
                     pygame.mixer.music.stop()
                     menu.menu()
+                menu.cursor_point = menu.cursor_event(voltar_ao_menu_button, event, mx, my)
 
-            if sair_do_jogo_button.collidepoint((mx, my)) or cursor_point == sair_do_jogo_button:
-                cursor_point = sair_do_jogo_button
-                if menu.enter:
-                    menu.enter = False
-
+            if sair_do_jogo_button.collidepoint((mx, my)) or menu.cursor_point == sair_do_jogo_button:
+                def event():
                     self.show_pause = False
                     self.game_over = True
                     pygame.quit()
                     exit()
+                menu.cursor_point = menu.cursor_event(sair_do_jogo_button, event, mx, my)
 
-            try:
-                Draw_util.cursor(screen, cursor_point)
-            except:
-                cursor_point = voltar_ao_jogo_button
-
-            # Depois de checar os inputs o click fica falso
-            menu.enter = False
-
+            menu.click_to_false()
+            menu.draw_cursor(voltar_ao_jogo_button)
             screen_update()
 
     # Tela de game over
     def game_over_screen(self):
-        self.show_game_over_screen = True
         button_list = []
-        cursor_point = None
+        menu.cursor_point = None
         pygame.mixer.music.stop()
 
+        self.show_game_over_screen = True
         while self.show_game_over_screen:
             clock.tick(Const.FPS)
             for event in pygame.event.get():
@@ -1055,7 +1048,7 @@ class Game:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-                        cursor_point = Menu_util.cursor_event(button_list, cursor_point, event.key)
+                        menu.cursor_point = Menu_util.cursor_event(button_list, menu.cursor_point, event.key)
 
                     if event.key == pygame.K_RETURN:
                         menu.enter = True
@@ -1077,27 +1070,21 @@ class Game:
 
             mx, my = pygame.mouse.get_pos()
 
-            if voltar_ao_menu_buttom.collidepoint((mx, my)) or cursor_point == voltar_ao_menu_buttom:
+            if voltar_ao_menu_buttom.collidepoint((mx, my)) or menu.cursor_point == voltar_ao_menu_buttom:
                 def voltar_ao_menu():
                     self.show_game_over_screen = False
                     menu.menu()
 
-                cursor_point = menu.cursor_event(cursor_point, voltar_ao_menu_buttom, voltar_ao_menu, mx, my)
+                menu.cursor_point = menu.cursor_event(voltar_ao_menu_buttom, voltar_ao_menu, mx, my)
 
-            if jogar_novamente_button.collidepoint((mx, my)) or cursor_point == jogar_novamente_button:
+            if jogar_novamente_button.collidepoint((mx, my)) or menu.cursor_point == jogar_novamente_button:
                 def jogar_novamente():
                     self.show_game_over_screen = False
                     self.new_game()
+                menu.cursor_point = menu.cursor_event(jogar_novamente_button, jogar_novamente, mx, my)
 
-                cursor_point = menu.cursor_event(cursor_point, jogar_novamente_button, jogar_novamente, mx, my)
-
-            menu.enter = False
-
-            try:
-                Draw_util.cursor(screen, cursor_point)
-            except:
-                cursor_point = voltar_ao_menu_buttom
-
+            menu.click_to_false()
+            menu.draw_cursor(voltar_ao_menu_buttom)
             screen_update()
 
     # -------------------------------- #
