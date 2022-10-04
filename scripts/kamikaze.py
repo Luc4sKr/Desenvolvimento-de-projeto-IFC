@@ -28,18 +28,40 @@ class Kamikaze(pygame.sprite.Sprite):
 
         self.__image.convert_alpha()
 
-    def collision_botton(self):
-        if self.__rect.top > Const.SCREEN_Y:
-            self.kill()
+    # Update de animação
+    def update_animation(self):
+        self.__image = self.__animation_list[self.__frame_index]
+        self.update_image()
 
-    def update(self):
-        self.collision_botton()
+        if pygame.time.get_ticks() - self.__update_time > Const.KAMIKAZE_ANIMATION_COOLDOWN:
+            self.__update_time = pygame.time.get_ticks()
+            self.__frame_index += 1
+        if self.__frame_index >= len(self.__animation_list):
+            self.__frame_index = 0
 
+    def movement(self):
         self.__rect.y += 4.8
         if self.__rect.x > Const.SCREEN_X / 2:
             self.__rect.x -= 0.9
         if self.__rect.x < Const.SCREEN_X / 2:
             self.__rect.x += 1.1
+
+    def collision_botton(self):
+        if self.__rect.top > Const.SCREEN_Y:
+            self.kill()
+
+    def update_image(self):
+        # Define a rotação do kamikaze dependendo de qual lado da tela ele está
+        if self.__rect.x > Const.SCREEN_X / 2:
+            self.__image = pygame.transform.rotate(self.__image, 340)
+        if self.__rect.x < Const.SCREEN_X / 2:
+            self.__image = pygame.transform.rotate(self.__image, 20)
+        self.__image.convert_alpha()
+
+    def update(self):
+        self.collision_botton()
+        self.update_animation()
+        self.movement()
 
     # Image
     @property

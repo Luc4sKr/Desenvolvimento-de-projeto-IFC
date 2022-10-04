@@ -110,7 +110,7 @@ class Boss(pygame.sprite.Sprite):
         image = animation_list[Boss.frame_index]
         if direction == "right":
             image = pygame.transform.flip(image, True, False)
-        if pygame.time.get_ticks() - Boss.update_time > Const.ENEMIES_ANIMATION_COOLDOWN:
+        if pygame.time.get_ticks() - Boss.update_time > Const.ENEMY_ANIMATION_COOLDOWN:
             Boss.update_time = pygame.time.get_ticks()
             Boss.frame_index += 1
         if Boss.frame_index >= len(animation_list):
