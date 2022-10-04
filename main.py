@@ -261,6 +261,7 @@ class Menu:
             if ship_1_button.collidepoint((mx, my)):
                 def event():
                     Loja_util.equip_spaceship(Data_util, "spaceship-1")
+
                 self.cursor_point = self.cursor_event(ship_1_button, event, mx, my)
 
             if ship_2_button.collidepoint((mx, my)):
@@ -268,6 +269,7 @@ class Menu:
                     if "spaceship-2" not in Data_util.get_purchased_ships():
                         Loja_util.buy_spaceship(Data_util, "spaceship-2")
                     Loja_util.equip_spaceship(Data_util, "spaceship-2")
+
                 self.cursor_point = self.cursor_event(ship_2_button, event, mx, my)
 
             if ship_3_button.collidepoint((mx, my)):
@@ -275,6 +277,7 @@ class Menu:
                     if "spaceship-3" not in Data_util.get_purchased_ships():
                         Loja_util.buy_spaceship(Data_util, "spaceship-3")
                     Loja_util.equip_spaceship(Data_util, "spaceship-3")
+
                 self.cursor_point = self.cursor_event(ship_3_button, event, mx, my)
 
             self.click_to_false()
@@ -442,14 +445,18 @@ class Menu:
             Draw_util.draw_text(screen, "ACESSIBILIDADE", Const.TITLE_FONT - 10, Const.WHITE, Const.SCREEN_X / 2, 80)
             Draw_util.draw_text(screen, "PARA DALTÔNICOS", Const.TITLE_FONT - 10, Const.WHITE, Const.SCREEN_X / 2, 120)
 
-            padrao_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50,
-                                                 "PADRÃO")
-            deutranopia_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 320, Const.SCREEN_X / 2 + 10,
-                                                      50, "DEUTRANOPIA")
-            protanopia_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 390, Const.SCREEN_X / 2 + 10, 50,
-                                                     "PROTANOPIA")
-            tritanopia_buton = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 460, Const.SCREEN_X / 2 + 10, 50,
-                                                     "TRITANOPIA")
+            padrao_buton = Draw_util.draw_acessibilidade_button(screen, Const.SCREEN_X / 2 - 150, 250,
+                                                                Const.SCREEN_X / 2 + 10, 50,
+                                                                "PADRÃO", "default")
+            deutranopia_buton = Draw_util.draw_acessibilidade_button(screen, Const.SCREEN_X / 2 - 150, 320,
+                                                                     Const.SCREEN_X / 2 + 10,
+                                                                     50, "DEUTRANOPIA", "deutranopia")
+            protanopia_buton = Draw_util.draw_acessibilidade_button(screen, Const.SCREEN_X / 2 - 150, 390,
+                                                                    Const.SCREEN_X / 2 + 10, 50,
+                                                                    "PROTANOPIA", "protanopia")
+            tritanopia_buton = Draw_util.draw_acessibilidade_button(screen, Const.SCREEN_X / 2 - 150, 460,
+                                                                    Const.SCREEN_X / 2 + 10, 50,
+                                                                    "TRITANOPIA", "tritanopia")
 
             voltar_button = Draw_util.voltar_button(screen)
 
@@ -465,24 +472,28 @@ class Menu:
                 def change_image():
                     Data_util.set_image("default")
                     Images.update()
+
                 self.cursor_point = self.cursor_event(padrao_buton, change_image, mx, my)
 
             if deutranopia_buton.collidepoint((mx, my)) or self.cursor_point == deutranopia_buton:
                 def change_image():
                     Data_util.set_image("deutranopia")
                     Images.update()
+
                 self.cursor_point = self.cursor_event(deutranopia_buton, change_image, mx, my)
 
             if protanopia_buton.collidepoint((mx, my)) or self.cursor_point == protanopia_buton:
                 def change_image():
                     Data_util.set_image("protanopia")
                     Images.update()
+
                 self.cursor_point = self.cursor_event(protanopia_buton, change_image, mx, my)
 
             if tritanopia_buton.collidepoint((mx, my)) or self.cursor_point == tritanopia_buton:
                 def change_image():
-                    Data_util.set_image("protanopia")
+                    Data_util.set_image("tritanopia")
                     Images.update()
+
                 self.cursor_point = self.cursor_event(tritanopia_buton, change_image, mx, my)
 
             self.click_to_false()
@@ -1011,6 +1022,7 @@ class Game:
                 def event():
                     self.show_pause = False
                     pygame.mixer.music.unpause()
+
                 menu.cursor_point = menu.cursor_event(voltar_ao_jogo_button, event, mx, my)
 
             if voltar_ao_menu_button.collidepoint((mx, my)) or menu.cursor_point == voltar_ao_menu_button:
@@ -1019,6 +1031,7 @@ class Game:
                     self.game_over = True
                     pygame.mixer.music.stop()
                     menu.menu()
+
                 menu.cursor_point = menu.cursor_event(voltar_ao_menu_button, event, mx, my)
 
             if sair_do_jogo_button.collidepoint((mx, my)) or menu.cursor_point == sair_do_jogo_button:
@@ -1027,6 +1040,7 @@ class Game:
                     self.game_over = True
                     pygame.quit()
                     exit()
+
                 menu.cursor_point = menu.cursor_event(sair_do_jogo_button, event, mx, my)
 
             menu.click_to_false()
@@ -1081,6 +1095,7 @@ class Game:
                 def jogar_novamente():
                     self.show_game_over_screen = False
                     self.new_game()
+
                 menu.cursor_point = menu.cursor_event(jogar_novamente_button, jogar_novamente, mx, my)
 
             menu.click_to_false()

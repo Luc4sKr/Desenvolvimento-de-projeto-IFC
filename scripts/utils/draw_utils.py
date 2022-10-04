@@ -21,7 +21,7 @@ class Draw_util:
         screen.blit(text_obj, text_rect)
 
     @staticmethod
-    def draw_button(screen, left, top, width, height, text, font_size=20, button_color=(0, 0, 0), font_color=Const.WHITE, border_color=Const.WHITE):
+    def draw_button(screen, left, top, width, height, text, font_size=20, button_color=Const.BLACK, font_color=Const.WHITE, border_color=Const.WHITE):
         button_border = pygame.Rect(int(left - 2), int(top - 2), int(width + 4), int(height + 4))
         button = pygame.Rect(int(left), int(top), int(width), int(height))
         pygame.draw.rect(screen, border_color, button_border)
@@ -62,6 +62,14 @@ class Draw_util:
         Draw_util.draw_text(screen, f"Dano: {damage}", 10, Const.WHITE, left + 270, top + 35, topleft=True)  # Dano
         Draw_util.draw_text(screen, f"Velocidade: {velocity}", 10, Const.WHITE, left + 270, top + 55, topleft=True)  # Velocidade
         Draw_util.draw_text(screen, f"Shoot delay: {shoot_dedaly}", 10, Const.WHITE, left + 270, top + 75, topleft=True)  # Shoot delay
+        return button
+
+    @staticmethod
+    def draw_acessibilidade_button(screen, left, top, width, height, text, image):
+        if Data_util.get_image() == image:
+            button = Draw_util.draw_button(screen, left, top, width, height, text, border_color=Const.GREEN, font_color=Const.GREEN)
+        else:
+            button = Draw_util.draw_button(screen, left, top, width, height, text)
         return button
 
     @staticmethod
