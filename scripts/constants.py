@@ -1,8 +1,6 @@
 import pygame
 from os import path, getcwd
 
-from scripts.data.data_utils import Data_util
-
 
 class Constants:
 

@@ -1,9 +1,10 @@
 {
     "player": {
-        "coins": 3462,
+        "coins": 2463,
         "ship": "spaceship-1",
         "purchased-ships": [
-            "spaceship-1"
+            "spaceship-1",
+            "spaceship-2"
         ]
     },
     "spaceships": {

@@ -450,7 +450,7 @@ class Menu:
                                                                 "PADRÃO", "default")
             deutranopia_buton = Draw_util.draw_acessibilidade_button(screen, Const.SCREEN_X / 2 - 150, 320,
                                                                      Const.SCREEN_X / 2 + 10,
-                                                                     50, "DEUTRANOPIA", "deutranopia")
+                                                                     50, "DEUTERANOPIA", "deuteranopia")
             protanopia_buton = Draw_util.draw_acessibilidade_button(screen, Const.SCREEN_X / 2 - 150, 390,
                                                                     Const.SCREEN_X / 2 + 10, 50,
                                                                     "PROTANOPIA", "protanopia")
@@ -477,7 +477,7 @@ class Menu:
 
             if deutranopia_buton.collidepoint((mx, my)) or self.cursor_point == deutranopia_buton:
                 def change_image():
-                    Data_util.set_image("deutranopia")
+                    Data_util.set_image("deuteranopia")
                     Images.update()
 
                 self.cursor_point = self.cursor_event(deutranopia_buton, change_image, mx, my)
