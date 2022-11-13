@@ -1,6 +1,6 @@
 import pygame
 
-from os import listdir, path, getcwd
+from os import path, getcwd
 from random import randint
 from sys import exit
 from math import sin
@@ -24,6 +24,7 @@ from scripts.utils.loja_utils import Loja_util
 from scripts.utils.menu_utils import Menu_util
 from scripts.utils.draw_utils import Draw_util
 from scripts.utils.images import Images
+from scripts.utils.sprite_sheet import Sprite_sheet as Sprite
 
 from scripts.utils.music_player import Music_player
 
@@ -192,6 +193,7 @@ class Menu:
     def loja_menu(self):
         button_list = []
         self.show_loja_menu = True
+        self.cursor_point = None
 
         while self.show_loja_menu:
             clock.tick(Const.FPS)
@@ -238,7 +240,7 @@ class Menu:
                                                        spaceship_2_attributes["velocity"],
                                                        spaceship_2_attributes["shoot_delay"])
 
-            ship_3_button = Draw_util.draw_loja_button(screen, "nave_teste.png", 70, 480, 440, 120, "Nave teste",
+            ship_3_button = Draw_util.draw_loja_button(screen, "spaceship-3.png", 70, 480, 440, 120, "Bat Spaceship",
                                                        spaceship_3_attributes["price"],
                                                        spaceship_3_attributes["lives"],
                                                        spaceship_3_attributes["shield"],
@@ -569,21 +571,21 @@ class Game:
                                                         (Const.MINI_PLAYER_IMG, Const.MINI_PLAYER_IMG))
 
         # Asteroid
-        self.asteroid_sprite_sheet = self.create_sprite_sheet(Images.asteroid_image_dir, Const.ASTEROID_SIZE_X,
-                                                              Const.ASTEROID_SIZE_Y)
+        self.asteroid_sprite_sheet = Sprite.create_sprite_sheet(Images.asteroid_image_dir, Const.ASTEROID_SIZE_X,
+                                                                Const.ASTEROID_SIZE_Y)
 
         # Explosion
-        self.explosion_sprite_sheet = self.create_sprite_sheet(Images.explosion_image_dir, Const.EXPLOSION_WIDTH,
+        self.explosion_sprite_sheet = Sprite.create_sprite_sheet(Images.explosion_image_dir, Const.EXPLOSION_WIDTH,
                                                                Const.EXPLOSION_HEIGHT)
 
         # Enemy
-        self.enemy_1_sprite_sheet = self.create_sprite_sheet(Images.enemy_image_dir, Const.ENEMY_SIZE_X,
+        self.enemy_1_sprite_sheet = Sprite.create_sprite_sheet(Images.enemy_image_dir, Const.ENEMY_SIZE_X,
                                                              Const.ENEMY_SIZE_Y)
         self.create_enemy_delay = 2500
         self.last_enemy = pygame.time.get_ticks()
 
         # Kamikaze
-        self.kamikaze_sprite_sheet = self.create_sprite_sheet(Images.kamikaze_image_dir, Const.ENEMY_SIZE_X,
+        self.kamikaze_sprite_sheet = Sprite.create_sprite_sheet(Images.kamikaze_image_dir, Const.ENEMY_SIZE_X,
                                                               Const.ENEMY_SIZE_Y)
         self.create_kamikaze_delay = 7000
         self.last_kemikaze = pygame.time.get_ticks()
@@ -596,9 +598,9 @@ class Game:
         self.boss_body_shield_bar = Enemy_shield_bar(screen)
 
         # Boss
-        self.boss_body_sprite_sheet = self.create_sprite_sheet(Images.boss_body_image_dir, Const.BODY_BOSS_SIZE_X,
+        self.boss_body_sprite_sheet = Sprite.create_sprite_sheet(Images.boss_body_image_dir, Const.BODY_BOSS_SIZE_X,
                                                                Const.BODY_BOSS_SIZE_Y)
-        self.boss_wing_sprite_sheet = self.create_sprite_sheet(Images.boss_wing_image_dir, Const.WING_BOSS_SIZE_X,
+        self.boss_wing_sprite_sheet = Sprite.create_sprite_sheet(Images.boss_wing_image_dir, Const.WING_BOSS_SIZE_X,
                                                                Const.WING_BOSS_SIZE_Y)
         self.boss_event = False
         self.boss_created = False
@@ -970,7 +972,6 @@ class Game:
             self.player.shield = 100  # O shield do jogador volta a ser 100
 
     # ------------ Screens ----------- #
-
     # Tela de pause
     def pause_screen(self):
         button_list = []
@@ -1102,8 +1103,6 @@ class Game:
             menu.draw_cursor(voltar_ao_menu_buttom)
             screen_update()
 
-    # -------------------------------- #
-
     # Chance de dropar moedas
     def chance_to_drop_coins(self, pos_x, pos_y):
         if randint(1, 2) > 0:
@@ -1168,8 +1167,8 @@ class Game:
 
     # Novo kamikaze
     def new_kamikaze(self):
-        kamikaze_1 = self.create_kemikaze(Const.KAMIKAZE_X_POS_1, Const.KAMIKAZE_SHIELD)
-        kamikaze_2 = self.create_kemikaze(Const.KAMIKAZE_X_POS_2, Const.KAMIKAZE_SHIELD)
+        kamikaze_1 = self.create_kamikaze(Const.KAMIKAZE_X_POS_1, Const.KAMIKAZE_SHIELD)
+        kamikaze_2 = self.create_kamikaze(Const.KAMIKAZE_X_POS_2, Const.KAMIKAZE_SHIELD)
         self.kamikaze_group.add(kamikaze_1, kamikaze_2)
 
     # Gera o kamikaze
@@ -1185,7 +1184,7 @@ class Game:
         return enemy
 
     # Cria o kamikaze
-    def create_kemikaze(self, x, shield):
+    def create_kamikaze(self, x, shield):
         kamikaze = Kamikaze(x, shield, self.kamikaze_sprite_sheet)
         return kamikaze
 
@@ -1200,12 +1199,22 @@ class Game:
             if self.wing_explosion:
                 self.wing_explosion_event()
 
+            if self.left_wing_destroyed and self.right_wing_destroyed:
+                self.final_boss_event()
+
             if self.body_explosion:
                 self.body_explosion_event()
                 self.boss_event = False
 
             if self.left_wing_destroyed and self.right_wing_destroyed:
                 self.draw_body_boss_shield_bar = True
+
+    def final_boss_event(self):
+        # Gera inimigos
+        if pygame.time.get_ticks() - self.last_enemy > self.create_enemy_delay - self.create_enemy_delay_multiplier:
+            self.last_enemy = pygame.time.get_ticks()
+            self.new_kamikaze()
+
 
     # Explosão do Boss
     def body_explosion_event(self):
@@ -1285,17 +1294,6 @@ class Game:
             Draw_util.draw_text(screen, "GO", 42, Const.YELLOW, Const.SCREEN_X / 2, 150)
         if pygame.time.get_ticks() - self.ready_time > 3000:
             self.ready = True
-
-    # Cria as sprite sheets de naves
-    @staticmethod
-    def create_sprite_sheet(sprite_directory, sprite_size_x, sprite_size_y):
-        animation_list = []
-        num_of_frames = len(listdir(sprite_directory))
-        for i in range(1, num_of_frames):
-            image = pygame.image.load(f"{sprite_directory}/sprite-{i}.png").convert_alpha()
-            image = pygame.transform.scale(image, (int(sprite_size_x), int(sprite_size_y)))
-            animation_list.append(image)
-        return animation_list
 
 
 # -------------------------------------------------------- // -------------------------------------------------------- #

@@ -1,10 +1,11 @@
 {
     "player": {
-        "coins": 2463,
+        "coins": 567,
         "ship": "spaceship-1",
         "purchased-ships": [
             "spaceship-1",
-            "spaceship-2"
+            "spaceship-2",
+            "spaceship-3"
         ]
     },
     "spaceships": {
@@ -12,7 +13,7 @@
             "price": null,
             "shield": 100,
             "lives": 3,
-            "damage": 1,
+            "damage": 10000,
             "velocity": 5,
             "shoot_delay": 300
         },

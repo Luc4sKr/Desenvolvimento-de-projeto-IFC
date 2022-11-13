@@ -4,6 +4,7 @@ from sys import exit
 from os import listdir, getcwd, path
 
 from scripts.constants import *
+from scripts.constants import Constants as Const
 
 
 class Music_player:
@@ -22,17 +23,17 @@ class Music_player:
     # Roda o framework
     def run(self):
         while self.running:
-            self.clock.tick(FPS)
+            self.clock.tick(Const.FPS)
             self.input_events()
 
-            self.draw_text("Music", 44, WHITE, SCREEN_X / 2, 80)
+            self.draw_text("Music", 44, Const.WHITE, Const.SCREEN_X / 2, 80)
 
-            self.draw_text(f"{self.list_directory[self.music_index]}", 8, WHITE, SCREEN_X / 2, 200)
+            self.draw_text(f"{self.list_directory[self.music_index]}", 8, Const.WHITE, Const.SCREEN_X / 2, 200)
 
-            play_button = self.draw_button(SCREEN_X / 2 - 55, 250, 45, 25, "play", font_size=8)
-            pause_button = self.draw_button(SCREEN_X / 2 + 5, 250, 45, 25, "pause", font_size=8)
-            next_button = self.draw_button(SCREEN_X / 2 + 60, 250, 45, 25, ">", font_size=8)
-            back_button = self.draw_button(SCREEN_X / 2 - 110, 250, 45, 25, "<", font_size=8)
+            play_button = self.draw_button(Const.SCREEN_X / 2 - 55, 250, 45, 25, "play", font_size=8)
+            pause_button = self.draw_button(Const.SCREEN_X / 2 + 5, 250, 45, 25, "pause", font_size=8)
+            next_button = self.draw_button(Const.SCREEN_X / 2 + 60, 250, 45, 25, ">", font_size=8)
+            back_button = self.draw_button(Const.SCREEN_X / 2 - 110, 250, 45, 25, "<", font_size=8)
 
             mx, my = pygame.mouse.get_pos()
 
@@ -63,7 +64,7 @@ class Music_player:
 
             # Update na tela
             pygame.display.update()
-            self.screen.fill(BLACK)
+            self.screen.fill(Const.BLACK)
             
     # Eventos de input
     def input_events(self):
@@ -84,7 +85,7 @@ class Music_player:
 
     # Desenha o texto
     def draw_text(self, text, tam, color, x, y, topleft=False):
-        fonte = pygame.font.Font(FONT_STYLE, tam)
+        fonte = pygame.font.Font(Const.FONT_STYLE, tam)
         text_obj = fonte.render(text, False, color)
         text_rect = text_obj.get_rect()
         if topleft:
@@ -97,9 +98,9 @@ class Music_player:
     def draw_button(self, left, top, width, height, text, font_size=20, color=(0, 0, 0)):
         button_border = pygame.Rect(left - 2, top - 2, width + 4, height + 4)
         button = pygame.Rect(left, top, width, height)
-        pygame.draw.rect(self.screen, WHITE, button_border)
+        pygame.draw.rect(self.screen, Const.WHITE, button_border)
         pygame.draw.rect(self.screen, color, button)
-        self.draw_text(text, font_size, WHITE, left + (width / 2), top + (height / 2))
+        self.draw_text(text, font_size, Const.WHITE, left + (width / 2), top + (height / 2))
         return button
 
 
