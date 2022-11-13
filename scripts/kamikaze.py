@@ -18,6 +18,9 @@ class Kamikaze(pygame.sprite.Sprite):
         self.__image = pygame.transform.scale(self.__image, (Const.ENEMY_SIZE_X, Const.ENEMY_SIZE_Y))
         self.__rect = self.__image.get_rect()
 
+        self.velX1 = 0.9
+        self.velX2 = 1.1
+
         self.__rect.center = (x, -20)  # Posição onde o inimigo vai surgir
 
         # Define a rotação do kamikaze dependendo de qual lado da tela ele está
@@ -42,9 +45,9 @@ class Kamikaze(pygame.sprite.Sprite):
     def movement(self):
         self.__rect.y += 4.8
         if self.__rect.x > Const.SCREEN_X / 2:
-            self.__rect.x -= 0.9
+            self.__rect.x -= self.velX1
         if self.__rect.x < Const.SCREEN_X / 2:
-            self.__rect.x += 1.1
+            self.__rect.x += self.velX2
 
     def collision_botton(self):
         if self.__rect.top > Const.SCREEN_Y:
@@ -52,10 +55,16 @@ class Kamikaze(pygame.sprite.Sprite):
 
     def update_image(self):
         # Define a rotação do kamikaze dependendo de qual lado da tela ele está
-        if self.__rect.x > Const.SCREEN_X / 2:
+        if self.__rect.x > Const.SCREEN_X / 2 + 30:
             self.__image = pygame.transform.rotate(self.__image, 340)
-        if self.__rect.x < Const.SCREEN_X / 2:
+        else:
+            self.velX1 = 0
+
+        if self.__rect.x < Const.SCREEN_X / 2 - 120:
             self.__image = pygame.transform.rotate(self.__image, 20)
+        else:
+            self.velX2 = 0
+
         self.__image.convert_alpha()
 
     def update(self):

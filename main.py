@@ -1166,9 +1166,9 @@ class Game:
         self.enemy_group.add(enemy)
 
     # Novo kamikaze
-    def new_kamikaze(self):
-        kamikaze_1 = self.create_kamikaze(Const.KAMIKAZE_X_POS_1, Const.KAMIKAZE_SHIELD)
-        kamikaze_2 = self.create_kamikaze(Const.KAMIKAZE_X_POS_2, Const.KAMIKAZE_SHIELD)
+    def new_kamikaze(self, x1=0, x2=0):
+        kamikaze_1 = self.create_kamikaze(Const.KAMIKAZE_X_POS_1 + x1, Const.KAMIKAZE_SHIELD)
+        kamikaze_2 = self.create_kamikaze(Const.KAMIKAZE_X_POS_2 - x2, Const.KAMIKAZE_SHIELD)
         self.kamikaze_group.add(kamikaze_1, kamikaze_2)
 
     # Gera o kamikaze
@@ -1213,7 +1213,7 @@ class Game:
         # Gera inimigos
         if pygame.time.get_ticks() - self.last_enemy > self.create_enemy_delay - self.create_enemy_delay_multiplier:
             self.last_enemy = pygame.time.get_ticks()
-            self.new_kamikaze()
+            self.new_kamikaze(100, 100)
 
 
     # Explosão do Boss
