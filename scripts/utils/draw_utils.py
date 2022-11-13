@@ -73,6 +73,29 @@ class Draw_util:
         return button
 
     @staticmethod
+    def draw_music_button(screen, left, top, width, height, text):
+        if Data_util.get_music_activated():
+            button = Draw_util.draw_button(screen, left, top, width, height, text)
+            Draw_util.draw_text(screen, "Ativado", 10, Const.WHITE, left + (width / 2), top + height - 10)
+        else:
+            button = Draw_util.draw_button(screen, left, top, width, height, text, border_color=Const.RED, font_color=Const.RED)
+            Draw_util.draw_text(screen, "Desativado", 10, Const.WHITE, left + (width / 2), top + height - 10)
+
+        return button
+
+    @staticmethod
+    def draw_som_button(screen, left, top, width, height, text):
+        if Data_util.get_sound_activated():
+            button = Draw_util.draw_button(screen, left, top, width, height, text)
+            Draw_util.draw_text(screen, "Ativado", 10, Const.WHITE, left + (width / 2), top + height - 10)
+        else:
+            button = Draw_util.draw_button(screen, left, top, width, height, text, border_color=Const.RED,
+                                           font_color=Const.RED)
+            Draw_util.draw_text(screen, "Desativado", 10, Const.WHITE, left + (width / 2), top + height - 10)
+
+        return button
+
+    @staticmethod
     def cursor(screen, button, color=Const.WHITE):
         Draw_util.draw_text(screen, "->", 16, color, button.left - 30, button.centery)
         Draw_util.draw_text(screen, "<-", 16, color, button.right + 30, button.centery)

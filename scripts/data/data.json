@@ -13,7 +13,7 @@
             "price": null,
             "shield": 100,
             "lives": 3,
-            "damage": 10000,
+            "damage": 1,
             "velocity": 5,
             "shoot_delay": 300
         },
@@ -36,6 +36,8 @@
     },
     "game": {
         "music": "wyver9_Arcade Title.wav",
+        "music_activated": true,
+        "sounds_activated": true,
         "image": "default"
     }
 }

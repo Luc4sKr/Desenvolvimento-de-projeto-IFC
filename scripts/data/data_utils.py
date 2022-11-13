@@ -63,5 +63,23 @@ class Data_util:
         return Data_util.json_obj["game"]["music"]
 
     @staticmethod
+    def get_music_activated():
+        return Data_util.json_obj["game"]["music_activated"]
+
+    @staticmethod
+    def set_music_activated(resp):
+        Data_util.json_obj["game"]["music_activated"] = resp
+        Data_util.save_file()
+
+    @staticmethod
+    def get_sound_activated():
+        return Data_util.json_obj["game"]["sounds_activated"]
+
+    @staticmethod
+    def set_sound_activated(resp):
+        Data_util.json_obj["game"]["sounds_activated"] = resp
+        Data_util.save_file()
+
+    @staticmethod
     def spaceship_attributes():
         return Data_util.json_obj["spaceships"][Data_util.get_player_spaceship()]

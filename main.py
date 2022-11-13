@@ -391,6 +391,8 @@ class Menu:
             screen_update()
 
     def sons_options(self):
+        button_list = []
+        self.cursor_point = None
         self.show_options_sons_menu = True
         while self.show_options_sons_menu:
             clock.tick(Const.FPS)
@@ -404,16 +406,52 @@ class Menu:
                     if event.key == pygame.K_ESCAPE:
                         self.show_options_sons_menu = False
 
-            min_line_sound = (Const.SCREEN_X - 425, 300)
-            max_line_sound = (Const.SCREEN_X - 150, 300)
+                    if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+                        self.cursor_point = Menu_util.cursor_event(button_list, self.cursor_point, event.key)
+
+                    if event.key == pygame.K_RETURN:
+                        self.enter = True
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        self.mouse_click = True
 
             Draw_util.draw_text(screen, "SONS", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
 
-            pygame.draw.line(screen, Const.WHITE, min_line_sound, max_line_sound, 2)
+            music_button = Draw_util.draw_music_button(screen, Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10,
+                                                       70, "MÚSICA")
+            som_button = Draw_util.draw_som_button(screen, Const.SCREEN_X / 2 - 150, 350, Const.SCREEN_X / 2 + 10,
+                                                   70, "SOM")
+            voltar_button = Draw_util.voltar_button(screen)
 
-            pygame.draw.line(screen, Const.RED, (Const.SCREEN_X / 2, 0), (Const.SCREEN_X / 2, Const.SCREEN_Y), 1)
-            pygame.draw.line(screen, Const.GREEN, (Const.SCREEN_X - 425, 315), (Const.SCREEN_X / 2, 315), 1)
-            pygame.draw.line(screen, Const.GREEN, (Const.SCREEN_X / 2, 315), (Const.SCREEN_X - 150, 315), 1)
+            button_list = [music_button, som_button]
+            mx, my = pygame.mouse.get_pos()
+
+            if voltar_button.collidepoint((mx, my)):
+                if self.mouse_click:
+                    self.mouse_click = False
+                    self.show_options_sons_menu = False
+
+            if music_button.collidepoint((mx, my)) or self.cursor_point == music_button:
+                def change_music():
+                    if Data_util.get_music_activated():
+                        Data_util.set_music_activated(False)
+                    else:
+                        Data_util.set_music_activated(True)
+
+                self.cursor_point = self.cursor_event(music_button, change_music, mx, my)
+
+            if som_button.collidepoint((mx, my)) or self.cursor_point == som_button:
+                def change_sound():
+                    if Data_util.get_sound_activated():
+                        Data_util.set_sound_activated(False)
+                    else:
+                        Data_util.set_sound_activated(True)
+
+                self.cursor_point = self.cursor_event(som_button, change_sound, mx, my)
+
+            self.click_to_false()
+            self.draw_cursor(music_button)
 
             screen_update()
 
@@ -576,17 +614,17 @@ class Game:
 
         # Explosion
         self.explosion_sprite_sheet = Sprite.create_sprite_sheet(Images.explosion_image_dir, Const.EXPLOSION_WIDTH,
-                                                               Const.EXPLOSION_HEIGHT)
+                                                                 Const.EXPLOSION_HEIGHT)
 
         # Enemy
         self.enemy_1_sprite_sheet = Sprite.create_sprite_sheet(Images.enemy_image_dir, Const.ENEMY_SIZE_X,
-                                                             Const.ENEMY_SIZE_Y)
+                                                               Const.ENEMY_SIZE_Y)
         self.create_enemy_delay = 2500
         self.last_enemy = pygame.time.get_ticks()
 
         # Kamikaze
         self.kamikaze_sprite_sheet = Sprite.create_sprite_sheet(Images.kamikaze_image_dir, Const.ENEMY_SIZE_X,
-                                                              Const.ENEMY_SIZE_Y)
+                                                                Const.ENEMY_SIZE_Y)
         self.create_kamikaze_delay = 7000
         self.last_kemikaze = pygame.time.get_ticks()
 
@@ -599,9 +637,9 @@ class Game:
 
         # Boss
         self.boss_body_sprite_sheet = Sprite.create_sprite_sheet(Images.boss_body_image_dir, Const.BODY_BOSS_SIZE_X,
-                                                               Const.BODY_BOSS_SIZE_Y)
+                                                                 Const.BODY_BOSS_SIZE_Y)
         self.boss_wing_sprite_sheet = Sprite.create_sprite_sheet(Images.boss_wing_image_dir, Const.WING_BOSS_SIZE_X,
-                                                               Const.WING_BOSS_SIZE_Y)
+                                                                 Const.WING_BOSS_SIZE_Y)
         self.boss_event = False
         self.boss_created = False
         self.wing_explosion = False
@@ -1214,7 +1252,6 @@ class Game:
         if pygame.time.get_ticks() - self.last_enemy > self.create_enemy_delay - self.create_enemy_delay_multiplier:
             self.last_enemy = pygame.time.get_ticks()
             self.new_kamikaze(100, 100)
-
 
     # Explosão do Boss
     def body_explosion_event(self):
