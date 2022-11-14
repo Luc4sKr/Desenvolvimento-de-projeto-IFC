@@ -436,8 +436,11 @@ class Menu:
                 def change_music():
                     if Data_util.get_music_activated():
                         Data_util.set_music_activated(False)
+                        pygame.mixer.music.pause()
+                        pygame.mixer.music.set_volume(0)
                     else:
                         Data_util.set_music_activated(True)
+                        pygame.mixer.music.set_volume(0.3)
 
                 self.cursor_point = self.cursor_event(music_button, change_music, mx, my)
 
@@ -445,8 +448,13 @@ class Menu:
                 def change_sound():
                     if Data_util.get_sound_activated():
                         Data_util.set_sound_activated(False)
+                        for sound in Const.LIST_OF_SOUNDS:
+                            sound.set_volume(0)
                     else:
                         Data_util.set_sound_activated(True)
+                        for i, sound in enumerate(Const.LIST_OF_SOUNDS):
+                            sound.set_volume(Const.LIST_OF_VOL[i])
+
 
                 self.cursor_point = self.cursor_event(som_button, change_sound, mx, my)
 
@@ -596,6 +604,11 @@ class Game:
         pygame.mixer.music.load(path.join(getcwd() + f"/assets/music/{Data_util.get_music()}"))
         pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.3)
+
+        # Verifica se a música está desativada
+        if not Data_util.get_music_activated():
+            pygame.mixer.music.pause()
+            pygame.mixer.music.set_volume(0)
 
         # Background do jogo
         self.game_background_rect = Background(Images.game_image_background)

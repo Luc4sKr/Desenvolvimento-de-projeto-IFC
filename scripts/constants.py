@@ -111,11 +111,20 @@ class Constants:
     SELECT_SOUND = pygame.mixer.Sound(f"{SOUND_DIR}/select-3.wav")
     COIN_SOUND = pygame.mixer.Sound(f"{SOUND_DIR}/coin-1.wav")
 
-    SHOOT_SOUND_1.set_volume(0.15)
-    SHOOT_SOUND_2.set_volume(0.1)
-    EXPLOSION_SOUND.set_volume(0.4)
-    SELECT_SOUND.set_volume(0.1)
-    COIN_SOUND.set_volume(0.4)
+    SHOOT_SOUND_1_VOL = 0.15
+    SHOOT_SOUND_2_VOL = 0.10
+    EXPLOSION_SOUND_VOL = 0.40
+    SELECT_SOUND_VOL = 0.10
+    COIN_SOUND_VOL = 0.40
+
+    SHOOT_SOUND_1.set_volume(SHOOT_SOUND_1_VOL)
+    SHOOT_SOUND_2.set_volume(SHOOT_SOUND_2_VOL)
+    EXPLOSION_SOUND.set_volume(EXPLOSION_SOUND_VOL)
+    SELECT_SOUND.set_volume(SELECT_SOUND_VOL)
+    COIN_SOUND.set_volume(COIN_SOUND_VOL)
+
+    LIST_OF_SOUNDS = [SHOOT_SOUND_1, SHOOT_SOUND_2, EXPLOSION_SOUND, SELECT_SOUND, COIN_SOUND]
+    LIST_OF_VOL = [SHOOT_SOUND_1_VOL, SHOOT_SOUND_2_VOL, EXPLOSION_SOUND_VOL, SELECT_SOUND_VOL, COIN_SOUND_VOL]
 
     # Fonte
     FONT_STYLE = path.join(getcwd() + "/assets/font/8-bit_font.ttf")
