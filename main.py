@@ -51,10 +51,16 @@ class Menu:
         # Background
         self.menu_background_sprite = pygame.sprite.Sprite()
         self.menu_background_sprite.image = pygame.image.load(Images.manu_image_background)
-        self.menu_background_sprite.image = pygame.transform.scale(self.menu_background_sprite.image,
-                                                                   (Const.SCREEN_X, Const.SCREEN_Y))
+        self.menu_background_sprite.image = pygame.transform.scale(self.menu_background_sprite.image, (Const.SCREEN_X, Const.SCREEN_Y))
         self.menu_background_sprite.rect = self.menu_background_sprite.image.get_rect()
         self.menu_background = pygame.sprite.GroupSingle(self.menu_background_sprite)
+
+        if Data_util.get_sound_activated():
+            for i, sound in enumerate(Const.LIST_OF_SOUNDS):
+                sound.set_volume(Const.LIST_OF_VOL[i])
+        else:
+            for sound in Const.LIST_OF_SOUNDS:
+                sound.set_volume(0)
 
     def menu(self):
         button_list = []
@@ -85,8 +91,7 @@ class Menu:
 
             # Background
             self.menu_background_sprite.image = pygame.image.load(Images.manu_image_background)
-            self.menu_background_sprite.image = pygame.transform.scale(self.menu_background_sprite.image,
-                                                                       (Const.SCREEN_X, Const.SCREEN_Y))
+            self.menu_background_sprite.image = pygame.transform.scale(self.menu_background_sprite.image, (Const.SCREEN_X, Const.SCREEN_Y))
             self.menu_background.draw(screen)
 
             # Título do jogo
@@ -449,7 +454,6 @@ class Menu:
                         Data_util.set_sound_activated(True)
                         for i, sound in enumerate(Const.LIST_OF_SOUNDS):
                             sound.set_volume(Const.LIST_OF_VOL[i])
-
 
                 self.cursor_point = self.cursor_event(som_button, change_sound, mx, my)
 
