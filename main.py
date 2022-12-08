@@ -46,6 +46,7 @@ class Menu:
 
         self.show_options_sons_menu = False
         self.show_options_acessibilidade_menu = False
+        self.show_options_como_jogar_menu = False
 
         # Background
         self.menu_background_sprite = pygame.sprite.Sprite()
@@ -93,19 +94,11 @@ class Menu:
             Draw_util.draw_text(screen, "BATTLE", Const.LOGO_FONT, Const.YELLOW, Const.SCREEN_X / 2, 160)
 
             # Botões do menu
-            jogar_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 250, Const.SCREEN_X / 2 - 50, 50,
-                                                 "JOGAR")
-            loja_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 310, Const.SCREEN_X / 2 - 50, 50,
-                                                "LOJA")
-            opcoes_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 370, Const.SCREEN_X / 2 - 50, 50,
-                                                  "OPÇÕES")
-            creditos_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 430, Const.SCREEN_X / 2 - 50, 50,
-                                                    "CRÉDITOS")
-            sair_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 490, Const.SCREEN_X / 2 - 50, 50,
-                                                "SAIR")
-
-            Draw_util.draw_text(screen, "(EM DESENVOLVIMENTO)", 8, Const.WHITE, Const.SCREEN_X / 2, 355)
-            Draw_util.draw_text(screen, "(EM DESENVOLVIMENTO)", 8, Const.WHITE, Const.SCREEN_X / 2, 415)
+            jogar_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 250, Const.SCREEN_X / 2 - 50, 50, "JOGAR")
+            loja_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 310, Const.SCREEN_X / 2 - 50, 50, "LOJA")
+            opcoes_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 370, Const.SCREEN_X / 2 - 50, 50, "OPÇÕES")
+            creditos_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 430, Const.SCREEN_X / 2 - 50, 50, "CRÉDITOS")
+            sair_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 120, 490, Const.SCREEN_X / 2 - 50, 50, "SAIR")
 
             button_list = [jogar_button, loja_button, opcoes_button, creditos_button, sair_button]
 
@@ -316,15 +309,14 @@ class Menu:
 
             Draw_util.draw_text(screen, "OPÇÕES", Const.TITLE_FONT, Const.WHITE, Const.SCREEN_X / 2, 80)
 
-            sons_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50,
-                                                "SONS")
+            sons_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 250, Const.SCREEN_X / 2 + 10, 50, "SONS")
             acessibilidade_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 320,
-                                                          Const.SCREEN_X / 2 + 10, 50,
-                                                          "ACESSIBILIDADE PARA DALTÔNICOS", font_size=9)
+                                                          Const.SCREEN_X / 2 + 10, 50, "ACESSIBILIDADE PARA DALTÔNICOS", font_size=9)
+            como_jogar_button = Draw_util.draw_button(screen, Const.SCREEN_X / 2 - 150, 390, Const.SCREEN_X / 2 + 10, 50, "COMO JOGAR")
 
             voltar_button = Draw_util.voltar_button(screen)
 
-            button_list = [sons_button, acessibilidade_button]
+            button_list = [sons_button, acessibilidade_button, como_jogar_button]
 
             mx, my = pygame.mouse.get_pos()
 
@@ -338,6 +330,9 @@ class Menu:
 
             if acessibilidade_button.collidepoint((mx, my)):
                 self.cursor_point = self.cursor_event(acessibilidade_button, self.acessibilidade_options, mx, my)
+
+            if como_jogar_button.collidepoint((mx, my)):
+                self.cursor_point = self.cursor_event(como_jogar_button, self.como_jogar, mx, my)
 
             self.click_to_false()
             self.draw_cursor(sons_button)
@@ -546,6 +541,58 @@ class Menu:
 
             self.click_to_false()
             self.draw_cursor(padrao_buton)
+
+            screen_update()
+
+    def como_jogar(self):
+        self.show_options_como_jogar_menu = True
+
+        while self.show_options_como_jogar_menu:
+            clock.tick(Const.FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.show_options_como_jogar_menu = False
+                    pygame.quit()
+                    exit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.show_options_como_jogar_menu = False
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        self.mouse_click = True
+
+            Draw_util.draw_text(screen, "COMO JOGAR", Const.TITLE_FONT - 10, Const.WHITE, Const.SCREEN_X / 2, 80)
+
+            # Mover
+            Draw_util.draw_text(screen, "Mover", 18, Const.WHITE, Const.SCREEN_X / 2, 200)
+
+            Draw_util.draw_button(screen, 100, 150, 50, 50, "W")
+            Draw_util.draw_button(screen, 100, 210, 50, 50, "S")
+            Draw_util.draw_button(screen, 40, 210, 50, 50, "A")
+            Draw_util.draw_button(screen, 160, 210, 50, 50, "D")
+
+            Draw_util.draw_button(screen, 420, 150, 50, 50, "↑")
+            Draw_util.draw_button(screen, 420, 210, 50, 50, "↓")
+            Draw_util.draw_button(screen, 360, 210, 50, 50, "←")
+            Draw_util.draw_button(screen, 480, 210, 50, 50, "→")
+
+            # Disparar
+            Draw_util.draw_text(screen, "Disparar", 18, Const.WHITE, Const.SCREEN_X / 2, 350)
+            Draw_util.draw_button(screen, 80, 370, 420, 50, "SPACE")
+
+            # ESC
+            Draw_util.draw_button(screen, 40, 480, 50, 50, "ESC", font_size=12)
+            Draw_util.draw_text(screen, "Pausar", 18, Const.WHITE, 160, 505)
+
+            voltar_button = Draw_util.voltar_button(screen)
+            mx, my = pygame.mouse.get_pos()
+
+            if voltar_button.collidepoint((mx, my)):
+                if self.mouse_click:
+                    self.mouse_click = False
+                    self.show_options_como_jogar_menu = False
 
             screen_update()
 
