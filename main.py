@@ -630,7 +630,7 @@ class Game:
         self.game_over = False
         self.show_pause = False
         self.show_game_over_screen = False
-        self.draw_dev_options = False
+        self.dev_options = False
         self.ready = False
 
         self.difficulty = None
@@ -774,8 +774,8 @@ class Game:
             self.check_lives()
             self.check_shield()
 
-            if self.draw_dev_options:
-                Game_utils.dev_options(clock)
+            if self.dev_options:
+                Game_utils.dev_options(clock, screen)
 
             self.update_sprites()
             self.draw()
@@ -873,20 +873,21 @@ class Game:
                     pygame.mixer.music.pause()
                     self.pause_screen()
 
-                if event.key == pygame.K_p:
-                    self.asteroid_shower_event = True
+                if self.dev_options:
+                    if event.key == pygame.K_p:
+                        self.asteroid_shower_event = True
 
-                if event.key == pygame.K_i:
-                    self.score.add_score(100)
+                    if event.key == pygame.K_i:
+                        self.score.add_score(100)
 
-                if event.key == pygame.K_l:
-                    self.game_over_screen()
+                    if event.key == pygame.K_l:
+                        self.game_over_screen()
 
                 if event.key == pygame.K_F3:
-                    if not self.draw_dev_options:
-                        self.draw_dev_options = True
+                    if not self.dev_options:
+                        self.dev_options = True
                     else:
-                        self.draw_dev_options = False
+                        self.dev_options = False
 
     # Checa as colisões do jogo
     def collision_checks(self):
