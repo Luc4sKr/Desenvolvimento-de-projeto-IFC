@@ -29,12 +29,23 @@ Space Battle é um jogo do estilo <i>Shoot 'em up</i>, o jogo em si consiste em 
 # Demonstração da Aplicação
 
 ## Telas
+<div align="center">
+  <img src="/assets/readme-images/main-menu.png" alt="Menu principal" height="550">
+  <img src="/assets/readme-images/loja.png" alt="Loja" height="550">
+  <img src="/assets/readme-images/opcoes.png" alt="Opções" height="550">
+  <img src="/assets/readme-images/creditos.png" alt="Créditos" height="550">
+</div>
 
 ## Gameplay
 
-# Como rodar o projeto
+# Acesso ao Projeto
 
 * Baixe as dependências do projeto em [requirements.txt](requirements.txt)
 * Execute o arquivo [main.py](main.py) com python 3.10
   
+# Desenvolvedores
 
+<p>Lucas Eduardo Kreuch</p>
+<p>Maria Clara de Souza</p>
+<p>Aline Amaral de Souza</p>
+<p>Haidy Jandre</p>
